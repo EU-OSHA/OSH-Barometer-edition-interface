@@ -44,10 +44,14 @@
 		<!-- TESTING PROFILE -->
 		<profile>
 			<id>testing</id>
+			<properties>
+				<envClassifier>testing</envClassifier>
+			</properties>
 			<build>
 				<plugins>
 					<plugin>
 						<artifactId>maven-antrun-plugin</artifactId>
+
 						<executions>
 							<execution>
 								<phase>package</phase>
@@ -81,7 +85,7 @@
 									<goal>copy-dependencies</goal>
 								</goals>
 								<configuration>
-									<outputDirectory>C:/OSHBarometer/report/testReportLib</outputDirectory>
+									<outputDirectory>C:/OSHBarometer/lib</outputDirectory>
 									<overWriteReleases>false</overWriteReleases>
 									<overWriteSnapshots>false</overWriteSnapshots>
 									<overWriteIfNewer>true</overWriteIfNewer>
@@ -96,17 +100,18 @@
 						</configuration>
 					</plugin>
 					<plugin>
-						<artifactId>maven-jar-plugin</artifactId>
+						<artifactId>maven-war-plugin</artifactId>
 						<executions>
 							<execution>
-								<phase>package</phase>
+								<phase>install</phase>
 								<goals>
-									<goal>jar</goal>
+									<goal>war</goal>
 								</goals>
 								<configuration>
-									<outputDirectory>C:/OSHBarometer/report</outputDirectory>
+									<outputDirectory>C:/OSHBarometer/packages</outputDirectory>
+									<classifier>${envClassifier}</classifier>
 								</configuration>
-								<!--configuration> <classifier>testnaniero</classifier> </configuration -->
+								<!--configuration> <classifier>testnaniero</classifier> </configuration> -->
 							</execution>
 						</executions>
 					</plugin>
@@ -116,6 +121,9 @@
 		<!-- STAGING PROFILE -->
 		<profile>
 			<id>osha_staging</id>
+			<properties>
+				<envClassifier>staging</envClassifier>
+			</properties>
 			<build>
 				<plugins>
 					<plugin>
@@ -153,7 +161,7 @@
 									<goal>copy-dependencies</goal>
 								</goals>
 								<configuration>
-									<outputDirectory>C:/OSHBarometer/report/testReportLib</outputDirectory>
+									<outputDirectory>C:/OSHBarometer/lib/</outputDirectory>
 									<overWriteReleases>false</overWriteReleases>
 									<overWriteSnapshots>false</overWriteSnapshots>
 									<overWriteIfNewer>true</overWriteIfNewer>
@@ -168,17 +176,18 @@
 						</configuration>
 					</plugin>
 					<plugin>
-						<artifactId>maven-jar-plugin</artifactId>
+						<artifactId>maven-war-plugin</artifactId>
 						<executions>
 							<execution>
-								<phase>package</phase>
+								<phase>install</phase>
 								<goals>
-									<goal>jar</goal>
+									<goal>war</goal>
 								</goals>
 								<configuration>
-									<outputDirectory>C:/OSHBarometer/report</outputDirectory>
+									<outputDirectory>C:/OSHBarometer/packages</outputDirectory>
+									<classifier>${envClassifier}</classifier>
 								</configuration>
-								<!--configuration> <classifier>testnaniero</classifier> </configuration -->
+								<!--configuration> <classifier>testnaniero</classifier> </configuration> -->
 							</execution>
 						</executions>
 					</plugin>

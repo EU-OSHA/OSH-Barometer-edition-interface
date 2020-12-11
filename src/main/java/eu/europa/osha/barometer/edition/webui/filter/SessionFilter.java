@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -20,6 +21,9 @@ import eu.europa.osha.barometer.edition.webui.bean.User;
 @WebFilter("/uicontroller")
 public class SessionFilter implements Filter {
 	private static final Logger LOGGER = LogManager.getLogger(SessionFilter.class);
+	
+	public void init(FilterConfig filterConfig) throws ServletException {
+	}
 
 	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
 			throws IOException, ServletException {
@@ -54,6 +58,9 @@ public class SessionFilter implements Filter {
         	LOGGER.error("AN ERROR HAS OCCURRED.");
         	e.printStackTrace();
         }
+	}
+	
+	public void destroy() {
 	}
 
 }

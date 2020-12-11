@@ -1,14 +1,31 @@
-<%@include file="includes/head.jsp"%>
+<!DOCTYPE html>
+<html>
+<head>
+<title>OSH Barometer Backend</title>
+<link href="css/baromether-backend-style.css" rel="stylesheet" type="text/css">
+<link href="css/baromether-backend-responsive.css" rel="stylesheet" type="text/css">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
 <body>
-	<%@include file="includes/header.jsp"%>
+	<header>
+		<div class="container">
+			<img src="images/logo.png" alt="OSH Barometer Logo">
+			<div class="content-header-button">
+				<form action="login.html"><button class="login">Logout</button></form>
+			</div>
+		</div>
+	</header>
 	<div class="container">
 		<div class="breadcrumbs">
 			<ul>
-				<li><a href="uicontroller?page=home">Home</a></li>
+				<li><span>Home</span></li>
 			</ul>
 		</div>
 		<h1>Edition tool</h1>
-<section id="home-boxes">
+		<section id="home-boxes">
 			<div class="row1">
 				<a class="box" href="">
 					<span class="content-box">
@@ -63,6 +80,12 @@
 			</div>
 		</section>
 	</div>
+	<footer>
+		<div class="container">
+			© 2020 EU-OSHA | <a href="https://osha.europa.eu/" target="_blank">an agency of the European Union</a>
+		</div>
+	</footer>
 </body>
-<%@include file="includes/footer.jsp"%>
+
+
 </html>

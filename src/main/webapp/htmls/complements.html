@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>OSH Barometer Backend</title>
+	<link href="css/baromether-backend-style.css" rel="stylesheet" type="text/css">
+	<link href="css/baromether-backend-responsive.css" rel="stylesheet" type="text/css">
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="js/baromether-backend.js"></script>
+</head>
+
+<body>
+	<header>
+		<div class="container">
+			<img src="images/logo.png" alt="OSH Barometer Logo">
+			<div class="content-header-button">
+				<form action="login.html"><button class="login">Logout</button></form>
+			</div>
+		</div>
+	</header>
+	<div class="container">
+		<div class="breadcrumbs">
+			<ul>
+				<li><a href="index.html">Home</a></li>
+				<li><span>Qualitative data that complements quantitative data</span></li>
+			</ul>
+		</div>
+	</div>
+	<div class="container">
+		<h1>Qualitative data that complements quantitative data</h1>
+		<div class="conten-input">
+			<label>Section</label>
+			<select>
+				<option>
+					OSH authorities
+				</option>
+				<option>
+					
+				</option>
+			</select>
+		</div>
+		<div class="conten-input disabled">
+			<label>Chart</label>
+			<select disabled="disabled">
+				<option>
+					
+				</option>
+				<option>
+					
+				</option>
+			</select>
+		</div>
+		<div class="clear-content"><!-- only for prototype --></div>
+		<table class="literals">
+		  <tr>
+		  	<th>Publish</th>
+		    <th>Published text</th>
+			<th>Draft text</th>
+			<th>Actions</th>
+		  </tr>
+		  <tr>
+		  	<td><input type="checkbox" name=""></td>
+			<td><strong>Download the country data</strong></td>
+			<td><strong>Download the country data edited</strong></td>
+			<td><button class="view-click">Edit</button><button>Undo</button></td>
+		  </tr>
+		  <tr>
+		  	<td><input type="checkbox" name=""></td>
+			<td>Compensation and insurance body </td>
+			<td></td>
+			<td><button class="view-click">Edit</button><button class="disabled">Undo</button></td>
+		  </tr>
+		  <tr>
+		  	<td><input type="checkbox" name=""></td>
+			<td>Prevention institute</td>
+			<td></td>
+			<td><button class="view-click">Edit</button><button class="disabled">Undo</button></td>
+		  </tr>
+		  <tr>
+		  	<td><input type="checkbox" name=""></td>
+			<td>Standardisation body</td>
+			<td>Standardisation body edited</td>
+			<td><button class="view-click">Edit</button><button>Undo</button></td>
+		  </tr>
+		  <tr>
+		  	<td><input type="checkbox" name=""></td>
+			<td>OSH authority</td>
+			<td></td>
+			<td><button class="view-click">Edit</button><button class="disabled">Undo</button></td>
+		  </tr>
+		  <tr>
+		  	<td><input type="checkbox" name=""></td>
+			<td>This indicator is an overview of OSH authorities and relevant OSH institutions in the different Member States and at EU level.</td>
+			<td></td>
+			<td><button class="view-click">Edit</button><button class="disabled">Undo</button></td>
+		  </tr>
+		</table>
+		<button>Publish</button>
+		<div class="clear-content"><!-- only for prototype --></div>
+		<div class="popup">
+			<div class="close close-click">x</div>
+			<label>Published text:</label>
+			<textarea readonly class="disabled" style="font-weight: bold; font-family: arial">Download the country data</textarea>
+			<label>Draft text:</label>
+			<div class="wysi"></div>
+			<textarea style="font-weight: bold; font-family: arial">Download the country data edited</textarea>
+			<button class="close-click">Save</button><button class="close-click">Cancel</button>
+		</div>
+		<div class="popup">
+			<div class="close close-click">x</div>
+			<label>Published text:</label>
+			<div readonly class="textarea disabled"><p style="font-weight: bold; font-family: arial">Download the country data</p></div>
+			<label>Draft text:</label>
+			<div class="wysi"></div>
+			<div class="textarea"><p style="font-weight: bold; font-family: arial">Download the country data edited</p></div>
+			<button class="close-click">Save</button><button class="close-click">Cancel</button>
+		</div>
+	</div> 
+	<footer>
+		<div class="container">
+			© 2020 EU-OSHA | <a href="https://osha.europa.eu/" target="_blank">an agency of the European Union</a>
+		</div>
+	</footer>
+</body>
+
+
+</html>
