@@ -226,30 +226,6 @@
     </file>
     <fields>
       <field>
-        <name>Indicator</name>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-        <repeat>N</repeat>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-      </field>
-      <field>
-        <name>Section</name>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-        <repeat>N</repeat>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-      </field>
-      <field>
         <name>Indicator_name</name>
         <type>String</type>
         <length>-1</length>
@@ -350,132 +326,6 @@
      <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
       <xloc>96</xloc>
-      <yloc>208</yloc>
-      <draw>Y</draw>
-      </GUI>
-    </step>
-
-  <step>
-    <name>Get Variables</name>
-    <type>GetVariable</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-         <partitioning>
-           <method>none</method>
-           <schema_name/>
-           </partitioning>
-    <fields>
-      <field>
-        <name>pYear</name>
-        <variable>&#x24;&#x7b;pYear&#x7d;</variable>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <length>-1</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-    </fields>
-     <cluster_schema/>
- <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>240</xloc>
-      <yloc>208</yloc>
-      <draw>Y</draw>
-      </GUI>
-    </step>
-
-  <step>
-    <name>Update Methodology</name>
-    <type>ExecSQL</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-         <partitioning>
-           <method>none</method>
-           <schema_name/>
-           </partitioning>
-    <connection>osha_dvt</connection>
-    <execute_each_row>Y</execute_each_row>
-    <single_statement>N</single_statement>
-    <replace_variables>Y</replace_variables>
-    <quoteString>N</quoteString>
-    <sql>SET &#x40;sectionID &#x3d; &#x28;SELECT s.id FROM section s INNER JOIN tool t ON s.tool_id&#x3d;t.id WHERE s.name&#x3d;&#x22;METHODOLOGY&#x22; AND t.name&#x3d;&#x22;osha_dvt_barometer&#x22;&#x29;&#x3b;&#xd;&#xa;SET &#x40;maxID &#x3d; &#x28;SELECT MAX&#x28;id&#x29; FROM literal WHERE id&#x3e;20000 AND id&#x3c;30000&#x29;&#x3b;&#xd;&#xa;&#xd;&#xa;-- Additional comments&#xd;&#xa;INSERT INTO literal &#x28;id, section_id, chart_id, type&#x29; VALUES &#x28;&#x40;maxID&#x2b;1, &#x40;sectionID, NULL, &#x22;METHODOLOGY_TEXT&#x22;&#x29;&#x3b;&#xd;&#xa;INSERT INTO translation &#x28;literal_id, language, is_default, text&#x29; VALUES &#x28;&#x40;maxID&#x2b;1, &#x22;EN&#x22;, 1, &#x22;&#x22;&#x29;&#x3b;&#xd;&#xa;-- Description&#xd;&#xa;INSERT INTO literal &#x28;id, section_id, chart_id, type&#x29; VALUES &#x28;&#x40;maxID&#x2b;2, &#x40;sectionID, NULL, &#x22;METHODOLOGY_TEXT&#x22;&#x29;&#x3b;&#xd;&#xa;INSERT INTO translation &#x28;literal_id, language, is_default, text&#x29; VALUES &#x28;&#x40;maxID&#x2b;2, &#x22;EN&#x22;, 1, &#x22;&#x22;&#x29;&#x3b;&#xd;&#xa;-- Source&#xd;&#xa;INSERT INTO literal &#x28;id, section_id, chart_id, type&#x29; VALUES &#x28;&#x40;maxID&#x2b;3, &#x40;sectionID, NULL, &#x22;METHODOLOGY_TEXT&#x22;&#x29;&#x3b;&#xd;&#xa;INSERT INTO translation &#x28;literal_id, language, is_default, text&#x29; VALUES &#x28;&#x40;maxID&#x2b;3, &#x22;EN&#x22;, 1, &#x22;&#x22;&#x29;&#x3b;&#xd;&#xa;-- Specific table&#xd;&#xa;INSERT INTO literal &#x28;id, section_id, chart_id, type&#x29; VALUES &#x28;&#x40;maxID&#x2b;4, &#x40;sectionID, NULL, &#x22;METHODOLOGY_TEXT&#x22;&#x29;&#x3b;&#xd;&#xa;INSERT INTO translation &#x28;literal_id, language, is_default, text&#x29; VALUES &#x28;&#x40;maxID&#x2b;4, &#x22;EN&#x22;, 1, &#x22;&#x22;&#x29;&#x3b;&#xd;&#xa;-- URL&#xd;&#xa;INSERT INTO literal &#x28;id, section_id, chart_id, type&#x29; VALUES &#x28;&#x40;maxID&#x2b;5, &#x40;sectionID, NULL, &#x22;METHODOLOGY_TEXT&#x22;&#x29;&#x3b;&#xd;&#xa;INSERT INTO translation &#x28;literal_id, language, is_default, text&#x29; VALUES &#x28;&#x40;maxID&#x2b;5, &#x22;EN&#x22;, 1, &#x22;&#x22;&#x29;&#x3b;&#xd;&#xa;-- Reference year&#xd;&#xa;INSERT INTO literal &#x28;id, section_id, chart_id, type&#x29; VALUES &#x28;&#x40;maxID&#x2b;6, &#x40;sectionID, NULL, &#x22;METHODOLOGY_TEXT&#x22;&#x29;&#x3b;&#xd;&#xa;INSERT INTO translation &#x28;literal_id, language, is_default, text&#x29; VALUES &#x28;&#x40;maxID&#x2b;6, &#x22;EN&#x22;, 1, &#x22;&#x3f;&#x22;&#x29;&#x3b;&#xd;&#xa;-- Last update&#xd;&#xa;INSERT INTO literal &#x28;id, section_id, chart_id, type&#x29; VALUES &#x28;&#x40;maxID&#x2b;7, &#x40;sectionID, NULL, &#x22;METHODOLOGY_TEXT&#x22;&#x29;&#x3b;&#xd;&#xa;INSERT INTO translation &#x28;literal_id, language, is_default, text&#x29; VALUES &#x28;&#x40;maxID&#x2b;7, &#x22;EN&#x22;, 1, &#x22;&#x3f;&#x22;&#x29;&#x3b;&#xd;&#xa;-- Coverage&#xd;&#xa;INSERT INTO literal &#x28;id, section_id, chart_id, type&#x29; VALUES &#x28;&#x40;maxID&#x2b;8, &#x40;sectionID, NULL, &#x22;METHODOLOGY_TEXT&#x22;&#x29;&#x3b;&#xd;&#xa;INSERT INTO translation &#x28;literal_id, language, is_default, text&#x29; VALUES &#x28;&#x40;maxID&#x2b;8, &#x22;EN&#x22;, 1, &#x22;&#x3f;&#x22;&#x29;&#x3b;&#xd;&#xa;-- Filtering options&#xd;&#xa;INSERT INTO literal &#x28;id, section_id, chart_id, type&#x29; VALUES &#x28;&#x40;maxID&#x2b;9, &#x40;sectionID, NULL, &#x22;METHODOLOGY_TEXT&#x22;&#x29;&#x3b;&#xd;&#xa;INSERT INTO translation &#x28;literal_id, language, is_default, text&#x29; VALUES &#x28;&#x40;maxID&#x2b;9, &#x22;EN&#x22;, 1, &#x22;&#x3f;&#x22;&#x29;&#x3b;&#xd;&#xa;-- Calculations&#xd;&#xa;INSERT INTO literal &#x28;id, section_id, chart_id, type&#x29; VALUES &#x28;&#x40;maxID&#x2b;10, &#x40;sectionID,NULL,  &#x22;METHODOLOGY_TEXT&#x22;&#x29;&#x3b;&#xd;&#xa;INSERT INTO translation &#x28;literal_id, language, is_default, text&#x29; VALUES &#x28;&#x40;maxID&#x2b;10, &#x22;EN&#x22;, 1, &#x22;&#x22;&#x29;&#x3b;&#xd;&#xa;-- Unit measure&#xd;&#xa;INSERT INTO literal &#x28;id, section_id, chart_id, type&#x29; VALUES &#x28;&#x40;maxID&#x2b;11, &#x40;sectionID,NULL,  &#x22;METHODOLOGY_TEXT&#x22;&#x29;&#x3b;&#xd;&#xa;INSERT INTO translation &#x28;literal_id, language, is_default, text&#x29; VALUES &#x28;&#x40;maxID&#x2b;11, &#x22;EN&#x22;, 1, &#x22;&#x22;&#x29;&#x3b;&#xd;&#xa;-- Visualisation&#xd;&#xa;INSERT INTO literal &#x28;id, section_id, chart_id, type&#x29; VALUES &#x28;&#x40;maxID&#x2b;12, &#x40;sectionID,NULL,  &#x22;METHODOLOGY_TEXT&#x22;&#x29;&#x3b;&#xd;&#xa;INSERT INTO translation &#x28;literal_id, language, is_default, text&#x29; VALUES &#x28;&#x40;maxID&#x2b;12, &#x22;EN&#x22;, 1, &#x22;&#x3f;&#x22;&#x29;&#x3b;&#xd;&#xa;-- Indicator name displayed&#xd;&#xa;INSERT INTO literal &#x28;id, section_id, chart_id, type&#x29; VALUES &#x28;&#x40;maxID&#x2b;13, &#x40;sectionID,NULL,  &#x22;METHODOLOGY_TEXT&#x22;&#x29;&#x3b;&#xd;&#xa;INSERT INTO translation &#x28;literal_id, language, is_default, text&#x29; VALUES &#x28;&#x40;maxID&#x2b;13, &#x22;EN&#x22;, 1, &#x22;&#x22;&#x29;&#x3b;&#xd;&#xa;&#xd;&#xa;SET &#x40;datasetId &#x3d; &#x28;SELECT id FROM dataset WHERE source&#x3d;&#x22;European Working Conditions Survey &#x28;EWCS&#x29;&#x22; AND date_from&#x3d;&#x22;&#x24;&#x7b;pYear&#x7d;&#x22;&#x29;&#x3b;&#xd;&#xa;SET &#x40;methodologySectionID &#x3d; &#x28;SELECT id FROM section WHERE name&#x3d;&#x22;&#x3f;&#x22;&#x29;&#x3b;&#xd;&#xa;SET &#x40;indicatorID &#x3d; &#x28;SELECT id FROM indicator WHERE name&#x3d;&#x22;&#x3f;&#x22;&#x29;&#x3b;&#xd;&#xa;&#xd;&#xa;INSERT INTO methodology &#x28;indicator_id, dataset_id, section_id, additional_comments_literal_id, description_literal_id, source_methodology_literal_id, specific_table_literal_id, url_literal_id, reference_year_literal_id, last_update_literal_id, coverage_literal_id, filtering_options_literal_id, calculations_literal_id, unit_measure_literal_id, visualisation_literal_id, indicator_name_displayed_literal_id&#x29;&#xd;&#xa;VALUES &#x28;&#x40;indicatorID, &#x40;datasetId, &#x40;methodologySectionID, &#x40;maxID&#x2b;1, &#x40;maxID&#x2b;2, &#x40;maxID&#x2b;3, &#x40;maxID&#x2b;4, &#x40;maxID&#x2b;5, &#x40;maxID&#x2b;6, &#x40;maxID&#x2b;7, &#x40;maxID&#x2b;8, &#x40;maxID&#x2b;9, &#x40;maxID&#x2b;10, &#x40;maxID&#x2b;11, &#x40;maxID&#x2b;12, &#x40;maxID&#x2b;13&#x29;&#x3b;&#xd;&#xa;&#xd;&#xa;&#xd;&#xa;&#xd;&#xa;&#xd;&#xa;&#xd;&#xa;&#xd;&#xa;</sql>
-    <set_params>N</set_params>
-    <insert_field/>
-    <update_field/>
-    <delete_field/>
-    <read_field/>
-    <arguments>
-       <argument><name>referenceText</name></argument>
-       <argument><name>lastUpdateText</name></argument>
-       <argument><name>coverageText</name></argument>
-       <argument><name>filteringOptionsText</name></argument>
-       <argument><name>visualisationText</name></argument>
-       <argument><name>Section</name></argument>
-       <argument><name>Indicator</name></argument>
-    </arguments>
-     <cluster_schema/>
- <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>1104</xloc>
-      <yloc>208</yloc>
-      <draw>Y</draw>
-      </GUI>
-    </step>
-
-  <step>
-    <name>Modified Java Script Value</name>
-    <type>ScriptValueMod</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-         <partitioning>
-           <method>none</method>
-           <schema_name/>
-           </partitioning>
-    <compatible>N</compatible>
-    <optimizationLevel>9</optimizationLevel>
-    <jsScripts>      <jsScript>        <jsScript_type>0</jsScript_type>
-        <jsScript_name>Script 1</jsScript_name>
-        <jsScript_script>var filteringOptionsText &#x3d; filteringEscaped&#x3b;&#xd;&#xa;if &#x28;filteringOptionsText &#x3d;&#x3d; null &#x7c;&#x7c; filteringOptionsText &#x3d;&#x3d; undefined&#x29;&#xd;&#xa;&#x7b;&#xd;&#xa;	filteringOptionsText &#x3d; &#x22;&#x22;&#x3b;&#xd;&#xa;&#x7d;&#xd;&#xa;&#xd;&#xa;var referenceText &#x3d; referenceEscaped&#x3b;&#xd;&#xa;if &#x28;referenceText &#x3d;&#x3d; null &#x7c;&#x7c; referenceText &#x3d;&#x3d; undefined&#x29;&#xd;&#xa;&#x7b;&#xd;&#xa;	referenceText &#x3d; &#x22;&#x22;&#x3b;&#xd;&#xa;&#x7d;&#xd;&#xa;&#xd;&#xa;var lastUpdateText &#x3d; lastUpdateEscaped&#x3b;&#xd;&#xa;if &#x28;lastUpdateText &#x3d;&#x3d; null &#x7c;&#x7c; lastUpdateText &#x3d;&#x3d; undefined&#x29;&#xd;&#xa;&#x7b;&#xd;&#xa;	lastUpdateText &#x3d; &#x22;&#x22;&#x3b;&#xd;&#xa;&#x7d;&#xd;&#xa;&#xd;&#xa;var coverageText &#x3d; coverageEscaped&#x3b;&#xd;&#xa;if &#x28;coverageText &#x3d;&#x3d; null &#x7c;&#x7c; coverageText &#x3d;&#x3d; undefined&#x29;&#xd;&#xa;&#x7b;&#xd;&#xa;	coverageText &#x3d; &#x22;&#x22;&#x3b;&#xd;&#xa;&#x7d;&#xd;&#xa;&#xd;&#xa;var visualisationText &#x3d; visualisationEscaped&#x3b;&#xd;&#xa;if &#x28;visualisationText &#x3d;&#x3d; null &#x7c;&#x7c; visualisationText &#x3d;&#x3d; undefined&#x29;&#xd;&#xa;&#x7b;&#xd;&#xa;	visualisationText &#x3d; &#x22;&#x22;&#x3b;&#xd;&#xa;&#x7d;&#xd;&#xa;&#xd;&#xa;</jsScript_script>
-      </jsScript>    </jsScripts>    <fields>      <field>        <name>filteringOptionsText</name>
-        <rename>filteringOptionsText</rename>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>      <field>        <name>referenceText</name>
-        <rename>referenceText</rename>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>      <field>        <name>lastUpdateText</name>
-        <rename>lastUpdateText</rename>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>      <field>        <name>coverageText</name>
-        <rename>coverageText</rename>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>      <field>        <name>visualisationText</name>
-        <rename>visualisationText</rename>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>    </fields>     <cluster_schema/>
- <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>944</xloc>
       <yloc>208</yloc>
       <draw>Y</draw>
       </GUI>
@@ -780,6 +630,132 @@
      <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
       <xloc>544</xloc>
+      <yloc>208</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>Get Variables</name>
+    <type>GetVariable</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+    <fields>
+      <field>
+        <name>pYear</name>
+        <variable>&#x24;&#x7b;pYear&#x7d;</variable>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <length>-1</length>
+        <precision>-1</precision>
+        <trim_type>none</trim_type>
+      </field>
+    </fields>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>240</xloc>
+      <yloc>208</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>Modified Java Script Value</name>
+    <type>ScriptValueMod</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+    <compatible>N</compatible>
+    <optimizationLevel>9</optimizationLevel>
+    <jsScripts>      <jsScript>        <jsScript_type>0</jsScript_type>
+        <jsScript_name>Script 1</jsScript_name>
+        <jsScript_script>var filteringOptionsText &#x3d; filteringEscaped&#x3b;&#xd;&#xa;if &#x28;filteringOptionsText &#x3d;&#x3d; null &#x7c;&#x7c; filteringOptionsText &#x3d;&#x3d; undefined&#x29;&#xd;&#xa;&#x7b;&#xd;&#xa;	filteringOptionsText &#x3d; &#x22;&#x22;&#x3b;&#xd;&#xa;&#x7d;&#xd;&#xa;&#xd;&#xa;var referenceText &#x3d; referenceEscaped&#x3b;&#xd;&#xa;if &#x28;referenceText &#x3d;&#x3d; null &#x7c;&#x7c; referenceText &#x3d;&#x3d; undefined&#x29;&#xd;&#xa;&#x7b;&#xd;&#xa;	referenceText &#x3d; &#x22;&#x22;&#x3b;&#xd;&#xa;&#x7d;&#xd;&#xa;&#xd;&#xa;var lastUpdateText &#x3d; lastUpdateEscaped&#x3b;&#xd;&#xa;if &#x28;lastUpdateText &#x3d;&#x3d; null &#x7c;&#x7c; lastUpdateText &#x3d;&#x3d; undefined&#x29;&#xd;&#xa;&#x7b;&#xd;&#xa;	lastUpdateText &#x3d; &#x22;&#x22;&#x3b;&#xd;&#xa;&#x7d;&#xd;&#xa;&#xd;&#xa;var coverageText &#x3d; coverageEscaped&#x3b;&#xd;&#xa;if &#x28;coverageText &#x3d;&#x3d; null &#x7c;&#x7c; coverageText &#x3d;&#x3d; undefined&#x29;&#xd;&#xa;&#x7b;&#xd;&#xa;	coverageText &#x3d; &#x22;&#x22;&#x3b;&#xd;&#xa;&#x7d;&#xd;&#xa;&#xd;&#xa;var visualisationText &#x3d; visualisationEscaped&#x3b;&#xd;&#xa;if &#x28;visualisationText &#x3d;&#x3d; null &#x7c;&#x7c; visualisationText &#x3d;&#x3d; undefined&#x29;&#xd;&#xa;&#x7b;&#xd;&#xa;	visualisationText &#x3d; &#x22;&#x22;&#x3b;&#xd;&#xa;&#x7d;&#xd;&#xa;&#xd;&#xa;</jsScript_script>
+      </jsScript>    </jsScripts>    <fields>      <field>        <name>filteringOptionsText</name>
+        <rename>filteringOptionsText</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>      <field>        <name>referenceText</name>
+        <rename>referenceText</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>      <field>        <name>lastUpdateText</name>
+        <rename>lastUpdateText</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>      <field>        <name>coverageText</name>
+        <rename>coverageText</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>      <field>        <name>visualisationText</name>
+        <rename>visualisationText</rename>
+        <type>String</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>    </fields>     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>944</xloc>
+      <yloc>208</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>Update Methodology</name>
+    <type>ExecSQL</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+    <connection>osha_dvt</connection>
+    <execute_each_row>Y</execute_each_row>
+    <single_statement>N</single_statement>
+    <replace_variables>Y</replace_variables>
+    <quoteString>N</quoteString>
+    <sql>SET &#x40;datasetId &#x3d; &#x28;SELECT id FROM dataset WHERE source&#x3d;&#x22;European Working Conditions Survey &#x28;EWCS&#x29;&#x22; AND date_from&#x3d;&#x22;&#x24;&#x7b;pYear&#x7d;&#x22;&#x29;&#x3b;&#xd;&#xa;SET &#x40;sectionID &#x3d; &#x28;SELECT id FROM section WHERE name&#x3d;&#x22;&#x3f;&#x22;&#x29;&#x3b;&#xd;&#xa;SET &#x40;indicatorID &#x3d; &#x28;SELECT id FROM indicator WHERE name&#x3d;&#x22;&#x3f;&#x22;&#x29;&#x3b;&#xd;&#xa;&#xd;&#xa;UPDATE methodology SET dataset_id&#x3d;&#x40;datasetId WHERE section_id&#x3d;&#x40;sectionID AND indicator_id&#x3d;&#x40;indicatorID&#xd;&#xa;&#xd;&#xa;-- Reference&#xd;&#xa;SET &#x40;referenceLiteralID &#x3d; &#x28;SELECT reference_year_literal_id FROM methodology m WHERE m.indicator_id&#x3d;&#x40;indicatorID AND m.section_id&#x3d;&#x40;sectionID&#x29;&#x3b;&#xd;&#xa;UPDATE translation SET text&#x3d;&#x22;&#x3f;&#x22; WHERE literal_id&#x3d;&#x40;referenceLiteralID&#x3b;&#xd;&#xa;-- Last Update&#xd;&#xa;SET &#x40;lastUpdateLiteralID &#x3d; &#x28;SELECT last_update_literal_id FROM methodology m WHERE m.indicator_id&#x3d;&#x40;indicatorID AND m.section_id&#x3d;&#x40;sectionID&#x29;&#x3b;&#xd;&#xa;UPDATE translation SET text&#x3d;&#x22;&#x3f;&#x22; WHERE literal_id&#x3d;&#x40;lastUpdateLiteralID&#x3b;&#xd;&#xa;-- Coverage&#xd;&#xa;SET &#x40;coverageLiteralID &#x3d; &#x28;SELECT coverage_literal_id FROM methodology m WHERE m.indicator_id&#x3d;&#x40;indicatorID AND m.section_id&#x3d;&#x40;sectionID&#x29;&#x3b;&#xd;&#xa;UPDATE translation SET text&#x3d;&#x22;&#x3f;&#x22; WHERE literal_id&#x3d;&#x40;coverageLiteralID&#x3b;&#xd;&#xa;-- Filtering Options&#xd;&#xa;SET &#x40;filteringOptionsLiteralID &#x3d; &#x28;SELECT filtering_options_literal_id FROM methodology m WHERE m.indicator_id&#x3d;&#x40;indicatorID AND m.section_id&#x3d;&#x40;sectionID&#x29;&#x3b;&#xd;&#xa;UPDATE translation SET text&#x3d;&#x22;&#x3f;&#x22; WHERE literal_id&#x3d;&#x40;filteringOptionsLiteralID&#x3b;&#xd;&#xa;-- Visualisation&#xd;&#xa;SET &#x40;visualisationLiteralID &#x3d; &#x28;SELECT visualisation_literal_id FROM methodology m WHERE m.indicator_id&#x3d;&#x40;indicatorID AND m.section_id&#x3d;&#x40;sectionID&#x29;&#x3b;&#xd;&#xa;UPDATE translation SET text&#x3d;&#x22;&#x3f;&#x22; WHERE literal_id&#x3d;&#x40;visualisationLiteralID&#x3b;&#xd;&#xa;&#xd;&#xa;&#xd;&#xa;&#xd;&#xa;&#xd;&#xa;&#xd;&#xa;&#xd;&#xa;&#xd;&#xa;&#xd;&#xa;</sql>
+    <set_params>N</set_params>
+    <insert_field/>
+    <update_field/>
+    <delete_field/>
+    <read_field/>
+    <arguments>
+       <argument><name>indicatorName</name></argument>
+       <argument><name>sectionName</name></argument>
+       <argument><name>referenceText</name></argument>
+       <argument><name>lastUpdateText</name></argument>
+       <argument><name>coverageText</name></argument>
+       <argument><name>filteringOptionsText</name></argument>
+       <argument><name>visualisationText</name></argument>
+    </arguments>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>1104</xloc>
       <yloc>208</yloc>
       <draw>Y</draw>
       </GUI>
