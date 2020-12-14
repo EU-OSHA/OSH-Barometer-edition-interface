@@ -34,6 +34,9 @@ public class SessionFilter implements Filter {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
         
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        
         try {
         	//If user is logged he can access any page
         	if(user != null) {
@@ -44,7 +47,9 @@ public class SessionFilter implements Filter {
         			if(page.equals("login")){
                         filterChain.doFilter(request, response);
                     } else {
-                    	if(user == null){
+                    	if(username != null && password != null){
+                            filterChain.doFilter(request, response);
+                        } else {
                             LOGGER.error("User is not logged in. Redirecting...");
                             response.sendRedirect(request.getContextPath() + "/uicontroller?page=login");
                         }

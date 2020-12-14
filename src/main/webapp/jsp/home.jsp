@@ -2,11 +2,7 @@
 <body>
 	<%@include file="includes/header.jsp"%>
 	<div class="container">
-		<div class="breadcrumbs">
-			<ul>
-				<li><a href="uicontroller?page=home">Home</a></li>
-			</ul>
-		</div>
+		<%@include file="includes/breadcrumb.jsp"%>
 		<h1>Edition tool</h1>
 <section id="home-boxes">
 			<div class="row1">

@@ -80,9 +80,13 @@ public class BarometerUIController extends HttpServlet{
 				if (logout != null) {
 					LOGGER.info("Logging out from OSH Barometer Edition Tool.");
 					//TODO remove current session
-					
+
 					/* TEMPORAL LOGOUT */
 					session.removeAttribute("user");
+				} else {
+					if(session.getAttribute("user") != null) {
+						res.sendRedirect(req.getContextPath() + "/uicontroller?page=home");
+					}
 				}
 				nextURL = "/jsp/login.jsp";
 			}else if(page.equals("home")) {
@@ -92,24 +96,26 @@ public class BarometerUIController extends HttpServlet{
 				String username = req.getParameter("username");
 				String password = req.getParameter("password");
 				
-				/* TEMPORAL LOGIN */
-				if(username != null) {
-					if(password != null) {
-						if(username.equals(USERNAME) && password.equals(PASSWORD)) {
-							LOGGER.info("Username and password correct.");
-							loginCorrect = true;
-							User user = new User(username, password);
-							session.setAttribute("user", user);
+				if(session.getAttribute("user") != null) {
+					loginCorrect = true;
+				} else {
+					/* TEMPORAL LOGIN */
+					if(username != null) {
+						if(password != null) {
+							if(username.equals(USERNAME) && password.equals(PASSWORD)) {
+								LOGGER.info("Username and password correct.");
+								loginCorrect = true;
+								User user = new User(username, password);
+								session.setAttribute("user", user);
+							} else {
+								LOGGER.error("Login failed. Username or password not correct.");
+							}
 						} else {
-							LOGGER.error("Login failed. Username or password not correct.");
+							LOGGER.error("Login failed. Password is empty.");
 						}
-					} else {
-						LOGGER.error("Login failed. Password is empty.");
 					}
-				}else{
-					LOGGER.error("Login failed. Username is empty.");
 				}
-				
+
 				if(loginCorrect) {
 					LOGGER.info("Login correct. Accessing to OSH Barometer homepage.");
 					nextURL = "/jsp/home.jsp";
