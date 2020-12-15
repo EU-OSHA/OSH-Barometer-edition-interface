@@ -133,7 +133,7 @@
     <accept_field/>
     <accept_stepname/>
     <file>
-      <name>&#x24;&#x7b;Internal.Transformation.Filename.Directory&#x7d;&#x5c;resources&#x5c;origin&#x5c;EU_OSHA_Barometer_Eurofound_Dataset.xlsx</name>
+      <name>&#x24;&#x7b;Internal.Transformation.Filename.Directory&#x7d;&#x2f;resources&#x2f;origin&#x2f;EU_OSHA_Barometer_Eurofound_Dataset.xlsx</name>
       <filemask/>
       <exclude_filemask/>
       <file_required>N</file_required>
