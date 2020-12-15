@@ -344,7 +344,7 @@
     <accept_field/>
     <accept_stepname/>
     <file>
-      <name>&#x24;&#x7b;Internal.Transformation.Filename.Directory&#x7d;&#x2f;resources&#x2f;origin&#x2f;EU_OSHA_Barometer_Eurostat_Company_Size.xlsx</name>
+      <name>&#x24;&#x7b;Internal.Transformation.Filename.Directory&#x7d;&#x2f;resources&#x2f;origin&#x2f;EU_OSHA_Barometer_Eurostat.xlsx</name>
       <filemask/>
       <exclude_filemask/>
       <file_required>N</file_required>
