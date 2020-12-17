@@ -4,16 +4,16 @@
 	<div class="container">
 		<%@include file="includes/breadcrumb.jsp"%>
 		<h1>Edition tool</h1>
-<section id="home-boxes">
+		<section id="home-boxes">
 			<div class="row1">
-				<a class="box" href="">
+				<a class="box" href="uicontroller?page=quantitative_eurofound">
 					<span class="content-box">
 						<span class="box-title">Quantitative data<br>from Eurofound</span>
 						<span class="box-ico"><img src="images/logo-eurofound.png"></span>
 					</span>
 					<span class="tootip-box">Upload Eurofound excel template with the new data.</span>
 				</a>
-				<a class="box eurostat" href="">
+				<a class="box eurostat" href="uicontroller?page=quantitative_eurostat">
 					<span class="content-box">
 						<span class="box-title">Quantitative<br>data from<br>Eurostat</span>
 						<span class="box-ico"><img src="images/logo-eurostat.png"></span>
@@ -59,6 +59,6 @@
 			</div>
 		</section>
 	</div>
+	<%@include file="includes/footer.jsp"%>
 </body>
-<%@include file="includes/footer.jsp"%>
 </html>
