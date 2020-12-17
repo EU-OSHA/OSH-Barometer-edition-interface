@@ -34,7 +34,7 @@
 			<label>Section</label>
 			<select>
 				<option>
-					Generic information
+					OSH authorities
 				</option>
 			</select>
 		</div>
@@ -42,7 +42,7 @@
 			<label>Indicator</label>
 			<select>
 				<option>
-					OSH authority
+					Compensation and insurance bodies
 				</option>
 			</select>
 		</div>
@@ -50,15 +50,15 @@
 		<table class="literals columns-5">
 		  <tr>
 		  	<th>Publish</th>
-		  	<th>Indicator name</th>
+		  	<th>Literal type</th>
 		    <th>Published text</th>
-			<th>Draft text</th>
+			<th>Updated text</th>
 			<th>Actions</th>
 		  </tr>
 		  <tr>
 		  	<td><input type="checkbox" name=""></td>
-		  	<td>Indicator</td>
-			<td>OSH authority</td>
+		  	<td>Indicator name</td>
+			<td>Compensation and insurance bodies</td>
 			<td></td>
 			<td><button class="view-click">Edit</button><button class="disabled">Undo</button></td>
 		  </tr>
@@ -68,8 +68,8 @@
 			<td>
 				<p>This part consists of a harmonised short description of OSH authorities and OSH institutions in Member States. You can select one of the Member States, the European Union or one of four categories of the ‘Institution types’. <strong>Specifically this indicator relates to:</strong></p>
 				<ul>
-					<li><strong>OSH authority</strong></li>
-					<li>Compensation and insurance body</li>
+					<li>OSH authority</li>
+					<li><strong>Compensation and insurance body</strong></li>
 					<li>Prevention institute</li>
 					<li>Standardisation body</li>
 				</ul>
@@ -82,8 +82,8 @@
 		  	<td>Data source</td>
 			<td>
 				<p>The source for OSH-authorities and OSH-institutions is a preparatory report for DG Employment from 2018. Most of the data has been compiled in 2016 or 2017.
-  				<br>(Kooperationsstelle Hamburg IFE / EUROGIP: Development and design of a structural model for the construction and implementation of an EU OSH Information System, Final Report, March 2018, Service contract No VC/2016/0055). 
- 				 <br>The National Contact Points updated the information at the end of 2019.</p>
+				  <br>(Kooperationsstelle Hamburg IFE / EUROGIP: Development and design of a structural model for the construction and implementation of an EU OSH Information System, Final Report, March 2018, Service contract No VC/2016/0055). 
+				  <br>The National Contact Points updated the information at the end of 2019.</p>
  			</td>
 			<td></td>
 			<td><button class="view-click">Edit</button><button class="disabled">Undo</button></td>
@@ -125,7 +125,7 @@
 		  	<td><input type="checkbox" name=""></td>
 		  	<td>Visualisation</td>
 			<td>
-				<p data-ng-bind-html="i18nLiterals['L'+data.visualisation]" data-ng-if="i18nLiterals['L'+data.visualisation] != 'null'" class="ng-binding ng-scope">Text boxes for all countries, selection of countries and institution type possible.</p>
+				<p>Text boxes for all countries, selection of countries and institution type possible.</p>
  			</td>
 			<td>
 				
@@ -152,7 +152,7 @@
 			<div readonly class="textarea disabled">
 				2019
 			</div>
-			<label>Draft text:</label>
+			<label>Updated text:</label>
 			<div class="wysi"></div>
 			<div class="textarea">
 				2020

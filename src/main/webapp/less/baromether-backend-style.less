@@ -120,6 +120,7 @@ select{
 
 input[type=file]{
 	padding: 5px 5px 2px 5px;
+	margin-right: 1em;
 }
 
 button{
@@ -139,7 +140,7 @@ button:hover{
 }
 
 button.disabled{
-	opacity: 0.7;
+	opacity: 0.6;
 	pointer-events: none;
 	&:hover{
 		background: #529FA2;
@@ -151,6 +152,7 @@ button.upload{
 	margin-left: 0px;
 	color: #333;
 	border-radius: 15px;
+	margin-right: 2em;
 	&:hover{
 		background: #ccc;
 	}
@@ -336,6 +338,7 @@ table.literals.columns-5{
 	}
 	td:nth-child(4){
 		width: 28%;
+		text-align: left;
 	}
 	td:nth-child(5){
 		width: 15%;
@@ -363,10 +366,10 @@ p.table{
 	border: 1px solid #529FA2;
     width: 613px;
     height: auto;
-    position: absolute;
+    position: fixed;
     top: 14%;
     left: 30%;
-    background: #FFFF;
+    background: #FFF;
     padding: 3em 2em 2em 2em;
     z-index: 999;
     .close{
@@ -402,7 +405,14 @@ p.table{
 			}
 		}
 		li:first-child{
-			a, span{
+			span{
+				padding-left: 22px;
+				background: url(../images/home-ico.png) no-repeat;
+				text-decoration: underline;
+				text-decoration-style: dotted;
+				text-decoration-color: #F6A400;
+			}
+			a{
 				padding-left: 22px;
 				background: url(../images/home-ico.png) no-repeat;
 				text-decoration: underline;
