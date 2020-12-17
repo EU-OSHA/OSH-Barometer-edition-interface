@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>OSH Barometer Backend</title>
+<link href="css/baromether-backend-style.css" rel="stylesheet" type="text/css">
+<link href="css/baromether-backend-responsive.css" rel="stylesheet" type="text/css">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+	<header>
+		<div class="container">
+			<img src="images/logo.png" alt="OSH Barometer Logo">
+			<div class="content-header-button">
+				<form action="login.html"><button class="login">Logout</button></form>
+			</div>
+		</div>
+	</header>
+	<div class="container">
+		<div class="breadcrumbs">
+			<ul>
+				<li><a href="index.html">Home</a></li>
+				<li><span>Quantitative data from Eurostat</span></li>
+			</ul>
+		</div>
+		<h1>Quantitative data from Eurostat</h1>
+		<label>Indicator</label>
+		<select>
+			<option>
+				Income per capita
+			</option>
+		</select>
+		<div class="clear-content"><!-- only for prototype --></div>
+		<label>Year</label>
+		<div class="conten-input">
+			<label class="help-text">From:</label>
+			<select>
+				<option>
+					
+				</option>
+				<option>
+					
+				</option>
+			</select>
+		</div>
+		<div class="conten-input">
+			<label class="help-text">To:</label>
+			<select>
+				<option>
+					
+				</option>
+				<option>
+					
+				</option>
+			</select>
+		</div>
+		<div class="clear-content"><!-- only for prototype --></div>
+		<label>File</label>
+		<label class="help-text">The template should be "EU-OSHA_OIE_Eurostat_Income_per_capita_YYYY-MM-DD"</label>
+		<input type="file" name=""><button title="Download Eurostat excel templates">Download Excel templates</button>
+		<div class="clear-content"><!-- only for prototype --></div>
+		<div class="conten-button">
+			<button>Clear</button><button>Submit</button>
+		</div>
+	</div>
+	<footer>
+		<div class="container">
+			© 2020 EU-OSHA | <a href="https://osha.europa.eu/" target="_blank">an agency of the European Union</a>
+		</div>
+	</footer>
+</body>
+
+
+</html>
