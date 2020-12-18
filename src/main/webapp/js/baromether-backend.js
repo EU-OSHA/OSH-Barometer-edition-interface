@@ -1,6 +1,6 @@
 (function ($) {
   
-  $(document).ready(function(){
+$(document).ready(function(){
     $( ".close-click" ).click(function() {
       $( ".popup" ).fadeOut( "slow" );
     });
@@ -15,7 +15,7 @@
 	$("#templateUsage").text('The template should be "EU-OSHA_OIE_Eurostat indicator_Company size_YYYY-MM-DD.xlsx"');
     
     changeYearCombos =  function(){
-		console.log("Entra en changeYearCombos");
+		//console.log("Entra en changeYearCombos");
 		var optionSelected = document.getElementById("indicatorEurostat");
 		var valueSelected = optionSelected.value;
 		if(valueSelected == 36 || valueSelected == 279 || valueSelected == 53
@@ -45,7 +45,12 @@
 			$("#templateUsage").text('The template should be "EU-OSHA_OIE_Eurostat_Direct value indicators_YYYY-MM-DD.xlsx"');
 		}
 	};
-
-  });
+	
+	changeChartsInTable = function () {
+		console.log("Enters changeChartsInTable function");
+		
+	}
+	
+});
 
 })(jQuery);
