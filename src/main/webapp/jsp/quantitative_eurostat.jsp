@@ -2,8 +2,7 @@
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.HashMap"%>
 <%@include file="includes/head.jsp"%>
-<body>
-	<%@include file="includes/header.jsp"%>
+<%@include file="includes/header.jsp"%>
 	<div class="container">
 		<%@include file="includes/breadcrumb.jsp"%>
 		<h1>Quantitative data from Eurostat</h1>
@@ -23,7 +22,7 @@
             <p><%=confirmationMessage%></p>
         </div>
         <% } %>
-        <form action="uicontroller?page=quantitative_eurostat" method="post" enctype="multipart/form-data">
+        <form action="user?page=quantitative_eurostat" method="post" enctype="multipart/form-data">
 			<label>Indicator</label>
 			<% ArrayList<HashMap<String,String>> indicatorsList = (ArrayList<HashMap<String,String>>) request.getAttribute("indicatorsList"); %>
 			<select id="indicatorEurostat" name="indicatorEurostat" onchange="changeYearCombos()">
@@ -53,7 +52,7 @@
 			</div>
 			<div id="oneYearContainer" class="conten-input">
 				<!-- FOR THE REST OF THE INDICATORS -->
-				<select name="OneYear" >
+				<select name="oneYear" >
 					<% for (int i = year; i >= 2013; i--) { %>
 					<option value="<%=i%>-01-01"><%=i%></option>
 					<% } %>
@@ -72,6 +71,4 @@
 			</div>
 		</form>
 	</div>
-</body>
 <%@include file="includes/footer.jsp"%>
-</html>

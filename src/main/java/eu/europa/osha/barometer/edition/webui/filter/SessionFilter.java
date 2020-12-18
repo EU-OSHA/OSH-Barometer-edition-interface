@@ -18,7 +18,7 @@ import org.apache.logging.log4j.Logger;
 
 import eu.europa.osha.barometer.edition.webui.bean.User;
 
-@WebFilter("/uicontroller")
+@WebFilter("/user")
 public class SessionFilter implements Filter {
 	private static final Logger LOGGER = LogManager.getLogger(SessionFilter.class);
 	
@@ -51,12 +51,12 @@ public class SessionFilter implements Filter {
                             filterChain.doFilter(request, response);
                         } else {
                             LOGGER.error("User is not logged in. Redirecting...");
-                            response.sendRedirect(request.getContextPath() + "/uicontroller?page=login");
+                            response.sendRedirect(request.getContextPath() + "/user?page=login");
                         }
                     }
         		}else {
         			LOGGER.error("Page error. Redirecting...");
-                    response.sendRedirect(request.getContextPath() + "/uicontroller?page=login");
+                    response.sendRedirect(request.getContextPath() + "/user?page=login");
         		}        		
         	}
         }catch(Exception e) {

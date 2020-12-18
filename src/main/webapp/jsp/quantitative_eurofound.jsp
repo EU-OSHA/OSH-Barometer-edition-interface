@@ -1,7 +1,6 @@
 <%@page import="java.util.Calendar"%>
 <%@include file="includes/head.jsp"%>
-<body>
-	<%@include file="includes/header.jsp"%>
+<%@include file="includes/header.jsp"%>
 	<div class="container">
 		<%@include file="includes/breadcrumb.jsp"%>
 		<h1>Quantitative data from Eurofound</h1>
@@ -20,9 +19,9 @@
         <div class="alert-success">
             <p><%=confirmationMessage%></p>
         </div>
-        <% } %>
         <div class="clear-content"></div>
-		<form action="uicontroller?page=quantitative_eurofound" method="post" enctype="multipart/form-data">
+        <% } %>
+		<form action="user?page=quantitative_eurofound" method="post" enctype="multipart/form-data">
 			<!-- Year input -->
 			<label>Year</label>
 			<%int year = Calendar.getInstance().get(Calendar.YEAR);%>
@@ -46,6 +45,4 @@
 			</div>
 		</form>
 	</div>
-	<%@include file="includes/footer.jsp"%>
-</body>
-</html>
+<%@include file="includes/footer.jsp"%>

@@ -7,7 +7,7 @@
 		<% if(currentPage != null) {
 			if(!currentPage.equals("login")) { %>
 			<div class="content-header-button">
-				<form action="uicontroller?page=login" method="post">
+				<form action="user?page=login" method="post">
 					<input type="hidden" name="logout" value="1">
 					<button type="submit" class="login">Logout</button>					
 				</form>

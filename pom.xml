@@ -2,11 +2,11 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>OSHBarometer</groupId>
-	<artifactId>OSHBarometer</artifactId>
+	<groupId>osh-barometer</groupId>
+	<artifactId>osh-barometer</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
-	<name>OSHBarometer</name>
+	<name>osh-barometer</name>
 	<description>OSHBarometer Interface Edition for backend</description>
 
 	<properties>
@@ -203,7 +203,7 @@
 	</profiles>
 
 	<build>
-		<finalName>OSHBarometer</finalName>
+		<finalName>osh-barometer</finalName>
 
 		<pluginManagement>
 			<!-- lock down plugins versions to avoid using Maven defaults (may be 
@@ -216,9 +216,9 @@
 					<configuration>
 						<modules>
 							<webModule>
-								<groupId>OSHBarometer</groupId>
-								<artifactId>OSHBarometer</artifactId>
-								<contextRoot>/OSHBarometer</contextRoot>
+								<groupId>osh-barometer</groupId>
+								<artifactId>osh-barometer</artifactId>
+								<contextRoot>/osh-barometer</contextRoot>
 							</webModule>
 						</modules>
 					</configuration>
