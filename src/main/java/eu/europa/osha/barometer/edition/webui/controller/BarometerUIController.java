@@ -33,6 +33,7 @@ import org.apache.logging.log4j.Logger;
 import com.sun.security.auth.UserPrincipal;
 
 import eu.europa.osha.barometer.edition.webui.bean.User;
+import eu.europa.osha.barometer.edition.webui.business.QualitativeDataBusiness;
 import eu.europa.osha.barometer.edition.webui.business.QuantitativeDataBusiness;
 import eu.europa.osha.barometer.edition.webui.security.ConfigurationImpl;
 import eu.europa.osha.barometer.edition.webui.security.PassiveCallbackHandler;
@@ -46,7 +47,7 @@ import eu.europa.osha.barometer.edition.webui.security.PassiveCallbackHandler;
 (
 	name = "controller",
 	description = "MVC controller servlet",
-	urlPatterns = {"/uicontroller"}
+	urlPatterns = {"/user"}
 )
 @MultipartConfig
 public class BarometerUIController extends HttpServlet{
@@ -61,6 +62,8 @@ public class BarometerUIController extends HttpServlet{
 
 	private static final String USERNAME = "admin";
 	private static final String PASSWORD = "admin";
+	
+	private static String DEFAULT_SECTION_ID = "17";
 
 	/**
 	 * The main method of the controller in charge of the redirections. Use a "service" method, so it can handle both
@@ -95,13 +98,24 @@ public class BarometerUIController extends HttpServlet{
 				String logout = req.getParameter("logout");
 				if (logout != null) {
 					LOGGER.info("Logging out from OSH Barometer Edition Tool.");
-					//TODO remove current session
+					//Remove current session
+//					User user = (User) session.getAttribute("user");
+//					CallbackHandler callbackHandler = new PassiveCallbackHandler(user.getUsername(), user.getPassword());
+//					Subject subject = null;
+//					try {
+//						LoginContext lc = new LoginContext(ConfigurationImpl.LDAP_CONFIGURATION_NAME, 
+//								subject, callbackHandler, new ConfigurationImpl());
+//						lc.logout();
+//					} catch(Exception e) {
+//						LOGGER.error("AN ERROR HAS OCCURRED WHILE LOGGING OUT.");
+//						e.printStackTrace();
+//					}
 
 					/* TEMPORAL LOGOUT */
 					session.removeAttribute("user");
 				} else {
 					if(session.getAttribute("user") != null) {
-						res.sendRedirect(req.getContextPath() + "/uicontroller?page=home");
+						res.sendRedirect(req.getContextPath() + "/user?page=home");
 					}
 				}
 				nextURL = "/jsp/login.jsp";
@@ -141,7 +155,7 @@ public class BarometerUIController extends HttpServlet{
 					nextURL = "/jsp/login.jsp";
 				}
 
-				//TODO Connect to LDAP to check if user/mail and password exist
+				//Connect to LDAP to check if user/mail and password exist
 				//				CallbackHandler callbackHandler = new PassiveCallbackHandler(username, password);
 				//				Subject subject = null;
 				//
@@ -167,9 +181,10 @@ public class BarometerUIController extends HttpServlet{
 				//				boolean loginCorrect = true;
 				//				if(loginCorrect) {
 				//					LOGGER.info("Login correct. Redirecting to OSH Barometer homepage.");
-				//					//TODO create user session
+				//					User user = new User(username, password);
+				//					session.setAttribute("user", user);
 				//					nextURL = "/jsp/home.jsp";
-				//				}else {
+				//				} else {
 				//					LOGGER.error("Login failed. Returning to login page.");
 				//					nextURL = "/jsp/login.jsp";
 				//					errorMessage = "Incorrect user/mail or password. Please try again.";
@@ -244,9 +259,9 @@ public class BarometerUIController extends HttpServlet{
 					}
 				}
 			} else if (page.equals("quantitative_eurostat")) {
+				LOGGER.info("Arriving to Quantitative Data from Eurostat.");
 				nextURL = "/jsp/quantitative_eurostat.jsp";
 				ArrayList<HashMap<String,String>> indicatorsList = QuantitativeDataBusiness.getIndicatorsForEurostat();
-				//TODO functionality for page quantitative_eurostat
 				String errorMessage = null;
 				String confirmationMessage = null;
 				String scriptDirectory = null;
@@ -256,15 +271,19 @@ public class BarometerUIController extends HttpServlet{
 					String indicatorEurostat = req.getParameter("indicatorEurostat");
 					String yearFrom = req.getParameter("yearFrom");
 					String yearTo = req.getParameter("yearTo");
+					String oneYear = req.getParameter("oneYear");
 					Part file = req.getPart("quantitativeEurostatFile");
 					String fileName = Paths.get(file.getSubmittedFileName()).getFileName().toString();
 					String fileNameWOExtension = fileName.substring(0, fileName.indexOf('.'));
 					
-					//TODO process year types that can be received (from and to or unique year)
+					if (yearFrom != null && yearTo != null) {
+						if(Integer.parseInt(yearFrom) > Integer.parseInt(yearTo)) {
+							errorMessage = "'Year To' field should be later than 'Year From' field";
+						}
+					}
 					
 					LOGGER.info("File name: "+fileName);
 					InputStream fileContent = file.getInputStream();
-					//TODO copy file to a determined location and call script to launch ETL
 					String profile = configurationData.getString("profile.name");
 					
 					OutputStream out = null;
@@ -284,7 +303,16 @@ public class BarometerUIController extends HttpServlet{
 				        
 				        if(profile.equals("localhost")) {
 							//TODO call .bat script to run ETL
-							Runtime.getRuntime().exec("cmd /c start \"\" "+scriptDirectory+"eurostat_quantitative_script.bat "+fileNameWOExtension+" ");
+				        	if(oneYear != null) {
+				        		Runtime.getRuntime().exec("cmd /c start \"\" " + scriptDirectory + "eurostat_quantitative_script.bat "
+										+ fileNameWOExtension + " " + indicatorEurostat + " " + yearTo);
+				        	}
+				        	
+				        	if (yearFrom != null && yearTo != null) {
+				        		Runtime.getRuntime().exec("cmd /c start \"\" "+scriptDirectory + "eurostat_quantitative_script.bat "
+										+ fileNameWOExtension + " " + indicatorEurostat + " " + yearFrom + " " + yearTo);
+				        	}
+							
 						} else {
 							//TODO call .sh script to run ETL
 						}
@@ -311,8 +339,48 @@ public class BarometerUIController extends HttpServlet{
 					req.setAttribute("confirmationMessage", confirmationMessage);
 				}
 			} else if (page.equals("update_labels")) {
+				LOGGER.info("Arriving to Update labels Form.");
 				nextURL = "/jsp/update_labels.jsp";
 				//TODO functionality for page update_labels
+			} else if (page.equals("update_datasets")) {
+				LOGGER.info("Arriving to Update year / period of the DVT's data Form.");
+				nextURL = "/jsp/update_datasets.jsp";
+				String errorMessage = null;
+				String confirmationMessage = null;
+				String sectionId = req.getParameter("section_id");
+				String formSent = req.getParameter("formSent");
+				ArrayList<HashMap<String,String>> chartsBySectionList = null;
+				ArrayList<HashMap<String,String>> sectionList = QualitativeDataBusiness.getSectionsForDatasetUpdate();
+				if (formSent != null) {
+					String chart_id =  req.getParameter("chart_id");
+					String indicator_id =  req.getParameter("indicator_id");
+					String datasetChart =  req.getParameter("datasetChart-"+chart_id);
+					boolean datasetUpdated = false;
+					datasetUpdated = QualitativeDataBusiness.updateIndicatorsDataset(chart_id, indicator_id, datasetChart);
+					
+					if(datasetUpdated) {
+						confirmationMessage = "The data has been correctly saved.";
+					} else {
+						errorMessage = "An error has occurred while updating the database.";
+					}
+					
+					if(errorMessage != null) {
+						req.setAttribute("errorMessage", errorMessage);
+					}					
+					if(confirmationMessage != null) {
+						req.setAttribute("confirmationMessage", confirmationMessage);
+					}
+				}
+				
+				if(sectionId != null) {
+					chartsBySectionList = QualitativeDataBusiness.getChartsBySection(sectionId);
+				} else {
+					chartsBySectionList = QualitativeDataBusiness.getChartsBySection(DEFAULT_SECTION_ID);
+				}
+				
+				req.setAttribute("sectionList", sectionList);
+				req.setAttribute("chartsBySectionList", chartsBySectionList);
+				req.setAttribute("sectionSelected", sectionId);
 			}
 			//If there is no proper "page" attribute, just error.
 		} else {
