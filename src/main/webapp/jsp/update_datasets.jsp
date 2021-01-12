@@ -33,7 +33,7 @@
 		<select id="sectionId" name="section" onchange="changeChartsInTable()">
 			<% for (HashMap<String,String> data : sectionList) { %>
 				<option value="<%=data.get("section_id")%>" <%= data.get("section_id").equals(sectionSelected) ? "selected": "" %>>
-					<%=data.get("section_name") %>
+					<%=data.get("section_name").replace("_", " ") %>
 				</option>
 			<% } %>
 		</select>
@@ -84,62 +84,6 @@
 				</tr>
 				<% } %>
 			</tbody>
-		  <!-- <tr>
-			<td>Median age of population</td>
-			<td>
-				<select>
-					<option>
-						Eurostat 2019
-					</option>
-					<option>
-						Eurostat 2017
-					</option>
-			</select>
-			</td>
-			<td><button>Save</button></td>
-		  </tr>
-		  <tr>
-			<td>Ageing workers (55 to 64) employment rate</td>
-			<td>
-				<select>
-					<option>
-						Eurostat 2018
-					</option>
-					<option>
-						Eurostat 2017
-					</option>
-			</select>
-			</td>
-			<td><button>Save</button></td>
-		  </tr>
-		   <tr>
-			<td>Total, male and female employment rate</td>
-			<td>
-				<select>
-					<option>
-						Eurostat 2018
-					</option>
-					<option>
-						Eurostat 2017
-					</option>
-			</select>
-			</td>
-			<td><button>Save</button></td>
-		  </tr>
-		   <tr>
-			<td>Unemployment rate</td>
-			<td>
-				<select>
-					<option>
-						Eurostat 2018
-					</option>
-					<option>
-						Eurostat 2017
-					</option>
-			</select>
-			</td>
-			<td><button>Save</button></td>
-		  </tr>-->
 		</table>
 	</div>
 <%@include file="includes/footer.jsp"%>

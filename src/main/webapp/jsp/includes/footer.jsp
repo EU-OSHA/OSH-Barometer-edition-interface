@@ -1,6 +1,8 @@
+<%@page import="java.util.Calendar"%>
 <footer>
+	<%int yearFooter = Calendar.getInstance().get(Calendar.YEAR);%>
 	<div class="container">
-		© 2020 EU-OSHA | <a href="https://osha.europa.eu/" target="_blank">an
+		© <%=yearFooter %> EU-OSHA | <a href="https://osha.europa.eu/" target="_blank">an
 			agency of the European Union</a>
 	</div>
 </footer>
