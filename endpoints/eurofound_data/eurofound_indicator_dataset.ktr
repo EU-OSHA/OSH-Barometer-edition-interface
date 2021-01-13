@@ -50,7 +50,7 @@
     <size_rowset>10000</size_rowset>
     <sleep_time_empty>50</sleep_time_empty>
     <sleep_time_full>50</sleep_time_full>
-    <unique_connections>N</unique_connections>
+    <unique_connections>Y</unique_connections>
     <feedback_shown>Y</feedback_shown>
     <feedback_size>50000</feedback_size>
     <using_thread_priorities>Y</using_thread_priorities>
@@ -104,9 +104,12 @@
   </connection>
   <order>
   <hop> <from>Get indicatorDatasetCount</from><to>indicatorDatasetCount&#x3d;0&#x3f;</to><enabled>Y</enabled> </hop>
-  <hop> <from>Excel IN</from><to>Get Variables</to><enabled>Y</enabled> </hop>
   <hop> <from>Get Variables</from><to>Get indicatorDatasetCount</to><enabled>Y</enabled> </hop>
-  <hop> <from>indicatorDatasetCount&#x3d;0&#x3f;</from><to>Insert Indicator in Dataset</to><enabled>Y</enabled> </hop>
+  <hop> <from>Excel IN</from><to>Get Indicator Name</to><enabled>Y</enabled> </hop>
+  <hop> <from>Get Indicator Name</from><to>Get Variables</to><enabled>Y</enabled> </hop>
+  <hop> <from>indicatorDatasetCount&#x3d;0&#x3f;</from><to>Check if Indicator Already Inserted</to><enabled>Y</enabled> </hop>
+  <hop> <from>Check if Indicator Already Inserted</from><to>Insert Indicator&#x3f;</to><enabled>Y</enabled> </hop>
+  <hop> <from>Insert Indicator&#x3f;</from><to>Insert Indicator in Dataset</to><enabled>Y</enabled> </hop>
   </order>
   <step>
     <name>Excel IN</name>
@@ -143,7 +146,7 @@
     </file>
     <fields>
       <field>
-        <name>Indicator</name>
+        <name>Indicator_name</name>
         <type>String</type>
         <length>-1</length>
         <precision>-1</precision>
@@ -215,7 +218,7 @@
     </fields>
      <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>256</xloc>
+      <xloc>448</xloc>
       <yloc>208</yloc>
       <draw>Y</draw>
       </GUI>
@@ -244,11 +247,11 @@
     <delete_field/>
     <read_field>indicatorDatasetCount</read_field>
     <arguments>
-       <argument><name>Indicator</name></argument>
+       <argument><name>indicatorName</name></argument>
     </arguments>
      <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>432</xloc>
+      <xloc>624</xloc>
       <yloc>208</yloc>
       <draw>Y</draw>
       </GUI>
@@ -277,11 +280,11 @@
     <delete_field/>
     <read_field/>
     <arguments>
-       <argument><name>Indicator</name></argument>
+       <argument><name>indicatorName</name></argument>
     </arguments>
      <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>896</xloc>
+      <xloc>1376</xloc>
       <yloc>208</yloc>
       <draw>Y</draw>
       </GUI>
@@ -298,7 +301,7 @@
            <method>none</method>
            <schema_name/>
            </partitioning>
-<send_true_to>Insert Indicator in Dataset</send_true_to>
+<send_true_to>Check if Indicator Already Inserted</send_true_to>
 <send_false_to/>
     <compare>
 <condition>
@@ -310,7 +313,218 @@
     </compare>
      <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>592</xloc>
+      <xloc>816</xloc>
+      <yloc>208</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>Get Indicator Name</name>
+    <type>ValueMapper</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+    <field_to_use>Indicator_name</field_to_use>
+    <target_field>indicatorName</target_field>
+    <non_match_default/>
+    <fields>
+      <field>
+        <source_value>1. Satisfaction with working conditions</source_value>
+        <target_value>Job satisfaction</target_value>
+      </field>
+      <field>
+        <source_value>2. Health affected by work</source_value>
+        <target_value>Health affected by work</target_value>
+      </field>
+      <field>
+        <source_value>3. More than 15 days of absence</source_value>
+        <target_value>More than 15 days of absence</target_value>
+      </field>
+      <field>
+        <source_value>4. Sick but at work</source_value>
+        <target_value>Sick at working</target_value>
+      </field>
+      <field>
+        <source_value>5. Likelihood of staying in current job until 60 years old</source_value>
+        <target_value>Be able to do current job until 60 years old</target_value>
+      </field>
+      <field>
+        <source_value>6. Use of personal protective equipment</source_value>
+        <target_value>Use of personal protective equipment</target_value>
+      </field>
+      <field>
+        <source_value>7. Information about risks</source_value>
+        <target_value>Information about risks</target_value>
+      </field>
+      <field>
+        <source_value>8. Job satisfaction</source_value>
+        <target_value>Job satisfaction</target_value>
+      </field>
+      <field>
+        <source_value>9. Health at risk</source_value>
+        <target_value>Health at risk</target_value>
+      </field>
+      <field>
+        <source_value>10. Time pressure</source_value>
+        <target_value>Time pressure - Eurofound EWCS Data</target_value>
+      </field>
+      <field>
+        <source_value>11. Poor communication</source_value>
+        <target_value>Poor communication - Eurofound EWCS Data</target_value>
+      </field>
+      <field>
+        <source_value>12. Influence</source_value>
+        <target_value>Influence - Eurofound EWCS Data</target_value>
+      </field>
+      <field>
+        <source_value>13. Fear of job loss</source_value>
+        <target_value>Job insecurity - Eurofound EWCS Data</target_value>
+      </field>
+      <field>
+        <source_value>14. Difficult clients</source_value>
+        <target_value>Difficult clients - Eurofound EWCS Data</target_value>
+      </field>
+      <field>
+        <source_value>15. Working hours</source_value>
+        <target_value>Working hours - Eurofound EWCS Data</target_value>
+      </field>
+      <field>
+        <source_value>16. Discrimination</source_value>
+        <target_value>Discrimination - Eurofound EWCS Data</target_value>
+      </field>
+      <field>
+        <source_value>17. a&#x29; Vibrations</source_value>
+        <target_value>Exposure to vibrations</target_value>
+      </field>
+      <field>
+        <source_value>17. b&#x29; Loud noise</source_value>
+        <target_value>Exposure to loud noise</target_value>
+      </field>
+      <field>
+        <source_value>17. c&#x29; High temperatures</source_value>
+        <target_value>Exposure to temperatures</target_value>
+      </field>
+      <field>
+        <source_value>17. d&#x29; Low temperatures</source_value>
+        <target_value>Exposure to low temperatures</target_value>
+      </field>
+      <field>
+        <source_value>18. a&#x29; Smoke, powder or dust</source_value>
+        <target_value>Exposure to breathing in smoke, fumes, powder or dust</target_value>
+      </field>
+      <field>
+        <source_value>18. b&#x29; Vapours</source_value>
+        <target_value>Exposure to breathing in vapours</target_value>
+      </field>
+      <field>
+        <source_value>18. c&#x29; Chemical products</source_value>
+        <target_value>Exposure to chemical products or substances</target_value>
+      </field>
+      <field>
+        <source_value>18. d&#x29; Infectious materials</source_value>
+        <target_value>Exposure to infections materials</target_value>
+      </field>
+      <field>
+        <source_value>19. a&#x29; Tiring or painful positions</source_value>
+        <target_value>Tiring or painful positions - Eurofound EWCS Data</target_value>
+      </field>
+      <field>
+        <source_value>19. b&#x29; Lifting or moving people</source_value>
+        <target_value>Lifting or moving people - Eurofound EWCS Data</target_value>
+      </field>
+      <field>
+        <source_value>19. c&#x29; Carrying ot moving heavy loads</source_value>
+        <target_value>Carrying or moving heavy loads - Eurofound EWCS Data</target_value>
+      </field>
+      <field>
+        <source_value>19. d&#x29; Prolonged sitting</source_value>
+        <target_value>Does your work involve sitting&#x3f; - Eurofound EWCS Data</target_value>
+      </field>
+      <field>
+        <source_value>19. e&#x29; Repetitive hand or arm movements</source_value>
+        <target_value>Repetitive hand or arm movements - Eurofound EWCS Data</target_value>
+      </field>
+      <field>
+        <source_value>20. a&#x29; Trade union</source_value>
+        <target_value>Does your organisation have a trade union, works council or a similar committee representing employees&#x3f; - Eurofound EWCS Data</target_value>
+      </field>
+      <field>
+        <source_value>20. b&#x29; Health and safety committee</source_value>
+        <target_value>Does your organisation have a health and safety delegate or committee&#x3f; - Eurofound EWCS Data</target_value>
+      </field>
+      <field>
+        <source_value>20. c&#x29; Health and safety discussed</source_value>
+        <target_value>Does your organisation have a regular meeting in which employees can express their views about what is happening in the organisation&#x3f;</target_value>
+      </field>
+    </fields>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>272</xloc>
+      <yloc>208</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>Check if Indicator Already Inserted</name>
+    <type>ScriptValueMod</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+    <compatible>N</compatible>
+    <optimizationLevel>9</optimizationLevel>
+    <jsScripts>      <jsScript>        <jsScript_type>0</jsScript_type>
+        <jsScript_name>Script 1</jsScript_name>
+        <jsScript_script>if &#x28;insertedIndicators &#x3d;&#x3d; null &#x7c;&#x7c; insertedIndicators &#x3d;&#x3d; undefined&#x29;&#xd;&#xa;&#x7b;&#xd;&#xa;	var insertedIndicators &#x3d; &#x22;&#x22;&#x3b;&#xd;&#xa;&#x7d;&#xd;&#xa;&#xd;&#xa;var combination &#x3d; indicatorName&#x2b;&#x22;&#x7c;&#x23;&#x23;&#x7c;&#x22;&#x3b;&#xd;&#xa;var insert &#x3d; false&#x3b;&#xd;&#xa;&#xd;&#xa;if &#x28;insertedIndicators.indexOf&#x28;indicatorName&#x29; &#x3d;&#x3d; -1&#x29;&#xd;&#xa;&#x7b;&#xd;&#xa;	insert &#x3d; true&#x3b;&#xd;&#xa;	insertedIndicators &#x3d; insertedIndicators &#x2b; &#x22;, &#x22; &#x2b; combination&#x3b;&#xd;&#xa;&#x7d;&#xd;&#xa;&#xd;&#xa;</jsScript_script>
+      </jsScript>    </jsScripts>    <fields>      <field>        <name>insert</name>
+        <rename>insert</rename>
+        <type>Boolean</type>
+        <length>-1</length>
+        <precision>-1</precision>
+        <replace>N</replace>
+      </field>    </fields>     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>1008</xloc>
+      <yloc>208</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>Insert Indicator&#x3f;</name>
+    <type>FilterRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+<send_true_to>Insert Indicator in Dataset</send_true_to>
+<send_false_to/>
+    <compare>
+<condition>
+ <negated>N</negated>
+ <leftvalue>insert</leftvalue>
+ <function>&#x3d;</function>
+ <rightvalue/>
+ <value><name>constant</name><type>Boolean</type><text>Y</text><length>-1</length><precision>-1</precision><isnull>N</isnull><mask/></value> </condition>
+    </compare>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>1200</xloc>
       <yloc>208</yloc>
       <draw>Y</draw>
       </GUI>
