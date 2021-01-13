@@ -33,12 +33,16 @@ public class TableLoad extends HttpServlet {
 		Gson g = new Gson();
         String returningData = "";        
 		String section = req.getParameter("section");
+		String chart = req.getParameter("chart");
 		String get = req.getParameter("get");
 		if(get.equals("charts")) {
 			ArrayList<HashMap<String,String>> chartsBySectionList = QualitativeDataBusiness.getChartsBySection(section);
 			LOGGER.info("chartsBySectionList length: "+chartsBySectionList.size());
 	        returningData = g.toJson(chartsBySectionList);
-
+		} else if(get.equals("indicators")) {
+			ArrayList<HashMap<String,String>> indicatorsByChartList = QualitativeDataBusiness.getIndicatorsByChart(chart);
+			LOGGER.info("indicatorsByChartList length: "+indicatorsByChartList.size());
+	        returningData = g.toJson(indicatorsByChartList);
 		} else if(get.equals("datasets")) {
 			String indicatorId = req.getParameter("indicator");
 			ArrayList<HashMap<String,String>> datasetsList = QualitativeDataBusiness.getDatasetsForIndicator(indicatorId);

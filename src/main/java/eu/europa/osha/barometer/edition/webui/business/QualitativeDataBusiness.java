@@ -24,13 +24,14 @@ public class QualitativeDataBusiness {
 		QualitativeDataDAO dataDAO = QualitativeDataDAO.getInstance();
 		ArrayList<HashMap<String,String>> dataList = dataDAO.getChartsBySection(id);
 		LOGGER.info("Retrieved data from database. Data list length: "+dataList.size());
-		for(HashMap<String, String> row: dataList){
-			if(row.get("chart_id").equals("20088")) {
-				row.put("chart_name", row.get("chart_name").concat(" EURO"));
-			} else if(row.get("chart_id").equals("20014")) {
-				row.put("chart_name", row.get("chart_name").concat(" (PPS)"));
-			} 
-        }
+		return dataList;
+	}
+	
+	public static ArrayList<HashMap<String,String>> getIndicatorsByChart(String id) {
+		LOGGER.info("Accessing data DAO in order to get Indicators by chart for dataset update page.");
+		QualitativeDataDAO dataDAO = QualitativeDataDAO.getInstance();
+		ArrayList<HashMap<String,String>> dataList = dataDAO.getIndicatorsByChart(id);
+		LOGGER.info("Retrieved data from database. Data list length: "+dataList.size());
 		return dataList;
 	}
 	

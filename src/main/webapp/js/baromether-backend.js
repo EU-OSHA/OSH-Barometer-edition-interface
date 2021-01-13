@@ -51,7 +51,8 @@ $(document).ready(function(){
 		
 		var optionSelected = document.getElementById("sectionId");
 		var valueSelected = optionSelected.value;
-		
+		var chartIndex = 1;
+				
 		$.get({
 			url: 'tableload',
 			data: {
@@ -59,115 +60,94 @@ $(document).ready(function(){
 				get: 'charts'
 			},
 			success: function(chartResponse) {
-		        var arr = JSON.parse(chartResponse);
+		        var chartList = JSON.parse(chartResponse);
 		        var new_tbody = "";
-		        $('tbody#updateDatasetsTableBody').empty();
-		        arr.forEach(function(item){
-		            new_tbody = new_tbody.concat('<tr>');				
-		            new_tbody = new_tbody.concat('<td>'+item.chart_name+'</td>');
-		            new_tbody = new_tbody.concat('<td>');
-					new_tbody = new_tbody.concat('<form id="formChart'+item.chart_id+'" action="user?page=update_datasets" method="post">');
-					new_tbody = new_tbody.concat('<input type="hidden" value="'+item.chart_id+'" name="chart_id">');
-					new_tbody = new_tbody.concat('<input type="hidden" value="'+item.indicator_id+'" name="indicator_id">');
-					new_tbody = new_tbody.concat('<input type="hidden" value="'+item.section_id+'" name="section_id">');
-					new_tbody = new_tbody.concat('');
-					//<select id="datasetChart-<%=chart.get("chart_id")%>" name="datasetChart-<%=chart.get("chart_id")%>">
-					new_tbody = new_tbody.concat('<select id="datasetChart-'+item.chart_id+'" name="datasetChart-'+item.chart_id+'">');
+		        $('div#tablesContainer').empty();
+		        chartList.forEach(function(chart){
+					new_tbody = new_tbody.concat('<label>Chart '+chartIndex+':</label>');
+					new_tbody = new_tbody.concat('<p class="table">Chart name</p>');
+					new_tbody = new_tbody.concat('<table>');
+					new_tbody = new_tbody.concat('<thead>');
+					new_tbody = new_tbody.concat('<tr>');
+					new_tbody = new_tbody.concat('<th>Name</th>');
+					new_tbody = new_tbody.concat('<th>Dataset</th>');
+					new_tbody = new_tbody.concat('<th>Actions</th>');
+					new_tbody = new_tbody.concat('</tr>');
+					new_tbody = new_tbody.concat('</thead>');
+					new_tbody = new_tbody.concat('<tbody id="chartTableBody'+chart.chart_id+'">');
 					
+					/* INDICATORS */
 					$.get({
 						url: 'tableload',
 						data: {
 							section: valueSelected,
-							get: 'datasets',
-							indicator: item.indicator_id
+							chart: chart.chart_id,
+							get: 'indicators'
 						},
-						success: function(datasetResponse){
-							var data = JSON.parse(datasetResponse);
-							data.forEach(function(dataset){
-								var year_from = dataset.dataset_year_from.substring(0,4);
-								//console.log("year_from: "+year_from);
-								var year_to = "";
-								var selectedOrNot = (item.dataset_id == dataset.dataset_id) ? "selected": "";
-								//console.log("selectedOrNot: "+selectedOrNot);
-								if(dataset.dataset_year_to != null){
-									year_to = dataset.dataset_year_to.substring(0,4);
-								}
-								//console.log("year_to: "+year_to);
-								new_tbody = new_tbody.concat('<option value="'+dataset.dataset_id+'" '+selectedOrNot+' >');
-								new_tbody = new_tbody.concat(dataset.dataset_name +' '+year_from);
-								if(dataset.dataset_year_to != null) {
-									new_tbody = new_tbody.concat(' - '+year_to);
-								}
-								new_tbody = new_tbody.concat('</option>');
-							});
-						},		
+						success: function(indicatorResponse) {
+					        var indicatorList = JSON.parse(indicatorResponse);
+					        //var new_tbody = "";
+					        //$('tbody#chartTableBody'+chart.chart_id).empty();
+					        indicatorList.forEach(function(indicator){
+					            new_tbody = new_tbody.concat('<tr>');
+					            new_tbody = new_tbody.concat('<td>'+indicator.chart_name+'</td>');
+					            new_tbody = new_tbody.concat('<td>');
+								new_tbody = new_tbody.concat('<form id="formChart'+indicator.chart_id+'" action="user?page=update_datasets" method="post">');
+								new_tbody = new_tbody.concat('<input type="hidden" value="'+indicator.chart_id+'" name="chart_id">');
+								new_tbody = new_tbody.concat('<input type="hidden" value="'+indicator.indicator_id+'" name="indicator_id">');
+								new_tbody = new_tbody.concat('<input type="hidden" value="'+indicator.section_id+'" name="section_id">');
+								new_tbody = new_tbody.concat('');
+								new_tbody = new_tbody.concat('<select id="datasetChart-'+indicator.chart_id+'" name="datasetChart-'+indicator.chart_id+'">')
+					
+								/* DATASETS */
+								$.get({
+									url: 'tableload',
+									data: {
+										section: valueSelected,
+										get: 'datasets',
+										indicator: indicator.indicator_id
+									},
+									success: function(datasetResponse){
+										var datasetList = JSON.parse(datasetResponse);
+										datasetList.forEach(function(dataset){
+											var year_from = dataset.dataset_year_from.substring(0,4);
+											//console.log("year_from: "+year_from);
+											var year_to = "";
+											var selectedOrNot = (indicator.dataset_id == dataset.dataset_id) ? "selected": "";
+											//console.log("selectedOrNot: "+selectedOrNot);
+											if(dataset.dataset_year_to != null){
+												year_to = dataset.dataset_year_to.substring(0,4);
+											}
+											//console.log("year_to: "+year_to);
+											new_tbody = new_tbody.concat('<option value="'+dataset.dataset_id+'" '+selectedOrNot+' >');
+											new_tbody = new_tbody.concat(dataset.dataset_name +' '+year_from);
+											if(dataset.dataset_year_to != null) {
+												new_tbody = new_tbody.concat(' - '+year_to);
+											}
+											new_tbody = new_tbody.concat('</option>');
+										});
+									},		
+									async: false
+								});
+								new_tbody = new_tbody.concat('</select>');
+								new_tbody = new_tbody.concat('</form>');
+								new_tbody = new_tbody.concat('</td>');
+								new_tbody = new_tbody.concat('<td><button type="submit" name="formSent" value="Save" form="formChart'+indicator.chart_id+'">Save</button></td>');
+								new_tbody = new_tbody.concat('</tr>');
+					        });
+						},
 						async: false
 					});
-					
-					new_tbody = new_tbody.concat('</select>');
-					new_tbody = new_tbody.concat('</form>');
-					new_tbody = new_tbody.concat('</td>');
-					new_tbody = new_tbody.concat('<td><button type="submit" name="formSent" value="Save" form="formChart'+item.chart_id+'">Save</button></td>');
+						
+					new_tbody = new_tbody.concat('</tbody>');
+					new_tbody = new_tbody.concat('</table>');
+					chartIndex++;
 		        });
 				//console.log(new_tbody);
-		        $('tbody#updateDatasetsTableBody').html(new_tbody);
+		        $('div#tablesContainer').html(new_tbody);
 			},
 			async: true
 		});
-		
-	    /*$.get('tableload', {
-	            section: valueSelected,
-				get: 'charts',
-				async: true
-	    }, function(chartResponse) {
-	        var arr = JSON.parse(chartResponse);
-	        var new_tbody = "";
-	        $('tbody#updateDatasetsTableBody').empty();
-	        arr.forEach(function(item){
-	            new_tbody = new_tbody.concat('<tr>');				
-	            new_tbody = new_tbody.concat('<td>'+item.chart_name+'</td>');
-	            new_tbody = new_tbody.concat('<td>');
-				new_tbody = new_tbody.concat('<form id="formChart'+item.chart_id+'" action="user?page=update_datasets" method="post">');
-				new_tbody = new_tbody.concat('<input type="hidden" value="'+item.chart_id+'" name="chart_id">');
-				new_tbody = new_tbody.concat('<input type="hidden" value="'+item.indicator_id+'" name="indicator_id">');
-				new_tbody = new_tbody.concat('<input type="hidden" value="'+item.section_id+'" name="section_id">');
-				new_tbody = new_tbody.concat('');
-				new_tbody = new_tbody.concat('<select>');
-				
-				$.get('tableload', {
-					section: valueSelected,
-					get: 'datasets',
-					indicator: item.indicator_id,
-					async: true
-				}, function(datasetResponse){
-					var data = JSON.parse(datasetResponse);
-					data.forEach(function(dataset){
-						var year_from = dataset.dataset_year_from.substring(0,4);
-						console.log("year_from: "+year_from);
-						var year_to = "";
-						var selectedOrNot = (item.dataset_id == dataset.dataset_id) ? "selected": "";
-						console.log("selectedOrNot: "+selectedOrNot);
-						if(dataset.dataset_year_to != null){
-							year_to = dataset.dataset_year_to.substring(0,4);
-						}
-						console.log("year_to: "+year_to);
-						new_tbody = new_tbody.concat('<option value="'+dataset.dataset_id+'" '+selectedOrNot+' >');
-						new_tbody = new_tbody.concat(dataset.dataset_name +' '+year_from);
-						if(dataset.dataset_year_to != null) {
-							new_tbody = new_tbody.concat(' - '+year_to);
-						}
-						new_tbody = new_tbody.concat('</option>');
-					});
-				});
-				
-				new_tbody = new_tbody.concat('</select>');
-				new_tbody = new_tbody.concat('</form>');
-				new_tbody = new_tbody.concat('</td>');
-				new_tbody = new_tbody.concat('<td><button type="submit" name="formSent" value="Save" form="formChart'+item.chart_id+'">Save</button></td>');
-	        });
-			console.log(new_tbody);
-	        $('tbody#updateDatasetsTableBody').html(new_tbody);
-		});*/
 	}
 	
 });

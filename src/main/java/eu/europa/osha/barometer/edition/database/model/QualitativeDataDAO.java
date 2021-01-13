@@ -36,11 +36,28 @@ public class QualitativeDataDAO {
     	return list;
     }
     
-    public ArrayList<HashMap<String,String>> getChartsBySection(String id){
+    public ArrayList<HashMap<String,String>> getChartsBySection(String idSection){
     	ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
     	try {
     		String query = "database.select.getChartsBySection";
-    		String[] queryParams = {id};
+    		String[] queryParams = {idSection};
+    		ArrayList<HashMap<String, String>> result = JDBCDataSourceOperations.launchSelect(query, queryParams, url);
+    		if (result.size() > 0)
+            {
+                list = (ArrayList<HashMap<String, String>>) result.clone();
+            }
+
+    	}catch(Exception e) {
+    		e.printStackTrace();
+    	}
+    	return list;
+    }
+    
+    public ArrayList<HashMap<String,String>> getIndicatorsByChart(String idChart){
+    	ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
+    	try {
+    		String query = "database.select.getIndicatorsByChart";
+    		String[] queryParams = {idChart};
     		ArrayList<HashMap<String, String>> result = JDBCDataSourceOperations.launchSelect(query, queryParams, url);
     		if (result.size() > 0)
             {
