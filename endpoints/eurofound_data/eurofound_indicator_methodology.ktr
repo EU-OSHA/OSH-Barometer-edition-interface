@@ -342,7 +342,7 @@
            <method>none</method>
            <schema_name/>
            </partitioning>
-    <field_to_use>Indicator</field_to_use>
+    <field_to_use>Indicator_name</field_to_use>
     <target_field>indicatorName</target_field>
     <non_match_default/>
     <fields>
@@ -494,7 +494,7 @@
            <method>none</method>
            <schema_name/>
            </partitioning>
-    <field_to_use>Indicator</field_to_use>
+    <field_to_use>Indicator_name</field_to_use>
     <target_field>sectionName</target_field>
     <non_match_default/>
     <fields>
