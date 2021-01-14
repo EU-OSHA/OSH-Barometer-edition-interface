@@ -62,12 +62,13 @@
 						<tr>
 							<td><%=indicator.get("chart_name") %></td>
 							<td>
-							<form id="formChart<%=indicator.get("chart_id")%>" action="user?page=update_datasets" method="post">
+							<form id="formChart<%=indicator.get("indicator_id")%>" action="user?page=update_datasets" method="post">
 									<input type="hidden" value="<%=indicator.get("chart_id")%>" name="chart_id">
 									<input type="hidden" value="<%=indicator.get("indicator_id")%>" name="indicator_id">
-									<input type="hidden" value="<%=indicator.get("section_id")%>" name="section_id">
+									<input type="hidden" value="<%=data.get("section_id")%>" name="section_id">
 									<% datasetList = (ArrayList<HashMap<String,String>>) QualitativeDataBusiness.getDatasetsForIndicator(indicator.get("indicator_id")); %>
-									<select id="datasetChart-<%=indicator.get("chart_id")%>" name="datasetChart-<%=indicator.get("chart_id")%>">
+									<select id="datasetChart-<%=indicator.get("indicator_id")%>" name="datasetChart-<%=indicator.get("indicator_id")%>" 
+										onchange="enableDatasetTableSaveButton(event, <%=indicator.get("dataset_id")%>, <%=indicator.get("indicator_id")%>)">
 									<% for(HashMap<String,String> datasetData : datasetList){ %>
 									<% String year_from = datasetData.get("dataset_year_from").substring(0,4); 
 										String year_to = "";
@@ -87,7 +88,8 @@
 									</select>
 								</form>
 							</td>
-							<td><button type="submit" name="formSent" value="Save" form="formChart<%=indicator.get("chart_id")%>">Save</button></td>
+							<td><button id="buttonForm-<%=indicator.get("indicator_id")%>"  class="disabled" type="submit" name="formSent" value="Save" 
+								form="formChart<%=indicator.get("indicator_id")%>" disabled>Save</button></td>
 						</tr>
 					<% } %>
 				</tbody>

@@ -46,6 +46,19 @@ $(document).ready(function(){
 		}
 	};
 	
+	enableDatasetTableSaveButton = function(event, currentDatasetId, indicatorId) {
+		console.log('Enters in enableDatasetTableSaveButton');
+		var selectedDatasetId = parseInt(event.currentTarget.options[event.currentTarget.selectedIndex].value);
+		if(currentDatasetId != selectedDatasetId) {
+			$('#buttonForm-'+indicatorId).prop('disabled', false);
+			$('#buttonForm-'+indicatorId).removeClass('disabled');
+		}else{
+			$('#buttonForm-'+indicatorId).prop('disabled', true);
+			$('#buttonForm-'+indicatorId).addClass('disabled');
+			
+		}
+	};
+	
 	changeChartsInTable = function () {
 		console.log("Enters changeChartsInTable function");
 		

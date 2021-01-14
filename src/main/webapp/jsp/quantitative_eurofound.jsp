@@ -36,8 +36,8 @@
 			<label>File</label> 
 			<input type="file" name="quantitativeEurofoundFile" required accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"> 
 			<!-- <button class="upload">Upload</button> -->
-			<button>Download Excel template</button>
-			<a href="files/EU-OSHA_OSH BAROMETER_EUROFOUND Indicator List_YYYYMMDD.xlsx">Download Excel templates</a>
+			<!-- <button>Download Excel template</button> -->
+			<a class="href-link" href="files/EU-OSHA_OSH BAROMETER_EUROFOUND Indicator List_YYYYMMDD.xlsx">Download Excel templates</a>
 			<div class="clear-content"></div>
 			<div class="conten-button">
 				<button name="clearButton" value="Clear" >Clear</button>

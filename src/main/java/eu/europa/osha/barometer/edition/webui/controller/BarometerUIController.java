@@ -8,7 +8,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.nio.file.Paths;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.ResourceBundle;
@@ -27,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
+import org.apache.commons.lang3.SystemUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -201,6 +205,7 @@ public class BarometerUIController extends HttpServlet{
 				String confirmationMessage = null;
 				String scriptDirectory = null;
 				String outputDirectory = null;
+				String inputDirectory = null;
 				
 				if(submit != null) {
 					String year = req.getParameter("year");
@@ -209,6 +214,7 @@ public class BarometerUIController extends HttpServlet{
 					if(file != null) {
 						String fileName = Paths.get(file.getSubmittedFileName()).getFileName().toString();
 						String fileNameWOExtension = fileName.substring(0, fileName.indexOf('.'));
+						String fileExtension = fileName.substring(fileName.indexOf('.'));
 						
 						LOGGER.info("File name: "+fileName);
 						InputStream fileContent = file.getInputStream();
@@ -217,9 +223,10 @@ public class BarometerUIController extends HttpServlet{
 						
 						OutputStream out = null;
 					    try {
-					    	outputDirectory = configurationData.getString("directory.quantitative_file.eurofound.output");
+					    	inputDirectory =  configurationData.getString("directory.quantitative_file.eurofound.input");
+					    	outputDirectory = configurationData.getString("directory.etl.quantitative_file.eurofound.output");
 					    	scriptDirectory = configurationData.getString("directory.script");
-					        out = new FileOutputStream(new File(outputDirectory + fileName));
+					        out = new FileOutputStream(new File(inputDirectory + fileName));
 
 					        int read = 0;
 					        final byte[] bytes = new byte[1024];
@@ -227,13 +234,19 @@ public class BarometerUIController extends HttpServlet{
 					        while ((read = fileContent.read(bytes)) != -1) {
 					            out.write(bytes, 0, read);
 					        }
-					        LOGGER.info("File "+fileName+" being uploaded to " + outputDirectory);
+					        LOGGER.info("File "+fileName+" being uploaded to " + inputDirectory);
 					        
-					        if(profile.equals("localhost")) {
-								//TODO call .bat script to run ETL
-								Runtime.getRuntime().exec("cmd /c start \"\" "+scriptDirectory+"eurofound_quantitative_script.bat "+fileNameWOExtension+" "+year);
+					        
+					        if(SystemUtils.IS_OS_WINDOWS) {
+					        //if(profile.equals("localhost")) {
+								Runtime.getRuntime().exec("cmd /c start \"\" "+scriptDirectory+"eurofound_quantitative_script.bat " 
+								+ fileNameWOExtension+" "+fileExtension+" "+year+" "+inputDirectory+" "+outputDirectory);
+								LOGGER.info("File "+fileName+" moved to directory " + outputDirectory);
 							} else {
 								//TODO call .sh script to run ETL
+								Runtime.getRuntime().exec("sh -c "+scriptDirectory+"eurofound_quantitative_script.sh " 
+								+ fileNameWOExtension+" "+fileExtension+" "+year+" "+inputDirectory+" "+outputDirectory);
+								LOGGER.info("File "+fileName+" moved to directory " + outputDirectory);
 							}
 					        confirmationMessage = "The data has been correctly saved.";
 					    } catch (FileNotFoundException fne) {
@@ -266,19 +279,37 @@ public class BarometerUIController extends HttpServlet{
 				String confirmationMessage = null;
 				String scriptDirectory = null;
 				String outputDirectory = null;
+				String inputDirectory = null;
 				String submit = req.getParameter("formSent");
 				if(submit != null) {
 					String indicatorEurostat = req.getParameter("indicatorEurostat");
-					String yearFrom = req.getParameter("yearFrom");
-					String yearTo = req.getParameter("yearTo");
-					String oneYear = req.getParameter("oneYear");
+					String yearFrom = null;
+					String yearTo = null;
+					String oneYear = null;
 					Part file = req.getPart("quantitativeEurostatFile");
 					String fileName = Paths.get(file.getSubmittedFileName()).getFileName().toString();
 					String fileNameWOExtension = fileName.substring(0, fileName.indexOf('.'));
+					String fileExtension = fileName.substring(fileName.indexOf('.'));
+					
+					if(indicatorEurostat == "36" || indicatorEurostat == "279" || indicatorEurostat == "53"
+							|| indicatorEurostat == "54") {
+						yearFrom = req.getParameter("yearFrom");
+						yearTo = req.getParameter("yearTo");
+					} else {
+						oneYear = req.getParameter("oneYear");
+					}
 					
 					if (yearFrom != null && yearTo != null) {
-						if(Integer.parseInt(yearFrom) > Integer.parseInt(yearTo)) {
-							errorMessage = "'Year To' field should be later than 'Year From' field";
+						try {
+							Date date_from = new SimpleDateFormat("yyyy-MM-dd").parse(yearFrom);
+							Date date_to = new SimpleDateFormat("yyyy-MM-dd").parse(yearTo);
+							
+							if(date_from.after(date_to)) {
+								errorMessage = "'Year To' field should be later than 'Year From' field";
+							}
+						} catch (ParseException e) {
+							LOGGER.error("'Year To' field should be later than 'Year From' field");
+							e.printStackTrace();
 						}
 					}
 					
@@ -289,9 +320,10 @@ public class BarometerUIController extends HttpServlet{
 					OutputStream out = null;
 					
 					try {
-						outputDirectory = configurationData.getString("directory.quantitative_file.eurostat.output");
+						inputDirectory = configurationData.getString("directory.quantitative_file.eurostat.input");
+						outputDirectory = configurationData.getString("directory.etl.quantitative_file.eurostat.output");
 				    	scriptDirectory = configurationData.getString("directory.script");
-				        out = new FileOutputStream(new File(outputDirectory + fileName));
+				        out = new FileOutputStream(new File(inputDirectory + fileName));
 
 				        int read = 0;
 				        final byte[] bytes = new byte[1024];
@@ -299,23 +331,28 @@ public class BarometerUIController extends HttpServlet{
 				        while ((read = fileContent.read(bytes)) != -1) {
 				            out.write(bytes, 0, read);
 				        }
-				        LOGGER.info("File "+fileName+" being uploaded to " + outputDirectory);
+				        LOGGER.info("File "+fileName+" being uploaded to " + inputDirectory);
 				        
-				        if(profile.equals("localhost")) {
-							//TODO call .bat script to run ETL
+				        if(SystemUtils.IS_OS_WINDOWS) {
+				        //if(profile.equals("localhost")) {
 				        	if(oneYear != null) {
 				        		Runtime.getRuntime().exec("cmd /c start \"\" " + scriptDirectory + "eurostat_quantitative_script.bat "
-										+ fileNameWOExtension + " " + indicatorEurostat + " " + yearTo);
+										+ fileNameWOExtension + " " + fileExtension + " " + indicatorEurostat + " " 
+										+" "+inputDirectory+" "+outputDirectory + " " + oneYear);
 				        	}
 				        	
 				        	if (yearFrom != null && yearTo != null) {
-				        		Runtime.getRuntime().exec("cmd /c start \"\" "+scriptDirectory + "eurostat_quantitative_script.bat "
-										+ fileNameWOExtension + " " + indicatorEurostat + " " + yearFrom + " " + yearTo);
+				        		Runtime.getRuntime().exec("sh -c "+scriptDirectory + "eurostat_quantitative_script.sh "
+										+ fileNameWOExtension + " " + fileExtension + " " + indicatorEurostat + " " + yearFrom 
+										+" "+inputDirectory+" "+outputDirectory+ " " + yearTo);
 				        	}
 							
 						} else {
 							//TODO call .sh script to run ETL
+							
 						}
+				        
+				        LOGGER.info("File "+fileName+" moved to " + outputDirectory);
 				        confirmationMessage = "The data has been correctly saved.";
 					} catch(Exception e) {
 						LOGGER.error("An error has occurred while processing file uploaded.");
@@ -354,7 +391,7 @@ public class BarometerUIController extends HttpServlet{
 				if (formSent != null) {
 					String chart_id =  req.getParameter("chart_id");
 					String indicator_id =  req.getParameter("indicator_id");
-					String datasetChart =  req.getParameter("datasetChart-"+chart_id);
+					String datasetChart =  req.getParameter("datasetChart-"+indicator_id);
 					boolean datasetUpdated = false;
 					datasetUpdated = QualitativeDataBusiness.updateIndicatorsDataset(chart_id, indicator_id, datasetChart);
 					

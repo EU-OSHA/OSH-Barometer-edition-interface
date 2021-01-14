@@ -19,14 +19,14 @@
 				</span>
 				<span class="tootip-box">Upload Eurostat the corresponding excel template with the new data.</span>
 			</a>
-			<a class="box" href="complements.html">
+			<a class="box" href="">
 				<span class="content-box">
 					<span class="box-title">Explanations<br>related to the<br>quantitative data</span>
 					<span class="box-ico"><img src="images/complements.png"></span>
 				</span>
 				<span class="tootip-box">Qualitative data related to the quantitative data.</span>
 			</a>
-			<a class="box" href="country-reports.html">
+			<a class="box" href="">
 				<span class="content-box">
 					<span class="box-title">Country Reports<br>from Member<br>States</span>
 					<span class="box-ico"><img src="images/report.png"></span>
@@ -35,14 +35,14 @@
 			</a>
 		</div>
 		<div class="row2">
-			<a class="box" href="qualitative-data-member-states-v1.html">
+			<a class="box" href="">
 				<span class="content-box">
 					<span class="box-title">Qualitative<br>data from<br>Member States,<br>EU and International</span>
 					<span class="box-ico"><img src="images/qualitative-data.png"></span>
 				</span>
 				<span class="tootip-box more-text">Update the qualitative data for OSH authorities, National strategies, Enforcement capacity and OSH statistics, surveys and research.</span>
 			</a>
-			<a class="box" href="methodology-v1.html">
+			<a class="box" href="">
 				<span class="content-box">
 					<span class="box-title">Methodology<br>data</span>
 					<span class="box-ico"><img src="images/methodology.png"></span>
