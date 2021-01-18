@@ -55,7 +55,6 @@ $(document).ready(function(){
 		}else{
 			$('#buttonForm-'+indicatorId).prop('disabled', true);
 			$('#buttonForm-'+indicatorId).addClass('disabled');
-			
 		}
 	};
 	
@@ -110,7 +109,8 @@ $(document).ready(function(){
 								new_tbody = new_tbody.concat('<input type="hidden" value="'+indicator.indicator_id+'" name="indicator_id">');
 								new_tbody = new_tbody.concat('<input type="hidden" value="'+indicator.section_id+'" name="section_id">');
 								new_tbody = new_tbody.concat('');
-								new_tbody = new_tbody.concat('<select id="datasetChart-'+indicator.chart_id+'" name="datasetChart-'+indicator.chart_id+'">')
+								new_tbody = new_tbody.concat('<select id="datasetChart-'+indicator.chart_id+'" name="datasetChart-'+indicator.chart_id+'" ')
+								new_tbody = new_tbody.concat('onchange="enableDatasetTableSaveButton(event, '+indicator.dataset_id+', '+indicator.indicator_id+')">');
 					
 								/* DATASETS */
 								$.get({
@@ -145,7 +145,8 @@ $(document).ready(function(){
 								new_tbody = new_tbody.concat('</select>');
 								new_tbody = new_tbody.concat('</form>');
 								new_tbody = new_tbody.concat('</td>');
-								new_tbody = new_tbody.concat('<td><button type="submit" name="formSent" value="Save" form="formChart'+indicator.chart_id+'">Save</button></td>');
+								new_tbody = new_tbody.concat('<td><button id="buttonForm-'+indicator.indicator_id+'" class="disabled" type="submit" name="formSent" value="Save" form="formChart'+indicator.chart_id+'" disabled>');
+								new_tbody = new_tbody.concat('Save</button></td>');
 								new_tbody = new_tbody.concat('</tr>');
 					        });
 						},

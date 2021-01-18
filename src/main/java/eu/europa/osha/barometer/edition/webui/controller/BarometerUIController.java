@@ -1,10 +1,12 @@
 package eu.europa.osha.barometer.edition.webui.controller;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.nio.file.Paths;
@@ -206,6 +208,7 @@ public class BarometerUIController extends HttpServlet{
 				String scriptDirectory = null;
 				String outputDirectory = null;
 				String inputDirectory = null;
+				String command = null;
 				
 				if(submit != null) {
 					String year = req.getParameter("year");
@@ -239,14 +242,22 @@ public class BarometerUIController extends HttpServlet{
 					        
 					        if(SystemUtils.IS_OS_WINDOWS) {
 					        //if(profile.equals("localhost")) {
-								Runtime.getRuntime().exec("cmd /c start \"\" "+scriptDirectory+"eurofound_quantitative_script.bat " 
-								+ fileNameWOExtension+" "+fileExtension+" "+year+" "+inputDirectory+" "+outputDirectory);
-								LOGGER.info("File "+fileName+" moved to directory " + outputDirectory);
+					        	LOGGER.info("WINDOWS: Running script: "+scriptDirectory+"eurofound_quantitative_script.bat");
+					        	command = "cmd /c start \"\" "+scriptDirectory+"eurofound_quantitative_script.bat " 
+										+ fileNameWOExtension+" "+fileExtension+" "+year+" "+inputDirectory+" "+outputDirectory
+										+ " > " + scriptDirectory + "script_log_eurofound.txt 2>&1";
+					        	LOGGER.info("WINDOWS: command to execute: "+command);
+								Runtime.getRuntime().exec(command);
+								LOGGER.info("WINDOWS: File "+fileName+" moved to directory " + outputDirectory);
 							} else {
 								//TODO call .sh script to run ETL
-								Runtime.getRuntime().exec("sh -c "+scriptDirectory+"eurofound_quantitative_script.sh " 
-								+ fileNameWOExtension+" "+fileExtension+" "+year+" "+inputDirectory+" "+outputDirectory);
-								LOGGER.info("File "+fileName+" moved to directory " + outputDirectory);
+								LOGGER.info("LINUX: Running script: "+scriptDirectory+"eurofound_quantitative_script.sh");
+								command = "sh -c "+scriptDirectory+"eurofound_quantitative_script.sh " 
+										+ fileNameWOExtension+" "+fileExtension+" "+year+" "+inputDirectory+" "+outputDirectory
+										+ " > " + scriptDirectory + "script_log_eurofound.txt 2>&1";
+								LOGGER.info("LINUX: command to execute: "+command);
+								Runtime.getRuntime().exec(command);
+								LOGGER.info("LINUX: File "+fileName+" moved to directory " + outputDirectory);
 							}
 					        confirmationMessage = "The data has been correctly saved.";
 					    } catch (FileNotFoundException fne) {
@@ -280,6 +291,7 @@ public class BarometerUIController extends HttpServlet{
 				String scriptDirectory = null;
 				String outputDirectory = null;
 				String inputDirectory = null;
+				String command = null;
 				String submit = req.getParameter("formSent");
 				if(submit != null) {
 					String indicatorEurostat = req.getParameter("indicatorEurostat");
@@ -336,15 +348,21 @@ public class BarometerUIController extends HttpServlet{
 				        if(SystemUtils.IS_OS_WINDOWS) {
 				        //if(profile.equals("localhost")) {
 				        	if(oneYear != null) {
-				        		Runtime.getRuntime().exec("cmd /c start \"\" " + scriptDirectory + "eurostat_quantitative_script.bat "
+				        		command = "cmd /c start \"\" " + scriptDirectory + "eurostat_quantitative_script.bat "
 										+ fileNameWOExtension + " " + fileExtension + " " + indicatorEurostat + " " 
-										+" "+inputDirectory+" "+outputDirectory + " " + oneYear);
+										+" "+inputDirectory+" "+outputDirectory + " " + oneYear
+										+ " > " + scriptDirectory + "script_log_eurostat.txt 2>&1";
+				        		Runtime.getRuntime().exec(command);
+				        		LOGGER.info("WINDOWS: command to execute: "+command);
 				        	}
 				        	
 				        	if (yearFrom != null && yearTo != null) {
-				        		Runtime.getRuntime().exec("sh -c "+scriptDirectory + "eurostat_quantitative_script.sh "
+				        		command = "sh -c "+scriptDirectory + "eurostat_quantitative_script.sh "
 										+ fileNameWOExtension + " " + fileExtension + " " + indicatorEurostat + " " + yearFrom 
-										+" "+inputDirectory+" "+outputDirectory+ " " + yearTo);
+										+" "+inputDirectory+" "+outputDirectory+ " " + yearTo
+										+ " > " + scriptDirectory + "script_log_eurostat.txt 2>&1";
+				        		Runtime.getRuntime().exec(command);
+				        		LOGGER.info("LINUX: command to execute: "+command);
 				        	}
 							
 						} else {
