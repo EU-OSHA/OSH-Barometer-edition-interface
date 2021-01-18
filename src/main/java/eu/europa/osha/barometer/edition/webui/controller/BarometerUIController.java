@@ -2,6 +2,7 @@ package eu.europa.osha.barometer.edition.webui.controller;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -9,7 +10,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardWatchEventKinds;
+import java.nio.file.WatchEvent;
+import java.nio.file.WatchKey;
+import java.nio.file.WatchService;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -209,6 +216,8 @@ public class BarometerUIController extends HttpServlet{
 				String outputDirectory = null;
 				String inputDirectory = null;
 				String command = null;
+				String logOutputDirectory = null;
+				StringBuilder resultStringBuilder = null;
 				
 				if(submit != null) {
 					String year = req.getParameter("year");
@@ -221,7 +230,6 @@ public class BarometerUIController extends HttpServlet{
 						
 						LOGGER.info("File name: "+fileName);
 						InputStream fileContent = file.getInputStream();
-						//TODO copy file to a determined location and call script to launch ETL
 						String profile = configurationData.getString("profile.name");
 						
 						OutputStream out = null;
@@ -229,7 +237,10 @@ public class BarometerUIController extends HttpServlet{
 					    	inputDirectory =  configurationData.getString("directory.quantitative_file.eurofound.input");
 					    	outputDirectory = configurationData.getString("directory.etl.quantitative_file.eurofound.output");
 					    	scriptDirectory = configurationData.getString("directory.script");
+					    	logOutputDirectory = configurationData.getString("directory.quantitative_file.eurofound.log");
 					        out = new FileOutputStream(new File(inputDirectory + fileName));
+					        
+					        resultStringBuilder = new StringBuilder();
 
 					        int read = 0;
 					        final byte[] bytes = new byte[1024];
@@ -237,8 +248,7 @@ public class BarometerUIController extends HttpServlet{
 					        while ((read = fileContent.read(bytes)) != -1) {
 					            out.write(bytes, 0, read);
 					        }
-					        LOGGER.info("File "+fileName+" being uploaded to " + inputDirectory);
-					        
+					        LOGGER.info("File "+fileName+" being uploaded to " + inputDirectory);					        
 					        
 					        if(SystemUtils.IS_OS_WINDOWS) {
 					        //if(profile.equals("localhost")) {
@@ -246,24 +256,48 @@ public class BarometerUIController extends HttpServlet{
 					        	command = "cmd /c start \"\" "+scriptDirectory+"eurofound_quantitative_script.bat " 
 										+ fileNameWOExtension+" "+fileExtension+" "+year+" "+inputDirectory+" "+outputDirectory
 										+ " > " + scriptDirectory + "script_log_eurofound.txt 2>&1";
+					        	//command = "cmd /c start /wait "+scriptDirectory+"test.bat";
 					        	LOGGER.info("WINDOWS: command to execute: "+command);
-								Runtime.getRuntime().exec(command);
-								LOGGER.info("WINDOWS: File "+fileName+" moved to directory " + outputDirectory);
+					        	Process p = Runtime.getRuntime().exec(command);
+								LOGGER.info("Waiting for script to end...");
+								p.waitFor();
+								LOGGER.info("Script process ended.");
+								LOGGER.info("WINDOWS: File "+fileName+" moved to directory " + outputDirectory);								
 							} else {
-								//TODO call .sh script to run ETL
 								LOGGER.info("LINUX: Running script: "+scriptDirectory+"eurofound_quantitative_script.sh");
-								command = "sh -c "+scriptDirectory+"eurofound_quantitative_script.sh " 
+								command = "sh "+scriptDirectory+"eurofound_quantitative_script.sh " 
 										+ fileNameWOExtension+" "+fileExtension+" "+year+" "+inputDirectory+" "+outputDirectory
 										+ " > " + scriptDirectory + "script_log_eurofound.txt 2>&1";
 								LOGGER.info("LINUX: command to execute: "+command);
-								Runtime.getRuntime().exec(command);
-								LOGGER.info("LINUX: File "+fileName+" moved to directory " + outputDirectory);
+								Process p = Runtime.getRuntime().exec(command);
+								LOGGER.info("Waiting for script to end...");
+								p.waitFor();
+								LOGGER.info("Script process ended.");
+								//LOGGER.info("LINUX: File "+fileName+" moved to directory " + outputDirectory);
+								InputStream inputStream = new FileInputStream(logOutputDirectory+"log.txt");
+							    try (BufferedReader br
+							      = new BufferedReader(new InputStreamReader(inputStream))) {
+							        String line;
+							        while ((line = br.readLine()) != null) {
+							            resultStringBuilder.append(line).append("\n");
+							        }
+							    }
 							}
-					        confirmationMessage = "The data has been correctly saved.";
+					        //confirmationMessage = "The data has been correctly saved.";
+					        if(resultStringBuilder.length() > 0) {
+					        	if(resultStringBuilder.toString().contains("SUCCESS")) {
+						        	confirmationMessage = resultStringBuilder.toString();
+						        } else if (resultStringBuilder.toString().contains("ERROR")) {
+						        	errorMessage = resultStringBuilder.toString();
+						        }
+					        }
 					    } catch (FileNotFoundException fne) {
 					        LOGGER.error("Problems during file upload. Error: "+fne.getMessage());
 					        fne.printStackTrace();
 					        errorMessage = "An error has occurred while processing excel file.";
+					    } catch (Exception e) {
+					    	LOGGER.error("An error has occurred. Error: "+e.getMessage());
+					    	e.printStackTrace();					    
 					    } finally {
 					        if (out != null) {
 					            out.close();
@@ -346,7 +380,6 @@ public class BarometerUIController extends HttpServlet{
 				        LOGGER.info("File "+fileName+" being uploaded to " + inputDirectory);
 				        
 				        if(SystemUtils.IS_OS_WINDOWS) {
-				        //if(profile.equals("localhost")) {
 				        	if(oneYear != null) {
 				        		command = "cmd /c start \"\" " + scriptDirectory + "eurostat_quantitative_script.bat "
 										+ fileNameWOExtension + " " + fileExtension + " " + indicatorEurostat + " " 

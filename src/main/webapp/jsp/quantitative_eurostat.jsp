@@ -13,6 +13,7 @@
         <div class="alert-danger">
             <p><%=errorMessage%></p>
         </div>
+        <div class="clear-content"></div>
         <%
             }
             String confirmationMessage = (String) request.getAttribute("confirmationMessage");
