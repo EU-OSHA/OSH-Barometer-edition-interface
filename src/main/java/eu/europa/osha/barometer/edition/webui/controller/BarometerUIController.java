@@ -325,6 +325,10 @@ public class BarometerUIController extends HttpServlet{
 				String scriptDirectory = null;
 				String outputDirectory = null;
 				String inputDirectory = null;
+				String logOutputDirectory = null;
+				
+				StringBuilder resultStringBuilder = null;
+				
 				String command = null;
 				String submit = req.getParameter("formSent");
 				if(submit != null) {
@@ -369,7 +373,9 @@ public class BarometerUIController extends HttpServlet{
 						inputDirectory = configurationData.getString("directory.quantitative_file.eurostat.input");
 						outputDirectory = configurationData.getString("directory.etl.quantitative_file.eurostat.output");
 				    	scriptDirectory = configurationData.getString("directory.script");
+				    	logOutputDirectory = configurationData.getString("directory.quantitative_file.eurofound.log");
 				        out = new FileOutputStream(new File(inputDirectory + fileName));
+				        resultStringBuilder = new StringBuilder();
 
 				        int read = 0;
 				        final byte[] bytes = new byte[1024];
@@ -390,21 +396,58 @@ public class BarometerUIController extends HttpServlet{
 				        	}
 				        	
 				        	if (yearFrom != null && yearTo != null) {
-				        		command = "sh -c "+scriptDirectory + "eurostat_quantitative_script.sh "
-										+ fileNameWOExtension + " " + fileExtension + " " + indicatorEurostat + " " + yearFrom 
-										+" "+inputDirectory+" "+outputDirectory+ " " + yearTo
+				        		command = "cmd /c start \"\" "+scriptDirectory + "eurostat_quantitative_script.sh "
+										+ fileNameWOExtension + " " + fileExtension + " " + indicatorEurostat 
+										+" "+inputDirectory+" "+outputDirectory+ " " + yearFrom + " " + yearTo
 										+ " > " + scriptDirectory + "script_log_eurostat.txt 2>&1";
 				        		Runtime.getRuntime().exec(command);
+				        		LOGGER.info("WINDOWS: command to execute: "+command);
+				        	}
+				        	confirmationMessage = "The data has been correctly saved.";
+						} else {
+							Process p = null;
+							//TODO call .sh script to run ETL
+							if(oneYear != null) {
+				        		command = "sh " + scriptDirectory + "eurostat_quantitative_script.bat "
+										+ fileNameWOExtension + " " + fileExtension + " " + indicatorEurostat + " " 
+										+" "+inputDirectory+" "+outputDirectory + " " + oneYear
+										+ " > " + scriptDirectory + "script_log_eurostat.txt 2>&1";
+				        		p = Runtime.getRuntime().exec(command);
 				        		LOGGER.info("LINUX: command to execute: "+command);
 				        	}
-							
-						} else {
-							//TODO call .sh script to run ETL
-							
+				        	
+				        	if (yearFrom != null && yearTo != null) {
+				        		command = "sh "+scriptDirectory + "eurostat_quantitative_script.sh "
+										+ fileNameWOExtension + " " + fileExtension + " " + indicatorEurostat
+										+" "+inputDirectory+" "+outputDirectory+ " " + yearFrom + " " + yearTo
+										+ " > " + scriptDirectory + "script_log_eurostat.txt 2>&1";
+				        		p = Runtime.getRuntime().exec(command);
+				        		LOGGER.info("LINUX: command to execute: "+command);
+				        	}
+				        	
+				        	LOGGER.info("Waiting for script to end...");
+							p.waitFor();
+							LOGGER.info("Script process ended.");
+							//LOGGER.info("LINUX: File "+fileName+" moved to directory " + outputDirectory);
+							InputStream inputStream = new FileInputStream(logOutputDirectory+"log.txt");
+						    try (BufferedReader br
+						      = new BufferedReader(new InputStreamReader(inputStream))) {
+						        String line;
+						        while ((line = br.readLine()) != null) {
+						            resultStringBuilder.append(line).append("\n");
+						        }
+						    }				        	
 						}
 				        
+				        if(resultStringBuilder.length() > 0) {
+				        	if(resultStringBuilder.toString().contains("SUCCESS")) {
+					        	confirmationMessage = resultStringBuilder.toString();
+					        } else if (resultStringBuilder.toString().contains("ERROR")) {
+					        	errorMessage = resultStringBuilder.toString();
+					        }
+				        }
+				        
 				        LOGGER.info("File "+fileName+" moved to " + outputDirectory);
-				        confirmationMessage = "The data has been correctly saved.";
 					} catch(Exception e) {
 						LOGGER.error("An error has occurred while processing file uploaded.");
 						errorMessage = "An error has occurred while processing excel file.";
