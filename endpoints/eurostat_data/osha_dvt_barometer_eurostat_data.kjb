@@ -98,11 +98,11 @@
       <variablename>pIndicatorID</variablename>
       <fieldtype>number</fieldtype>
       <mask/>
-      <comparevalue>0000</comparevalue>
+      <comparevalue>0</comparevalue>
       <minvalue/>
       <maxvalue/>
       <successcondition>different</successcondition>
-      <successnumbercondition>equal</successnumbercondition>
+      <successnumbercondition>different</successnumbercondition>
       <successbooleancondition>false</successbooleancondition>
       <successwhenvarset>N</successwhenvarset>
       <parallel>N</parallel>
