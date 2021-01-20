@@ -345,8 +345,10 @@ public class BarometerUIController extends HttpServlet{
 							|| indicatorEurostat == "54") {
 						yearFrom = req.getParameter("yearFrom");
 						yearTo = req.getParameter("yearTo");
+						LOGGER.info("year from: "+yearFrom+", year to: "+yearTo);
 					} else {
 						oneYear = req.getParameter("oneYear");
+						LOGGER.info("year from: "+oneYear+", year to: NULL");
 					}
 					
 					if (yearFrom != null && yearTo != null) {
@@ -396,7 +398,7 @@ public class BarometerUIController extends HttpServlet{
 				        	}
 				        	
 				        	if (yearFrom != null && yearTo != null) {
-				        		command = "cmd /c start \"\" "+scriptDirectory + "eurostat_quantitative_script.sh "
+				        		command = "cmd /c start \"\" "+scriptDirectory + "eurostat_quantitative_script.bat "
 										+ fileNameWOExtension + " " + fileExtension + " " + indicatorEurostat 
 										+" "+inputDirectory+" "+outputDirectory+ " " + yearFrom + " " + yearTo
 										+ " > " + scriptDirectory + "script_log_eurostat.txt 2>&1";
@@ -406,17 +408,18 @@ public class BarometerUIController extends HttpServlet{
 				        	confirmationMessage = "The data has been correctly saved.";
 						} else {
 							Process p = null;
-							//TODO call .sh script to run ETL
 							if(oneYear != null) {
-				        		command = "sh " + scriptDirectory + "eurostat_quantitative_script.bat "
-										+ fileNameWOExtension + " " + fileExtension + " " + indicatorEurostat + " " 
-										+" "+inputDirectory+" "+outputDirectory + " " + oneYear
+								LOGGER.info("ONLY YEAR FROM SELECTED");
+				        		command = "sh " + scriptDirectory + "eurostat_quantitative_script.sh "
+										+ fileNameWOExtension + " " + fileExtension + " " + indicatorEurostat 
+										+" "+inputDirectory+" "+outputDirectory + " " + oneYear + " NULL"
 										+ " > " + scriptDirectory + "script_log_eurostat.txt 2>&1";
 				        		p = Runtime.getRuntime().exec(command);
 				        		LOGGER.info("LINUX: command to execute: "+command);
 				        	}
 				        	
 				        	if (yearFrom != null && yearTo != null) {
+				        		LOGGER.info("YEAR FROM AND YEAR TO SELECTED");
 				        		command = "sh "+scriptDirectory + "eurostat_quantitative_script.sh "
 										+ fileNameWOExtension + " " + fileExtension + " " + indicatorEurostat
 										+" "+inputDirectory+" "+outputDirectory+ " " + yearFrom + " " + yearTo
@@ -430,6 +433,7 @@ public class BarometerUIController extends HttpServlet{
 							LOGGER.info("Script process ended.");
 							//LOGGER.info("LINUX: File "+fileName+" moved to directory " + outputDirectory);
 							InputStream inputStream = new FileInputStream(logOutputDirectory+"log.txt");
+							LOGGER.info("INPUT STREAM: "+inputStream.toString());
 						    try (BufferedReader br
 						      = new BufferedReader(new InputStreamReader(inputStream))) {
 						        String line;
@@ -439,6 +443,8 @@ public class BarometerUIController extends HttpServlet{
 						    }				        	
 						}
 				        
+				        LOGGER.info("Result String Builder: "+resultStringBuilder.toString());
+				        
 				        if(resultStringBuilder.length() > 0) {
 				        	if(resultStringBuilder.toString().contains("SUCCESS")) {
 					        	confirmationMessage = resultStringBuilder.toString();
@@ -447,7 +453,7 @@ public class BarometerUIController extends HttpServlet{
 					        }
 				        }
 				        
-				        LOGGER.info("File "+fileName+" moved to " + outputDirectory);
+				        //LOGGER.info("File "+fileName+" moved to " + outputDirectory);
 					} catch(Exception e) {
 						LOGGER.error("An error has occurred while processing file uploaded.");
 						errorMessage = "An error has occurred while processing excel file.";
