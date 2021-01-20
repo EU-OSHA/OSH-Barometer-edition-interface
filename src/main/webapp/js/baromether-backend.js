@@ -86,7 +86,7 @@ $(document).ready(function(){
 		        $('div#tablesContainer').empty();
 		        chartList.forEach(function(chart){
 					new_tbody = new_tbody.concat('<label>Chart '+chartIndex+':</label>');
-					new_tbody = new_tbody.concat('<p class="table">Chart name</p>');
+					new_tbody = new_tbody.concat('<p class="table">'+chart.chart_name+'</p>');
 					new_tbody = new_tbody.concat('<table>');
 					new_tbody = new_tbody.concat('<thead>');
 					new_tbody = new_tbody.concat('<tr>');

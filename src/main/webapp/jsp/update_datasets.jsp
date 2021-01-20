@@ -46,7 +46,7 @@
 		<% int chartIndex = 1; %>
 		<% for (HashMap<String,String> data : chartsBySectionList) { %>
 			<label>Chart <%=chartIndex %>:</label>
-			<p class="table">Chart name</p>
+			<p class="table"><%=data.get("chart_name") %></p>
 			<table>
 				<thead>
 					<tr>
