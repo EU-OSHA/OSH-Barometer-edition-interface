@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>Eurostat Methodology</name>
+    <name>Eurostat Methodology No End Date</name>
     <description/>
     <extended_description>Insert the methodology for the Eurofound indicators if it doesn&#x27;t &#xd;&#xa;exist</extended_description>
     <trans_version/>
@@ -108,103 +108,8 @@
     </attributes>
   </connection>
   <order>
-  <hop> <from>Get Variables</from><to>pYearTo is defined&#x3f;</to><enabled>Y</enabled> </hop>
-  <hop> <from>pYearTo is defined&#x3f;</from><to>Update methodology</to><enabled>Y</enabled> </hop>
-  <hop> <from>pYearTo is defined&#x3f;</from><to>Update methodology 2</to><enabled>Y</enabled> </hop>
+  <hop> <from>Get Variables</from><to>Update methodology</to><enabled>Y</enabled> </hop>
   </order>
-  <step>
-    <name>Update methodology</name>
-    <type>ExecSQL</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-         <partitioning>
-           <method>none</method>
-           <schema_name/>
-           </partitioning>
-    <connection>osha_dvt</connection>
-    <execute_each_row>Y</execute_each_row>
-    <single_statement>N</single_statement>
-    <replace_variables>Y</replace_variables>
-    <quoteString>N</quoteString>
-    <sql>SET &#x40;datasetId &#x3d; &#x28;SELECT id FROM dataset WHERE source&#x3d;&#x22;Eurostat&#x22; AND date_from&#x3d;&#x22;&#x24;&#x7b;pYearFrom&#x7d;&#x22; AND date_to IS NULL&#x29;&#x3b;&#xd;&#xa;&#xd;&#xa;UPDATE methodology SET dataset_id&#x3d;&#x40;datasetId WHERE indicator_id&#x3d;&#x24;&#x7b;pIndicatorID&#x7d;&#x3b;</sql>
-    <set_params>N</set_params>
-    <insert_field/>
-    <update_field/>
-    <delete_field/>
-    <read_field/>
-    <arguments>
-    </arguments>
-     <cluster_schema/>
- <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>448</xloc>
-      <yloc>208</yloc>
-      <draw>Y</draw>
-      </GUI>
-    </step>
-
-  <step>
-    <name>Update methodology 2</name>
-    <type>ExecSQL</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-         <partitioning>
-           <method>none</method>
-           <schema_name/>
-           </partitioning>
-    <connection>osha_dvt</connection>
-    <execute_each_row>Y</execute_each_row>
-    <single_statement>N</single_statement>
-    <replace_variables>Y</replace_variables>
-    <quoteString>N</quoteString>
-    <sql>SET &#x40;datasetId &#x3d; &#x28;SELECT id FROM dataset WHERE source&#x3d;&#x22;Eurostat&#x22; AND date_from&#x3d;&#x22;&#x24;&#x7b;pYearFrom&#x7d;&#x22; AND date_to&#x3d;&#x22;&#x24;&#x7b;pYearTo&#x7d;&#x22;&#x29;&#x3b;&#xd;&#xa;&#xd;&#xa;UPDATE methodology SET dataset_id&#x3d;&#x40;datasetId WHERE indicator_id&#x3d;&#x24;&#x7b;pIndicatorID&#x7d;&#x3b;</sql>
-    <set_params>N</set_params>
-    <insert_field/>
-    <update_field/>
-    <delete_field/>
-    <read_field/>
-    <arguments>
-    </arguments>
-     <cluster_schema/>
- <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>448</xloc>
-      <yloc>352</yloc>
-      <draw>Y</draw>
-      </GUI>
-    </step>
-
-  <step>
-    <name>pYearTo is defined&#x3f;</name>
-    <type>FilterRows</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-         <partitioning>
-           <method>none</method>
-           <schema_name/>
-           </partitioning>
-<send_true_to>Update methodology</send_true_to>
-<send_false_to>Update methodology 2</send_false_to>
-    <compare>
-<condition>
- <negated>N</negated>
- <leftvalue>pYearTo</leftvalue>
- <function>IS NULL</function>
- <rightvalue/>
- </condition>
-    </compare>
-     <cluster_schema/>
- <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>272</xloc>
-      <yloc>272</yloc>
-      <draw>Y</draw>
-      </GUI>
-    </step>
-
   <step>
     <name>Get Variables</name>
     <type>GetVariable</type>
@@ -218,9 +123,9 @@
            </partitioning>
     <fields>
       <field>
-        <name>pIndicator</name>
-        <variable>&#x24;&#x7b;pIndicator&#x7d;</variable>
-        <type>Number</type>
+        <name>pIndicatorID</name>
+        <variable>&#x24;&#x7b;pIndicatorID&#x7d;</variable>
+        <type>Integer</type>
         <format/>
         <currency/>
         <decimal/>
@@ -241,22 +146,42 @@
         <precision>-1</precision>
         <trim_type>none</trim_type>
       </field>
-      <field>
-        <name>pYearTo</name>
-        <variable>&#x24;&#x7b;pYearTo&#x7d;</variable>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <length>-1</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
     </fields>
      <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>128</xloc>
+      <xloc>272</xloc>
+      <yloc>272</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>Update methodology</name>
+    <type>ExecSQL</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+    <connection>osha_dvt</connection>
+    <execute_each_row>Y</execute_each_row>
+    <single_statement>N</single_statement>
+    <replace_variables>Y</replace_variables>
+    <quoteString>N</quoteString>
+    <sql>SET &#x40;datasetId &#x3d; &#x28;SELECT id FROM dataset WHERE source&#x3d;&#x22;Eurostat&#x22; AND date_from&#x3d;&#x22;&#x24;&#x7b;pYearFrom&#x7d;&#x22; AND date_to IS NULL&#x29;&#x3b;&#xd;&#xa;&#xd;&#xa;UPDATE methodology SET dataset_id&#x3d;&#x40;datasetId WHERE indicator_id&#x3d;&#x24;&#x7b;pIndicatorID&#x7d;&#x3b;&#xd;&#xa;UPDATE indicators_by_chart SET dataset_id&#x3d;&#x40;datasetId WHERE indicator_id&#x3d;&#x24;&#x7b;pIndicatorID&#x7d;&#x3b;</sql>
+    <set_params>N</set_params>
+    <insert_field/>
+    <update_field/>
+    <delete_field/>
+    <read_field/>
+    <arguments>
+    </arguments>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>416</xloc>
       <yloc>272</yloc>
       <draw>Y</draw>
       </GUI>
