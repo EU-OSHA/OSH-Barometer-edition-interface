@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>Eurostat Indicator Dataset</name>
+    <name>Eurostat Indicator Dataset No End Date</name>
     <description/>
     <extended_description/>
     <trans_version/>
@@ -105,11 +105,7 @@
   <order>
   <hop> <from>Execute SQL script</from><to>Filter rows</to><enabled>Y</enabled> </hop>
   <hop> <from>Filter rows</from><to>Execute SQL script 2</to><enabled>Y</enabled> </hop>
-  <hop> <from>Obtener Variables</from><to>dateTo is Set&#x3f;</to><enabled>Y</enabled> </hop>
-  <hop> <from>dateTo is Set&#x3f;</from><to>Execute SQL script</to><enabled>Y</enabled> </hop>
-  <hop> <from>Execute SQL script 3</from><to>Filter rows 2</to><enabled>Y</enabled> </hop>
-  <hop> <from>dateTo is Set&#x3f;</from><to>Execute SQL script 3</to><enabled>Y</enabled> </hop>
-  <hop> <from>Filter rows 2</from><to>Execute SQL script 2 2</to><enabled>Y</enabled> </hop>
+  <hop> <from>Obtener Variables</from><to>Execute SQL script</to><enabled>Y</enabled> </hop>
   </order>
   <step>
     <name>Execute SQL script</name>
@@ -137,8 +133,8 @@
     </arguments>
      <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>576</xloc>
-      <yloc>208</yloc>
+      <xloc>432</xloc>
+      <yloc>256</yloc>
       <draw>Y</draw>
       </GUI>
     </step>
@@ -169,8 +165,8 @@
     </arguments>
      <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>864</xloc>
-      <yloc>208</yloc>
+      <xloc>720</xloc>
+      <yloc>256</yloc>
       <draw>Y</draw>
       </GUI>
     </step>
@@ -198,8 +194,8 @@
     </compare>
      <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>704</xloc>
-      <yloc>208</yloc>
+      <xloc>560</xloc>
+      <yloc>256</yloc>
       <draw>Y</draw>
       </GUI>
     </step>
@@ -257,128 +253,6 @@
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
       <xloc>256</xloc>
       <yloc>256</yloc>
-      <draw>Y</draw>
-      </GUI>
-    </step>
-
-  <step>
-    <name>dateTo is Set&#x3f;</name>
-    <type>FilterRows</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-         <partitioning>
-           <method>none</method>
-           <schema_name/>
-           </partitioning>
-<send_true_to>Execute SQL script 3</send_true_to>
-<send_false_to>Execute SQL script</send_false_to>
-    <compare>
-<condition>
- <negated>N</negated>
- <leftvalue>pYearTo</leftvalue>
- <function>IS NULL</function>
- <rightvalue/>
- </condition>
-    </compare>
-     <cluster_schema/>
- <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>384</xloc>
-      <yloc>256</yloc>
-      <draw>Y</draw>
-      </GUI>
-    </step>
-
-  <step>
-    <name>Execute SQL script 3</name>
-    <type>ExecSQL</type>
-    <description/>
-    <distribute>N</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-         <partitioning>
-           <method>none</method>
-           <schema_name/>
-           </partitioning>
-    <connection>osha_dvt</connection>
-    <execute_each_row>Y</execute_each_row>
-    <single_statement>N</single_statement>
-    <replace_variables>Y</replace_variables>
-    <quoteString>N</quoteString>
-    <sql>SELECT &#x2a; FROM indicators_in_dataset iid &#xd;&#xa;INNER JOIN dataset d ON iid.dataset_id&#x3d;d.id&#xd;&#xa;WHERE iid.indicator_id&#x3d;&#x24;&#x7b;pIndicatorID&#x7d;&#xd;&#xa;AND d.source&#x3d;&#x22;Eurostat&#x22;&#xd;&#xa;AND d.date_from&#x3d;&#x22;&#x24;&#x7b;pYearFrom&#x7d;&#x22;&#xd;&#xa;AND d.date_to&#x3d;&#x22;&#x24;&#x7b;pYearTo&#x7d;&#x22;&#x3b;</sql>
-    <set_params>N</set_params>
-    <insert_field/>
-    <update_field/>
-    <delete_field/>
-    <read_field>indicatorDatasetCount</read_field>
-    <arguments>
-    </arguments>
-     <cluster_schema/>
- <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>576</xloc>
-      <yloc>304</yloc>
-      <draw>Y</draw>
-      </GUI>
-    </step>
-
-  <step>
-    <name>Execute SQL script 2 2</name>
-    <type>ExecSQL</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-         <partitioning>
-           <method>none</method>
-           <schema_name/>
-           </partitioning>
-    <connection>osha_dvt</connection>
-    <execute_each_row>Y</execute_each_row>
-    <single_statement>N</single_statement>
-    <replace_variables>Y</replace_variables>
-    <quoteString>N</quoteString>
-    <sql>SET &#x40;datasetId &#x3d; &#x28;SELECT id FROM dataset WHERE source&#x3d;&#x22;Eurostat&#x22; AND date_from&#x3d;&#x22;&#x24;&#x7b;pYearFrom&#x7d;&#x22; AND date_to&#x3d;&#x22;&#x24;&#x7b;pYearTo&#x7d;&#x22;&#x29;&#x3b;&#xd;&#xa;INSERT INTO indicators_in_dataset &#x28;indicator_id, dataset_id&#x29; &#xd;&#xa;VALUES &#x28;&#x24;&#x7b;pIndicatorID&#x7d;, &#x40;datasetId&#x29;&#x3b;</sql>
-    <set_params>N</set_params>
-    <insert_field/>
-    <update_field/>
-    <delete_field/>
-    <read_field/>
-    <arguments>
-    </arguments>
-     <cluster_schema/>
- <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>864</xloc>
-      <yloc>304</yloc>
-      <draw>Y</draw>
-      </GUI>
-    </step>
-
-  <step>
-    <name>Filter rows 2</name>
-    <type>FilterRows</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-         <partitioning>
-           <method>none</method>
-           <schema_name/>
-           </partitioning>
-<send_true_to>Execute SQL script 2 2</send_true_to>
-<send_false_to/>
-    <compare>
-<condition>
- <negated>N</negated>
- <leftvalue>indicatorDatasetCount</leftvalue>
- <function>&#x3d;</function>
- <rightvalue/>
- <value><name>constant</name><type>Integer</type><text>0</text><length>-1</length><precision>0</precision><isnull>N</isnull><mask>&#x23;&#x3b;-&#x23;</mask></value> </condition>
-    </compare>
-     <cluster_schema/>
- <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>704</xloc>
-      <yloc>304</yloc>
       <draw>Y</draw>
       </GUI>
     </step>
