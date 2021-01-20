@@ -1,7 +1,7 @@
 <%@page import="java.util.Calendar"%>
 <%@include file="includes/head.jsp"%>
 <%@include file="includes/header.jsp"%>
-	<div class="container">
+	<div class="container" id="quantitative-page">
 		<%@include file="includes/breadcrumb.jsp"%>
 		<h1>Quantitative data from Eurofound</h1>
 		<%
@@ -38,7 +38,8 @@
 			<input type="file" name="quantitativeEurofoundFile" required accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"> 
 			<!-- <button class="upload">Upload</button> -->
 			<!-- <button>Download Excel template</button> -->
-			<a class="href-link" href="files/EU-OSHA_OSH BAROMETER_EUROFOUND Indicator List_YYYYMMDD.xlsx">Download Excel templates</a>
+			<!-- <a class="href-link" href="files/EU-OSHA_OSH BAROMETER_EUROFOUND Indicator List_YYYYMMDD.xlsx">Download Excel templates</a> -->
+			<span class="with-tooltip"><a class="href-link" href="files/EU-OSHA_OSH BAROMETER_EUROFOUND Indicator List_YYYYMMDD.xlsx">Download Excel templates</a><span class="tootip-box">Download the Eurofound Excel template</span></span>
 			<div class="clear-content"></div>
 			<div class="conten-button">
 				<button name="clearButton" value="Clear" >Clear</button>

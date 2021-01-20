@@ -65,7 +65,7 @@
 			<label id="templateUsage" class="help-text">The template should be "EU-OSHA_OIE_Eurostat_Income_per_capita_YYYY-MM-DD"</label>
 			<input type="file" name="quantitativeEurostatFile" required accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
 			<!-- <button>Download Excel templates</button> -->
-			<a class="href-link" href="files/Eurostat_Quantitative_Templates.zip">Download Excel templates</a>
+			<span class="with-tooltip"><a class="href-link" href="files/Eurostat_Quantitative_Templates.zip">Download Excel templates</a><span class="tootip-box">Download the Eurostat Excel templates</span></span>
 			<div class="clear-content"></div>
 			<div class="conten-button">
 				<button name="clearButton" value="Clear" >Clear</button>
