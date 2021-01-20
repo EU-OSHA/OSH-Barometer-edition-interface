@@ -13,7 +13,16 @@ $(document).ready(function(){
 	$( "#yearToContainer" ).css("display","none");
 	$( "#oneYearContainer" ).css("display","block");
 	$("#templateUsage").text('The template should be "EU-OSHA_OIE_Eurostat indicator_Company size_YYYY-MM-DD.xlsx"');
-    
+  
+    var scroll = window.innerHeight;
+	var height = $("div.container")[1].scrollHeight;
+
+    if (height >= 750) {
+        $("footer").addClass("clear-fixed");
+    } else {
+        $("footer").removeClass("clear-fixed");
+    }
+	    
     changeYearCombos =  function(){
 		//console.log("Entra en changeYearCombos");
 		var optionSelected = document.getElementById("indicatorEurostat");

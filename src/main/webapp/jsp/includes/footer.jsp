@@ -1,5 +1,5 @@
 <%@page import="java.util.Calendar"%>
-<footer>
+<footer class="clear-fixed">
 	<%int yearFooter = Calendar.getInstance().get(Calendar.YEAR);%>
 	<div class="container">
 		© <%=yearFooter %> EU-OSHA | <a href="https://osha.europa.eu/" target="_blank">an
