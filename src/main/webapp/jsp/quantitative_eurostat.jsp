@@ -37,10 +37,23 @@
 			<!-- FOR INDICATORS Income per capita, Income per capita EURO, Non-fatal work accidents and Fatal work accidents -->
 			<div id="yearFromContainer" class="conten-input">
 				<%int year = Calendar.getInstance().get(Calendar.YEAR);%>
+				<% String yearFromSelected = (String) request.getAttribute("yearFrom");
+				String yearToSelected = (String) request.getAttribute("yearTo");
+				String oneYearSelected = (String) request.getAttribute("oneYear");
+				if(yearFromSelected == null){
+					yearFromSelected = year+"-01-01";
+				}
+				if(yearToSelected == null){
+					yearToSelected = year+"-12-31";
+				}
+				if(oneYearSelected == null){
+					oneYearSelected = year+"-01-01";
+				}
+				%>
 				<label class="help-text">From:</label>
 				<select name="yearFrom">
 					<% for (int i = year; i >= 2010; i--) { %>
-					<option value="<%=i%>-01-01"><%=i%></option>
+					<option value="<%=i%>-01-01" <%= yearFromSelected.equals(i+"-01-01") ? "selected": "" %> ><%=i%></option>
 					<% } %>
 				</select>
 			</div>
@@ -48,7 +61,7 @@
 				<label class="help-text">To:</label>
 				<select name="yearTo">
 					<% for (int i = year; i >= 2010; i--) { %>
-					<option value="<%=i%>-12-31"><%=i%></option>
+					<option value="<%=i%>-12-31" <%= yearToSelected.equals(i+"-12-31") ? "selected": "" %> ><%=i%></option>
 					<% } %>
 				</select>
 			</div>
@@ -56,7 +69,7 @@
 				<!-- FOR THE REST OF THE INDICATORS -->
 				<select name="oneYear" >
 					<% for (int i = year; i >= 2013; i--) { %>
-					<option value="<%=i%>-01-01"><%=i%></option>
+					<option value="<%=i%>-01-01" <%= oneYearSelected.equals(i+"-01-01") ? "selected": "" %> ><%=i%></option>
 					<% } %>
 				</select>
 			</div>

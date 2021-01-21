@@ -315,6 +315,7 @@ public class BarometerUIController extends HttpServlet{
 					if(confirmationMessage != null) {
 						req.setAttribute("confirmationMessage", confirmationMessage);
 					}
+					req.setAttribute("year", year);
 				}
 			} else if (page.equals("quantitative_eurostat")) {
 				LOGGER.info("Arriving to Quantitative Data from Eurostat.");
@@ -466,6 +467,9 @@ public class BarometerUIController extends HttpServlet{
 				        	fileContent.close();
 				        }
 					}
+					req.setAttribute("yearFrom", yearFrom);
+					req.setAttribute("yearTo", yearTo);
+					req.setAttribute("oneYear", oneYear);
 				}
 				req.setAttribute("indicatorsList", indicatorsList);
 				if(errorMessage != null) {

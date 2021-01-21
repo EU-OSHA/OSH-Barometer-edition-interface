@@ -26,10 +26,15 @@
 			<!-- Year input -->
 			<label>Year</label>
 			<%int year = Calendar.getInstance().get(Calendar.YEAR);%>
+			<% String yearSelected = (String) request.getAttribute("year"); 
+			System.out.println("yearSelected: "+yearSelected);
+				if(yearSelected == null){
+					yearSelected = year+"-01-01";
+				}%>
 			<!-- Values 20XX-01-01 -->
 			<select name="year">
 				<% for (int i = year; i >= 2015; i--) { %>
-				<option value="<%=i%>-01-01"><%=i%></option>
+				<option value="<%=i%>-01-01" <%= yearSelected.equals(i+"-01-01") ? "selected": "" %> ><%=i%></option>
 				<% } %>
 			</select>
 			<div class="clear-content"></div>
