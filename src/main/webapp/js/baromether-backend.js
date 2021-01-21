@@ -116,9 +116,9 @@ $(document).ready(function(){
 								new_tbody = new_tbody.concat('<form id="formChart'+indicator.chart_id+'" action="user?page=update_datasets" method="post">');
 								new_tbody = new_tbody.concat('<input type="hidden" value="'+indicator.chart_id+'" name="chart_id">');
 								new_tbody = new_tbody.concat('<input type="hidden" value="'+indicator.indicator_id+'" name="indicator_id">');
-								new_tbody = new_tbody.concat('<input type="hidden" value="'+indicator.section_id+'" name="section_id">');
+								new_tbody = new_tbody.concat('<input type="hidden" value="'+chart.section_id+'" name="section_id">');
 								new_tbody = new_tbody.concat('');
-								new_tbody = new_tbody.concat('<select id="datasetChart-'+indicator.chart_id+'" name="datasetChart-'+indicator.chart_id+'" ')
+								new_tbody = new_tbody.concat('<select id="datasetChart-'+indicator.indicator_id+'" name="datasetChart-'+indicator.indicator_id+'" ')
 								new_tbody = new_tbody.concat('onchange="enableDatasetTableSaveButton(event, '+indicator.dataset_id+', '+indicator.indicator_id+')">');
 					
 								/* DATASETS */

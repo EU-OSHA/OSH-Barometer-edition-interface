@@ -87,7 +87,7 @@ public class JDBCDataSourceOperations
     // @params
     // pQuery: Query to be launched. it can be a SELECT or an UPDATE. The gaps for the params will be replaced with ?
     // pParams: Array of Strings with the values for the gaps. The params will be in the correct order. It will have as many elements as gaps are in the Query
-    public static void launchQuery (String pQuery, String[] pParams, String url) {
+    public static void launchQuery (String pQuery, String[] pParams, String url) throws Exception {
         dbStatements = ResourceBundle.getBundle(url);
         String query = dbStatements.getString(pQuery);
         Connection con = null;

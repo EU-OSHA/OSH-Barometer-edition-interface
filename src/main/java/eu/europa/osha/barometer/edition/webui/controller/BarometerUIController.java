@@ -410,8 +410,8 @@ public class BarometerUIController extends HttpServlet{
 							Process p = null;
 							if(oneYear != null) {
 								LOGGER.info("ONLY YEAR FROM SELECTED");
-				        		command = "sh " + scriptDirectory + "eurostat_quantitative_script.sh "
-										+ fileNameWOExtension + " " + fileExtension + " " + indicatorEurostat 
+				        		command = "sh " + scriptDirectory + "eurostat_quantitative_script.sh \""
+										+ fileNameWOExtension + "\" " + fileExtension + " " + indicatorEurostat 
 										+" "+inputDirectory+" "+outputDirectory + " " + oneYear + " NULL"
 										+ " > " + scriptDirectory + "script_log_eurostat.txt 2>&1";
 				        		p = Runtime.getRuntime().exec(command);
@@ -420,8 +420,8 @@ public class BarometerUIController extends HttpServlet{
 				        	
 				        	if (yearFrom != null && yearTo != null) {
 				        		LOGGER.info("YEAR FROM AND YEAR TO SELECTED");
-				        		command = "sh "+scriptDirectory + "eurostat_quantitative_script.sh "
-										+ fileNameWOExtension + " " + fileExtension + " " + indicatorEurostat
+				        		command = "sh "+scriptDirectory + "eurostat_quantitative_script.sh \""
+										+ fileNameWOExtension + "\" " + fileExtension + " " + indicatorEurostat
 										+" "+inputDirectory+" "+outputDirectory+ " " + yearFrom + " " + yearTo
 										+ " > " + scriptDirectory + "script_log_eurostat.txt 2>&1";
 				        		p = Runtime.getRuntime().exec(command);
