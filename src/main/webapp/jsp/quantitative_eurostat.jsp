@@ -22,14 +22,21 @@
         <div class="alert-success">
             <p><%=confirmationMessage%></p>
         </div>
-        <% } %>
         <div class="clear-content"></div>
+        <% } %>
         <form action="user?page=quantitative_eurostat" method="post" enctype="multipart/form-data">
 			<label>Indicator</label>
-			<% ArrayList<HashMap<String,String>> indicatorsList = (ArrayList<HashMap<String,String>>) request.getAttribute("indicatorsList"); %>
+			<% ArrayList<HashMap<String,String>> indicatorsList = (ArrayList<HashMap<String,String>>) request.getAttribute("indicatorsList"); 
+			String indicatorEurostat = (String) request.getAttribute("indicatorEurostat");
+			if(indicatorEurostat == null){
+				indicatorEurostat = "31";
+			}
+			%>
 			<select id="indicatorEurostat" name="indicatorEurostat" onchange="changeYearCombos()">
 			<% for (HashMap<String,String> data : indicatorsList) { %>
-				<option value="<%=data.get("indicator_id")%>"><%=data.get("indicator_name") %></option>
+				<option value="<%=data.get("indicator_id")%>" <%= data.get("indicator_id").equals(indicatorEurostat) ? "selected": "" %> >
+					<%=data.get("indicator_name") %>
+				</option>
 			<% } %>
 			</select>
 			<div class="clear-content"></div>

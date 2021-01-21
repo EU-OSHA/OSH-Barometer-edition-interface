@@ -55,6 +55,8 @@ $(document).ready(function(){
 		}
 	};
 	
+	changeYearCombos();
+	
 	enableDatasetTableSaveButton = function(event, currentDatasetId, indicatorId) {
 		console.log('Enters in enableDatasetTableSaveButton');
 		var selectedDatasetId = parseInt(event.currentTarget.options[event.currentTarget.selectedIndex].value);

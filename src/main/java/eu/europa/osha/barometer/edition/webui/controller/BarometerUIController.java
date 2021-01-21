@@ -225,20 +225,19 @@ public class BarometerUIController extends HttpServlet{
 					Part file = req.getPart("quantitativeEurofoundFile");
 					if(file != null) {
 						String fileName = Paths.get(file.getSubmittedFileName()).getFileName().toString();
-						String fileNameWOExtension = fileName.substring(0, fileName.indexOf('.'));
+						String eurofoundDataFileName = configurationData.getString("file.eurofound.name");
 						String fileExtension = fileName.substring(fileName.indexOf('.'));
 						
 						LOGGER.info("File name: "+fileName);
-						InputStream fileContent = file.getInputStream();
-						String profile = configurationData.getString("profile.name");
-						
+						InputStream fileContent = file.getInputStream();						
 						OutputStream out = null;
+						
 					    try {
 					    	inputDirectory =  configurationData.getString("directory.quantitative_file.eurofound.input");
 					    	outputDirectory = configurationData.getString("directory.etl.quantitative_file.eurofound.output");
 					    	scriptDirectory = configurationData.getString("directory.script");
 					    	logOutputDirectory = configurationData.getString("directory.quantitative_file.eurofound.log");
-					        out = new FileOutputStream(new File(inputDirectory + fileName));
+					        out = new FileOutputStream(new File(inputDirectory + eurofoundDataFileName + fileExtension));
 					        
 					        resultStringBuilder = new StringBuilder();
 
@@ -248,15 +247,13 @@ public class BarometerUIController extends HttpServlet{
 					        while ((read = fileContent.read(bytes)) != -1) {
 					            out.write(bytes, 0, read);
 					        }
-					        LOGGER.info("File "+fileName+" being uploaded to " + inputDirectory);					        
+					        LOGGER.info("File "+fileName+" being uploaded to " + inputDirectory);
 					        
 					        if(SystemUtils.IS_OS_WINDOWS) {
-					        //if(profile.equals("localhost")) {
 					        	LOGGER.info("WINDOWS: Running script: "+scriptDirectory+"eurofound_quantitative_script.bat");
 					        	command = "cmd /c start \"\" "+scriptDirectory+"eurofound_quantitative_script.bat " 
-										+ fileNameWOExtension+" "+fileExtension+" "+year+" "+inputDirectory+" "+outputDirectory
+										+ eurofoundDataFileName+fileExtension+" "+year+" "+inputDirectory+" "+outputDirectory
 										+ " > " + scriptDirectory + "script_log_eurofound.txt 2>&1";
-					        	//command = "cmd /c start /wait "+scriptDirectory+"test.bat";
 					        	LOGGER.info("WINDOWS: command to execute: "+command);
 					        	Process p = Runtime.getRuntime().exec(command);
 								LOGGER.info("Waiting for script to end...");
@@ -266,30 +263,44 @@ public class BarometerUIController extends HttpServlet{
 							} else {
 								LOGGER.info("LINUX: Running script: "+scriptDirectory+"eurofound_quantitative_script.sh");
 								command = "sh "+scriptDirectory+"eurofound_quantitative_script.sh " 
-										+ fileNameWOExtension+" "+fileExtension+" "+year+" "+inputDirectory+" "+outputDirectory
-										+ " > " + scriptDirectory + "script_log_eurofound.txt 2>&1";
+										+ eurofoundDataFileName+fileExtension+" "+year+" "+inputDirectory+" "+outputDirectory;
 								LOGGER.info("LINUX: command to execute: "+command);
 								Process p = Runtime.getRuntime().exec(command);
 								LOGGER.info("Waiting for script to end...");
 								p.waitFor();
 								LOGGER.info("Script process ended.");
-								//LOGGER.info("LINUX: File "+fileName+" moved to directory " + outputDirectory);
-								InputStream inputStream = new FileInputStream(logOutputDirectory+"log.txt");
-							    try (BufferedReader br
-							      = new BufferedReader(new InputStreamReader(inputStream))) {
-							        String line;
-							        while ((line = br.readLine()) != null) {
-							            resultStringBuilder.append(line).append("\n");
-							        }
-							    }
+						        File logFile = new File(logOutputDirectory+"log.txt");
+						        LOGGER.info("Log file exists in "+logOutputDirectory+"log.txt? "+logFile.exists());
+						        LOGGER.info("Log file exists? "+logFile.exists());
+						        if(logFile.exists()) {
+									InputStream inputStream = new FileInputStream(logOutputDirectory+"log.txt");
+									if (inputStream != null) {
+									    try (BufferedReader br
+									      = new BufferedReader(new InputStreamReader(inputStream))) {
+									        String line;
+									        while ((line = br.readLine()) != null) {
+									            resultStringBuilder.append(line).append("\n");
+									        }
+									        LOGGER.info("resultStringBuilder: "+resultStringBuilder);
+									    }
+									    
+									    logFile.delete();
+									}
+						        }
 							}
-					        //confirmationMessage = "The data has been correctly saved.";
+					        
 					        if(resultStringBuilder.length() > 0) {
+					        	LOGGER.info("resultStringBuilder has data");
 					        	if(resultStringBuilder.toString().contains("SUCCESS")) {
+					        		LOGGER.info("LOG FILE SAYS TEST IS SUCCESSFUL");
 						        	confirmationMessage = resultStringBuilder.toString();
 						        } else if (resultStringBuilder.toString().contains("ERROR")) {
 						        	errorMessage = resultStringBuilder.toString();
+						        	LOGGER.info("LOG FILE SAYS TEST HAS ERRORS");
 						        }
+					        } else {
+					        	LOGGER.info("resultStringBuilder has NO data");
+					        	errorMessage = "An error has occurred in the process.";
 					        }
 					    } catch (FileNotFoundException fne) {
 					        LOGGER.error("Problems during file upload. Error: "+fne.getMessage());
@@ -327,6 +338,7 @@ public class BarometerUIController extends HttpServlet{
 				String outputDirectory = null;
 				String inputDirectory = null;
 				String logOutputDirectory = null;
+				boolean validation = true;
 				
 				StringBuilder resultStringBuilder = null;
 				
@@ -339,11 +351,11 @@ public class BarometerUIController extends HttpServlet{
 					String oneYear = null;
 					Part file = req.getPart("quantitativeEurostatFile");
 					String fileName = Paths.get(file.getSubmittedFileName()).getFileName().toString();
-					String fileNameWOExtension = fileName.substring(0, fileName.indexOf('.'));
+					String eurostatDataFileName = configurationData.getString("file.eurostat.name");
 					String fileExtension = fileName.substring(fileName.indexOf('.'));
 					
-					if(indicatorEurostat == "36" || indicatorEurostat == "279" || indicatorEurostat == "53"
-							|| indicatorEurostat == "54") {
+					if(indicatorEurostat.equals("36") || indicatorEurostat.equals("279") || indicatorEurostat.equals("53")
+							|| indicatorEurostat.equals("54")) {
 						yearFrom = req.getParameter("yearFrom");
 						yearTo = req.getParameter("yearTo");
 						LOGGER.info("year from: "+yearFrom+", year to: "+yearTo);
@@ -359,6 +371,7 @@ public class BarometerUIController extends HttpServlet{
 							
 							if(date_from.after(date_to)) {
 								errorMessage = "'Year To' field should be later than 'Year From' field";
+								validation = false;
 							}
 						} catch (ParseException e) {
 							LOGGER.error("'Year To' field should be later than 'Year From' field");
@@ -366,110 +379,124 @@ public class BarometerUIController extends HttpServlet{
 						}
 					}
 					
-					LOGGER.info("File name: "+fileName);
-					InputStream fileContent = file.getInputStream();
-					String profile = configurationData.getString("profile.name");
-					
-					OutputStream out = null;
-					
-					try {
-						inputDirectory = configurationData.getString("directory.quantitative_file.eurostat.input");
-						outputDirectory = configurationData.getString("directory.etl.quantitative_file.eurostat.output");
-				    	scriptDirectory = configurationData.getString("directory.script");
-				    	logOutputDirectory = configurationData.getString("directory.quantitative_file.eurofound.log");
-				        out = new FileOutputStream(new File(inputDirectory + fileName));
-				        resultStringBuilder = new StringBuilder();
+					if(validation) {
+						LOGGER.info("File name: "+fileName);
+						InputStream fileContent = file.getInputStream();						
+						OutputStream out = null;
+						
+						try {
+							inputDirectory = configurationData.getString("directory.quantitative_file.eurostat.input");
+							outputDirectory = configurationData.getString("directory.etl.quantitative_file.eurostat.output");
+					    	scriptDirectory = configurationData.getString("directory.script");
+					    	logOutputDirectory = configurationData.getString("directory.quantitative_file.eurostat.log");
+					        out = new FileOutputStream(new File(inputDirectory + eurostatDataFileName + fileExtension));
+					        resultStringBuilder = new StringBuilder();
 
-				        int read = 0;
-				        final byte[] bytes = new byte[1024];
+					        int read = 0;
+					        final byte[] bytes = new byte[1024];
 
-				        while ((read = fileContent.read(bytes)) != -1) {
-				            out.write(bytes, 0, read);
-				        }
-				        LOGGER.info("File "+fileName+" being uploaded to " + inputDirectory);
-				        
-				        if(SystemUtils.IS_OS_WINDOWS) {
-				        	if(oneYear != null) {
-				        		command = "cmd /c start \"\" " + scriptDirectory + "eurostat_quantitative_script.bat "
-										+ fileNameWOExtension + " " + fileExtension + " " + indicatorEurostat + " " 
-										+" "+inputDirectory+" "+outputDirectory + " " + oneYear
-										+ " > " + scriptDirectory + "script_log_eurostat.txt 2>&1";
-				        		Runtime.getRuntime().exec(command);
-				        		LOGGER.info("WINDOWS: command to execute: "+command);
-				        	}
-				        	
-				        	if (yearFrom != null && yearTo != null) {
-				        		command = "cmd /c start \"\" "+scriptDirectory + "eurostat_quantitative_script.bat "
-										+ fileNameWOExtension + " " + fileExtension + " " + indicatorEurostat 
-										+" "+inputDirectory+" "+outputDirectory+ " " + yearFrom + " " + yearTo
-										+ " > " + scriptDirectory + "script_log_eurostat.txt 2>&1";
-				        		Runtime.getRuntime().exec(command);
-				        		LOGGER.info("WINDOWS: command to execute: "+command);
-				        	}
-				        	confirmationMessage = "The data has been correctly saved.";
-						} else {
-							Process p = null;
-							if(oneYear != null) {
-								LOGGER.info("ONLY YEAR FROM SELECTED");
-				        		command = "sh " + scriptDirectory + "eurostat_quantitative_script.sh \""
-										+ fileNameWOExtension + "\" " + fileExtension + " " + indicatorEurostat 
-										+" "+inputDirectory+" "+outputDirectory + " " + oneYear + " NULL"
-										+ " > " + scriptDirectory + "script_log_eurostat.txt 2>&1";
-				        		p = Runtime.getRuntime().exec(command);
-				        		LOGGER.info("LINUX: command to execute: "+command);
-				        	}
-				        	
-				        	if (yearFrom != null && yearTo != null) {
-				        		LOGGER.info("YEAR FROM AND YEAR TO SELECTED");
-				        		command = "sh "+scriptDirectory + "eurostat_quantitative_script.sh \""
-										+ fileNameWOExtension + "\" " + fileExtension + " " + indicatorEurostat
-										+" "+inputDirectory+" "+outputDirectory+ " " + yearFrom + " " + yearTo
-										+ " > " + scriptDirectory + "script_log_eurostat.txt 2>&1";
-				        		p = Runtime.getRuntime().exec(command);
-				        		LOGGER.info("LINUX: command to execute: "+command);
-				        	}
-				        	
-				        	LOGGER.info("Waiting for script to end...");
-							p.waitFor();
-							LOGGER.info("Script process ended.");
-							//LOGGER.info("LINUX: File "+fileName+" moved to directory " + outputDirectory);
-							InputStream inputStream = new FileInputStream(logOutputDirectory+"log.txt");
-							LOGGER.info("INPUT STREAM: "+inputStream.toString());
-						    try (BufferedReader br
-						      = new BufferedReader(new InputStreamReader(inputStream))) {
-						        String line;
-						        while ((line = br.readLine()) != null) {
-						            resultStringBuilder.append(line).append("\n");
-						        }
-						    }				        	
-						}
-				        
-				        LOGGER.info("Result String Builder: "+resultStringBuilder.toString());
-				        
-				        if(resultStringBuilder.length() > 0) {
-				        	if(resultStringBuilder.toString().contains("SUCCESS")) {
-					        	confirmationMessage = resultStringBuilder.toString();
-					        } else if (resultStringBuilder.toString().contains("ERROR")) {
-					        	errorMessage = resultStringBuilder.toString();
+					        while ((read = fileContent.read(bytes)) != -1) {
+					            out.write(bytes, 0, read);
 					        }
-				        }
-				        
-				        //LOGGER.info("File "+fileName+" moved to " + outputDirectory);
-					} catch(Exception e) {
-						LOGGER.error("An error has occurred while processing file uploaded.");
-						errorMessage = "An error has occurred while processing excel file.";
-						e.printStackTrace();
-					} finally {
-				        if (out != null) {
-				            out.close();
-				        }
-				        if (fileContent != null) {
-				        	fileContent.close();
-				        }
+					        LOGGER.info("File "+fileName+" being uploaded to " + inputDirectory);
+					        
+					        if(SystemUtils.IS_OS_WINDOWS) {
+					        	if(oneYear != null) {
+					        		command = "cmd /c start \"\" " + scriptDirectory + "eurostat_quantitative_script.bat "
+											+ eurostatDataFileName + fileExtension + " " + indicatorEurostat + " " 
+											+" "+inputDirectory+" "+outputDirectory + " " + oneYear
+											+ " > " + scriptDirectory + "script_log_eurostat.txt 2>&1";
+					        		Runtime.getRuntime().exec(command);
+					        		LOGGER.info("WINDOWS: command to execute: "+command);
+					        	}
+					        	
+					        	if (yearFrom != null && yearTo != null) {
+					        		command = "cmd /c start \"\" "+scriptDirectory + "eurostat_quantitative_script.bat "
+											+ eurostatDataFileName + fileExtension + " " + indicatorEurostat 
+											+" "+inputDirectory+" "+outputDirectory+ " " + yearFrom + " " + yearTo
+											+ " > " + scriptDirectory + "script_log_eurostat.txt 2>&1";
+					        		Runtime.getRuntime().exec(command);
+					        		LOGGER.info("WINDOWS: command to execute: "+command);
+					        	}
+					        	confirmationMessage = "The data has been correctly saved.";
+							} else {
+								Process p = null;
+								if(oneYear != null) {
+									LOGGER.info("ONLY YEAR FROM SELECTED");
+					        		command = "sh " + scriptDirectory + "eurostat_quantitative_script.sh "
+											+ eurostatDataFileName + fileExtension + " " + indicatorEurostat 
+											+" "+inputDirectory+" "+outputDirectory + " " + oneYear + " NULL"
+											+ " > " + scriptDirectory + "script_log_eurostat.txt 2>&1";
+					        		p = Runtime.getRuntime().exec(command);
+					        		LOGGER.info("LINUX: command to execute: "+command);
+					        	}
+					        	
+					        	if (yearFrom != null && yearTo != null) {
+					        		LOGGER.info("YEAR FROM AND YEAR TO SELECTED");
+					        		command = "sh "+scriptDirectory + "eurostat_quantitative_script.sh "
+											+ eurostatDataFileName + fileExtension + " " + indicatorEurostat
+											+" "+inputDirectory+" "+outputDirectory+ " " + yearFrom + " " + yearTo
+											+ " > " + scriptDirectory + "script_log_eurostat.txt 2>&1";
+					        		p = Runtime.getRuntime().exec(command);
+					        		LOGGER.info("LINUX: command to execute: "+command);
+					        	}
+					        	
+					        	LOGGER.info("Waiting for script to end...");
+								p.waitFor();
+								LOGGER.info("Script process ended.");
+						        File logFile = new File(logOutputDirectory+"log.txt");
+						        LOGGER.info("Log file exists in "+logOutputDirectory+"log.txt? "+logFile.exists());
+						        LOGGER.info("Log file exists? "+logFile.exists());
+						        if(logFile.exists()) {
+									InputStream inputStream = new FileInputStream(logOutputDirectory+"log.txt");
+									if (inputStream != null) {
+									    try (BufferedReader br
+									      = new BufferedReader(new InputStreamReader(inputStream))) {
+									        String line;
+									        while ((line = br.readLine()) != null) {
+									            resultStringBuilder.append(line).append("\n");
+									        }
+									        LOGGER.info("resultStringBuilder: "+resultStringBuilder);
+									    }
+									    
+									    logFile.delete();
+									}
+						        }
+							}
+					        
+					        LOGGER.info("Result String Builder: "+resultStringBuilder.toString());
+					        
+					        if(resultStringBuilder.length() > 0) {
+					        	LOGGER.info("resultStringBuilder has data");
+					        	if(resultStringBuilder.toString().contains("SUCCESS")) {
+					        		LOGGER.info("LOG FILE SAYS TEST IS SUCCESSFUL");
+						        	confirmationMessage = resultStringBuilder.toString();
+						        } else if (resultStringBuilder.toString().contains("ERROR")) {
+						        	errorMessage = resultStringBuilder.toString();
+						        	LOGGER.info("LOG FILE SAYS TEST HAS ERRORS");
+						        }
+					        } else {
+					        	LOGGER.info("resultStringBuilder has NO data");
+					        	errorMessage = "An error has occurred in the process.";
+					        }
+					        
+						} catch(Exception e) {
+							LOGGER.error("An error has occurred while processing file uploaded.");
+							errorMessage = "An error has occurred while processing excel file.";
+							e.printStackTrace();
+						} finally {
+					        if (out != null) {
+					            out.close();
+					        }
+					        if (fileContent != null) {
+					        	fileContent.close();
+					        }
+						}
 					}
 					req.setAttribute("yearFrom", yearFrom);
 					req.setAttribute("yearTo", yearTo);
 					req.setAttribute("oneYear", oneYear);
+					req.setAttribute("indicatorEurostat", indicatorEurostat);
 				}
 				req.setAttribute("indicatorsList", indicatorsList);
 				if(errorMessage != null) {
