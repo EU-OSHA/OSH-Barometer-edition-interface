@@ -597,7 +597,7 @@
     <single_statement>N</single_statement>
     <replace_variables>Y</replace_variables>
     <quoteString>Y</quoteString>
-    <sql>SET &#x40;datasetID&#x3d;&#x28;SELECT id FROM dataset WHERE source&#x3d;&#x22;Eurostat&#x22; AND date_from&#x3d;&#x22;&#x24;&#x7b;pYearFrom&#x7d;&#x22; AND date_to IS NULL&#x29;&#x3b;&#xd;&#xa;SET &#x40;profileID&#x3d;&#x28;SELECT id FROM profile INNER JOIN nuts n ON p.nuts_id&#x3d;n.id INNER JOIN split_activity_sector sas ON p.activity_sector_id&#x3d;sas.id INNER JOIN translation t ON sas.literal_id&#x3d;t.literal_id WHERE n.country_code&#x3d;&#x22;&#x3f;&#x22; AND t.text&#x3d;&#x22;&#x3f;&#x22; AND t.language&#x3d;&#x22;EN&#x22; AND age_group_id IS NULL AND answer_id IS NULL AND company_size_id IS NULL AND currency_id IS NULL AND gender_id IS NULL AND illness_id IS NULL AND subindicator_id IS NULL ADN year IS NULL&#x29;&#x3b;&#xd;&#xa;&#xd;&#xa;INSERT INTO value &#x28;dataset_id, indicator_id, profile_id, value&#x29; VALUES &#x28;&#x40;datasetID, &#x24;&#x7b;pIndicatorID&#x7d;, &#x40;profileID, &#x3f;&#x29;&#x3b;</sql>
+    <sql>SET &#x40;datasetID&#x3d;&#x28;SELECT id FROM dataset WHERE source&#x3d;&#x22;Eurostat&#x22; AND date_from&#x3d;&#x22;&#x24;&#x7b;pYearFrom&#x7d;&#x22; AND date_to IS NULL&#x29;&#x3b;&#xd;&#xa;SET &#x40;profileID&#x3d;&#x28;SELECT p.id FROM profile p INNER JOIN nuts n ON p.nuts_id&#x3d;n.id INNER JOIN split_activity_sector sas ON p.activity_sector_id&#x3d;sas.id INNER JOIN translation t ON sas.literal_id&#x3d;t.literal_id WHERE n.country_code&#x3d;&#x22;&#x3f;&#x22; AND t.text&#x3d;&#x22;&#x3f;&#x22; AND t.language&#x3d;&#x22;EN&#x22; AND age_group_id IS NULL AND answer_id IS NULL AND company_size_id IS NULL AND currency_id IS NULL AND gender_id IS NULL AND illness_id IS NULL AND subindicator_id IS NULL ADN year IS NULL&#x29;&#x3b;&#xd;&#xa;&#xd;&#xa;INSERT INTO value &#x28;dataset_id, indicator_id, profile_id, value&#x29; VALUES &#x28;&#x40;datasetID, &#x24;&#x7b;pIndicatorID&#x7d;, &#x40;profileID, &#x3f;&#x29;&#x3b;</sql>
     <set_params>N</set_params>
     <insert_field/>
     <update_field/>
@@ -632,7 +632,7 @@
     <single_statement>N</single_statement>
     <replace_variables>Y</replace_variables>
     <quoteString>Y</quoteString>
-    <sql>SET &#x40;datasetID&#x3d;&#x28;SELECT id FROM dataset WHERE source&#x3d;&#x22;Eurostat&#x22; AND date_from&#x3d;&#x22;&#x24;&#x7b;pYearFrom&#x7d;&#x22; AND date_to&#x3d;&#x22;&#x24;&#x7b;pYearTo&#x7d;&#x22;&#x29;&#x3b;&#xd;&#xa;SET &#x40;profileID&#x3d;&#x28;SELECT id FROM profile INNER JOIN nuts n ON p.nuts_id&#x3d;n.id INNER JOIN split_activity_sector sas ON p.activity_sector_id&#x3d;sas.id INNER JOIN translation t ON sas.literal_id&#x3d;t.literal_id WHERE n.country_code&#x3d;&#x22;&#x3f;&#x22; AND t.text&#x3d;&#x22;&#x3f;&#x22; AND t.language&#x3d;&#x22;EN&#x22; AND age_group_id IS NULL AND answer_id IS NULL AND company_size_id IS NULL AND currency_id IS NULL AND gender_id IS NULL AND illness_id IS NULL AND subindicator_id IS NULL ADN year IS NULL&#x29;&#x3b;&#xd;&#xa;&#xd;&#xa;INSERT INTO value &#x28;dataset_id, indicator_id, profile_id, value&#x29; VALUES &#x28;&#x40;datasetID, &#x24;&#x7b;pIndicatorID&#x7d;, &#x40;profileID, &#x3f;&#x29;&#x3b;</sql>
+    <sql>SET &#x40;datasetID&#x3d;&#x28;SELECT id FROM dataset WHERE source&#x3d;&#x22;Eurostat&#x22; AND date_from&#x3d;&#x22;&#x24;&#x7b;pYearFrom&#x7d;&#x22; AND date_to&#x3d;&#x22;&#x24;&#x7b;pYearTo&#x7d;&#x22;&#x29;&#x3b;&#xd;&#xa;SET &#x40;profileID&#x3d;&#x28;SELECT p.id FROM profile p INNER JOIN nuts n ON p.nuts_id&#x3d;n.id INNER JOIN split_activity_sector sas ON p.activity_sector_id&#x3d;sas.id INNER JOIN translation t ON sas.literal_id&#x3d;t.literal_id WHERE n.country_code&#x3d;&#x22;&#x3f;&#x22; AND t.text&#x3d;&#x22;&#x3f;&#x22; AND t.language&#x3d;&#x22;EN&#x22; AND age_group_id IS NULL AND answer_id IS NULL AND company_size_id IS NULL AND currency_id IS NULL AND gender_id IS NULL AND illness_id IS NULL AND subindicator_id IS NULL ADN year IS NULL&#x29;&#x3b;&#xd;&#xa;&#xd;&#xa;INSERT INTO value &#x28;dataset_id, indicator_id, profile_id, value&#x29; VALUES &#x28;&#x40;datasetID, &#x24;&#x7b;pIndicatorID&#x7d;, &#x40;profileID, &#x3f;&#x29;&#x3b;</sql>
     <set_params>N</set_params>
     <insert_field/>
     <update_field/>
@@ -737,7 +737,7 @@
     <single_statement>N</single_statement>
     <replace_variables>Y</replace_variables>
     <quoteString>N</quoteString>
-    <sql>SET &#x40;datasetID&#x3d;&#x28;SELECT id FROM dataset WHERE source&#x3d;&#x22;Eurostat&#x22; AND date_from&#x3d;&#x22;&#x24;&#x7b;pYearFrom&#x7d;&#x22; AND date_to IS NULL&#x29;&#x3b;&#xd;&#xa;SET &#x40;profileID&#x3d;&#x28;SELECT id FROM profile INNER JOIN nuts n ON p.nuts_id&#x3d;n.id INNER JOIN split_activity_sector sas ON p.activity_sector_id&#x3d;sas.id INNER JOIN translation t ON sas.literal_id&#x3d;t.literal_id WHERE n.country_code&#x3d;&#x22;&#x3f;&#x22; AND t.text&#x3d;&#x22;&#x3f;&#x22; AND t.language&#x3d;&#x22;EN&#x22; AND age_group_id IS NULL AND answer_id IS NULL AND company_size_id IS NULL AND currency_id IS NULL AND gender_id IS NULL AND illness_id IS NULL AND subindicator_id IS NULL ADN year IS NULL&#x29;&#x3b;&#xd;&#xa;&#xd;&#xa;UPDATE value SET value&#x3d;&#x3f; WHERE dataset_id&#x3d;&#x40;datasetID AND indicator_id&#x3d;&#x24;&#x7b;pIndicatorID&#x7d; AND profile_id&#x3d;&#x40;profileID&#x3b;</sql>
+    <sql>SET &#x40;datasetID&#x3d;&#x28;SELECT id FROM dataset WHERE source&#x3d;&#x22;Eurostat&#x22; AND date_from&#x3d;&#x22;&#x24;&#x7b;pYearFrom&#x7d;&#x22; AND date_to IS NULL&#x29;&#x3b;&#xd;&#xa;SET &#x40;profileID&#x3d;&#x28;SELECT p.id FROM profile p INNER JOIN nuts n ON p.nuts_id&#x3d;n.id INNER JOIN split_activity_sector sas ON p.activity_sector_id&#x3d;sas.id INNER JOIN translation t ON sas.literal_id&#x3d;t.literal_id WHERE n.country_code&#x3d;&#x22;&#x3f;&#x22; AND t.text&#x3d;&#x22;&#x3f;&#x22; AND t.language&#x3d;&#x22;EN&#x22; AND age_group_id IS NULL AND answer_id IS NULL AND company_size_id IS NULL AND currency_id IS NULL AND gender_id IS NULL AND illness_id IS NULL AND subindicator_id IS NULL ADN year IS NULL&#x29;&#x3b;&#xd;&#xa;&#xd;&#xa;UPDATE value SET value&#x3d;&#x3f; WHERE dataset_id&#x3d;&#x40;datasetID AND indicator_id&#x3d;&#x24;&#x7b;pIndicatorID&#x7d; AND profile_id&#x3d;&#x40;profileID&#x3b;</sql>
     <set_params>N</set_params>
     <insert_field/>
     <update_field/>
@@ -772,7 +772,7 @@
     <single_statement>N</single_statement>
     <replace_variables>Y</replace_variables>
     <quoteString>N</quoteString>
-    <sql>SET &#x40;datasetID&#x3d;&#x28;SELECT id FROM dataset WHERE source&#x3d;&#x22;Eurostat&#x22; AND date_from&#x3d;&#x22;&#x24;&#x7b;pYearFrom&#x7d;&#x22; AND date_to&#x3d;&#x22;&#x24;&#x7b;pYearTo&#x7d;&#x22;&#x29;&#x3b;&#xd;&#xa;SET &#x40;profileID&#x3d;&#x28;SELECT id FROM profile INNER JOIN nuts n ON p.nuts_id&#x3d;n.id INNER JOIN split_activity_sector sas ON p.activity_sector_id&#x3d;sas.id INNER JOIN translation t ON sas.literal_id&#x3d;t.literal_id WHERE n.country_code&#x3d;&#x22;&#x3f;&#x22; AND t.text&#x3d;&#x22;&#x3f;&#x22; AND t.language&#x3d;&#x22;EN&#x22; AND age_group_id IS NULL AND answer_id IS NULL AND company_size_id IS NULL AND currency_id IS NULL AND gender_id IS NULL AND illness_id IS NULL AND subindicator_id IS NULL ADN year IS NULL&#x29;&#x3b;&#xd;&#xa;&#xd;&#xa;UPDATE value SET value&#x3d;&#x3f; WHERE dataset_id&#x3d;&#x40;datasetID AND indicator_id&#x3d;&#x24;&#x7b;pIndicatorID&#x7d; AND profile_id&#x3d;&#x40;profileID&#x3b;</sql>
+    <sql>SET &#x40;datasetID&#x3d;&#x28;SELECT id FROM dataset WHERE source&#x3d;&#x22;Eurostat&#x22; AND date_from&#x3d;&#x22;&#x24;&#x7b;pYearFrom&#x7d;&#x22; AND date_to&#x3d;&#x22;&#x24;&#x7b;pYearTo&#x7d;&#x22;&#x29;&#x3b;&#xd;&#xa;SET &#x40;profileID&#x3d;&#x28;SELECT p.id FROM profile p INNER JOIN nuts n ON p.nuts_id&#x3d;n.id INNER JOIN split_activity_sector sas ON p.activity_sector_id&#x3d;sas.id INNER JOIN translation t ON sas.literal_id&#x3d;t.literal_id WHERE n.country_code&#x3d;&#x22;&#x3f;&#x22; AND t.text&#x3d;&#x22;&#x3f;&#x22; AND t.language&#x3d;&#x22;EN&#x22; AND age_group_id IS NULL AND answer_id IS NULL AND company_size_id IS NULL AND currency_id IS NULL AND gender_id IS NULL AND illness_id IS NULL AND subindicator_id IS NULL ADN year IS NULL&#x29;&#x3b;&#xd;&#xa;&#xd;&#xa;UPDATE value SET value&#x3d;&#x3f; WHERE dataset_id&#x3d;&#x40;datasetID AND indicator_id&#x3d;&#x24;&#x7b;pIndicatorID&#x7d; AND profile_id&#x3d;&#x40;profileID&#x3b;</sql>
     <set_params>N</set_params>
     <insert_field/>
     <update_field/>
@@ -841,7 +841,7 @@
     <single_statement>N</single_statement>
     <replace_variables>Y</replace_variables>
     <quoteString>N</quoteString>
-    <sql>SET &#x40;datasetID&#x3d;&#x28;SELECT id FROM dataset WHERE source&#x3d;&#x22;Eurostat&#x22; AND date_from&#x3d;&#x22;&#x24;&#x7b;pYearFrom&#x7d;&#x22; AND date_to IS NULL&#x29;&#x3b;&#xd;&#xa;SET &#x40;profileID&#x3d;&#x28;SELECT id FROM profile INNER JOIN nuts n ON p.nuts_id&#x3d;n.id INNER JOIN split_activity_sector sas ON p.activity_sector_id&#x3d;sas.id INNER JOIN translation t ON sas.literal_id&#x3d;t.literal_id WHERE n.country_code&#x3d;&#x22;&#x3f;&#x22; AND t.text&#x3d;&#x22;&#x3f;&#x22; AND t.language&#x3d;&#x22;EN&#x22; AND age_group_id IS NULL AND answer_id IS NULL AND company_size_id IS NULL AND currency_id IS NULL AND gender_id IS NULL AND illness_id IS NULL AND subindicator_id IS NULL ADN year IS NULL&#x29;&#x3b;&#xd;&#xa;&#xd;&#xa;SELECT &#x2a; FROM value WHERE dataset_id&#x3d;&#x40;datasetID AND indicator_id&#x3d;&#x24;&#x7b;pIndicator&#x7d; AND profile_id&#x3d;&#x40;profileID&#x3b;</sql>
+    <sql>SET &#x40;datasetID&#x3d;&#x28;SELECT id FROM dataset WHERE source&#x3d;&#x22;Eurostat&#x22; AND date_from&#x3d;&#x22;&#x24;&#x7b;pYearFrom&#x7d;&#x22; AND date_to IS NULL&#x29;&#x3b;&#xd;&#xa;SET &#x40;profileID&#x3d;&#x28;SELECT p.id FROM profile p INNER JOIN nuts n ON p.nuts_id&#x3d;n.id INNER JOIN split_activity_sector sas ON p.activity_sector_id&#x3d;sas.id INNER JOIN translation t ON sas.literal_id&#x3d;t.literal_id WHERE n.country_code&#x3d;&#x22;&#x3f;&#x22; AND t.text&#x3d;&#x22;&#x3f;&#x22; AND t.language&#x3d;&#x22;EN&#x22; AND age_group_id IS NULL AND answer_id IS NULL AND company_size_id IS NULL AND currency_id IS NULL AND gender_id IS NULL AND illness_id IS NULL AND subindicator_id IS NULL ADN year IS NULL&#x29;&#x3b;&#xd;&#xa;&#xd;&#xa;SELECT &#x2a; FROM value WHERE dataset_id&#x3d;&#x40;datasetID AND indicator_id&#x3d;&#x24;&#x7b;pIndicatorID&#x7d; AND profile_id&#x3d;&#x40;profileID&#x3b;</sql>
     <set_params>N</set_params>
     <insert_field/>
     <update_field/>
@@ -875,7 +875,7 @@
     <single_statement>N</single_statement>
     <replace_variables>Y</replace_variables>
     <quoteString>N</quoteString>
-    <sql>SET &#x40;datasetID&#x3d;&#x28;SELECT id FROM dataset WHERE source&#x3d;&#x22;Eurostat&#x22; AND date_from&#x3d;&#x22;&#x24;&#x7b;pYearFrom&#x7d;&#x22; AND date_to&#x3d;&#x22;&#x24;&#x7b;pYearTo&#x7d;&#x22;&#x29;&#x3b;&#xd;&#xa;SET &#x40;profileID&#x3d;&#x28;SELECT id FROM profile INNER JOIN nuts n ON p.nuts_id&#x3d;n.id INNER JOIN split_activity_sector sas ON p.activity_sector_id&#x3d;sas.id INNER JOIN translation t ON sas.literal_id&#x3d;t.literal_id WHERE n.country_code&#x3d;&#x22;&#x3f;&#x22; AND t.text&#x3d;&#x22;&#x3f;&#x22; AND t.language&#x3d;&#x22;EN&#x22; AND age_group_id IS NULL AND answer_id IS NULL AND company_size_id IS NULL AND currency_id IS NULL AND gender_id IS NULL AND illness_id IS NULL AND subindicator_id IS NULL ADN year IS NULL&#x29;&#x3b;&#xd;&#xa;&#xd;&#xa;SELECT &#x2a; FROM value WHERE dataset_id&#x3d;&#x40;datasetID AND indicator_id&#x3d;&#x24;&#x7b;pIndicator&#x7d; AND profile_id&#x3d;&#x40;profileID&#x3b;</sql>
+    <sql>SET &#x40;datasetID&#x3d;&#x28;SELECT id FROM dataset WHERE source&#x3d;&#x22;Eurostat&#x22; AND date_from&#x3d;&#x22;&#x24;&#x7b;pYearFrom&#x7d;&#x22; AND date_to&#x3d;&#x22;&#x24;&#x7b;pYearTo&#x7d;&#x22;&#x29;&#x3b;&#xd;&#xa;SET &#x40;profileID&#x3d;&#x28;SELECT p.id FROM profile p INNER JOIN nuts n ON p.nuts_id&#x3d;n.id INNER JOIN split_activity_sector sas ON p.activity_sector_id&#x3d;sas.id INNER JOIN translation t ON sas.literal_id&#x3d;t.literal_id WHERE n.country_code&#x3d;&#x22;&#x3f;&#x22; AND t.text&#x3d;&#x22;&#x3f;&#x22; AND t.language&#x3d;&#x22;EN&#x22; AND age_group_id IS NULL AND answer_id IS NULL AND company_size_id IS NULL AND currency_id IS NULL AND gender_id IS NULL AND illness_id IS NULL AND subindicator_id IS NULL ADN year IS NULL&#x29;&#x3b;&#xd;&#xa;&#xd;&#xa;SELECT &#x2a; FROM value WHERE dataset_id&#x3d;&#x40;datasetID AND indicator_id&#x3d;&#x24;&#x7b;pIndicatorID&#x7d; AND profile_id&#x3d;&#x40;profileID&#x3b;</sql>
     <set_params>N</set_params>
     <insert_field/>
     <update_field/>
@@ -909,9 +909,21 @@
     <compare>
 <condition>
  <negated>N</negated>
- <leftvalue>pYearTo</leftvalue>
- <function>IS NOT NULL</function>
- <rightvalue/>
+ <conditions>
+  <condition>
+   <negated>N</negated>
+   <leftvalue>pYearTo</leftvalue>
+   <function>IS NOT NULL</function>
+   <rightvalue/>
+   </condition>
+  <condition>
+   <negated>Y</negated>
+   <operator>AND</operator>
+   <leftvalue>pYearTo</leftvalue>
+   <function>&#x3d;</function>
+   <rightvalue/>
+   <value><name>constant</name><type>String</type><text>NULL</text><length>-1</length><precision>-1</precision><isnull>N</isnull><mask/></value>   </condition>
+  </conditions>
  </condition>
     </compare>
      <cluster_schema/>
