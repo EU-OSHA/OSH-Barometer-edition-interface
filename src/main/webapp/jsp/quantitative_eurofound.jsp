@@ -4,24 +4,9 @@
 	<div class="container" id="quantitative-page">
 		<%@include file="includes/breadcrumb.jsp"%>
 		<h1>Quantitative data from Eurofound</h1>
-		<%
-            String errorMessage = (String) request.getAttribute("errorMessage");
-            if(errorMessage != null){
-        %>
-        <div class="alert-danger">
-            <p><%=errorMessage%></p>
-        </div>
-        <div class="clear-content"></div>
-        <%
-            }
-            String confirmationMessage = (String) request.getAttribute("confirmationMessage");
-            if(confirmationMessage != null){
-        %>
-        <div class="alert-success">
-            <p><%=confirmationMessage%></p>
-        </div>
-        <div class="clear-content"></div>
-        <% } %>
+		
+		<%@include file="includes/alerts.jsp"%>
+		
 		<form action="user?page=quantitative_eurofound" method="post" enctype="multipart/form-data">
 			<!-- Year input -->
 			<label>Year</label>
@@ -40,7 +25,7 @@
 			<div class="clear-content"></div>
 			<!-- File input -->
 			<label>File</label> 
-			<input type="file" name="quantitativeEurofoundFile" required accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"> 
+			<input type="file" name="quantitativeEurofoundFile" required accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"> 
 			<!-- <button class="upload">Upload</button> -->
 			<!-- <button>Download Excel template</button> -->
 			<!-- <a class="href-link" href="files/EU-OSHA_OSH BAROMETER_EUROFOUND Indicator List_YYYYMMDD.xlsx">Download Excel templates</a> -->

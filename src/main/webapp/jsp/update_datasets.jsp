@@ -6,23 +6,9 @@
 	<div class="container">
 		<%@include file="includes/breadcrumb.jsp"%>
 		<h1>Update year / period of the DVT's data</h1>
-		<%
-            String errorMessage = (String) request.getAttribute("errorMessage");
-            if(errorMessage != null){
-        %>
-        <div class="alert-danger">
-            <p><%=errorMessage%></p>
-        </div>
-        <%
-            }
-            String confirmationMessage = (String) request.getAttribute("confirmationMessage");
-            if(confirmationMessage != null){
-        %>
-        <div class="alert-success">
-            <p><%=confirmationMessage%></p>
-        </div>        
-        <div class="clear-content"></div>
-        <% } %>
+		
+		<%@include file="includes/alerts.jsp"%>
+		
 		<label>Section:</label>
 		<% ArrayList<HashMap<String,String>> sectionList = (ArrayList<HashMap<String,String>>) request.getAttribute("sectionList");
 			String sectionSelected = (String) request.getAttribute("sectionSelected");

@@ -3,27 +3,12 @@
 <%@page import="java.util.HashMap"%>
 <%@include file="includes/head.jsp"%>
 <%@include file="includes/header.jsp"%>
-	<div class="container">
+	<div class="container" id="container-eurostat-quantitative">
 		<%@include file="includes/breadcrumb.jsp"%>
 		<h1>Quantitative data from Eurostat</h1>
-		<%
-            String errorMessage = (String) request.getAttribute("errorMessage");
-            if(errorMessage != null){
-        %>
-        <div class="alert-danger">
-            <p><%=errorMessage%></p>
-        </div>
-        <div class="clear-content"></div>
-        <%
-            }
-            String confirmationMessage = (String) request.getAttribute("confirmationMessage");
-            if(confirmationMessage != null){
-        %>
-        <div class="alert-success">
-            <p><%=confirmationMessage%></p>
-        </div>
-        <div class="clear-content"></div>
-        <% } %>
+
+		<%@include file="includes/alerts.jsp"%>
+
         <form action="user?page=quantitative_eurostat" method="post" enctype="multipart/form-data">
 			<label>Indicator</label>
 			<% ArrayList<HashMap<String,String>> indicatorsList = (ArrayList<HashMap<String,String>>) request.getAttribute("indicatorsList"); 
@@ -83,7 +68,7 @@
 			<div class="clear-content"></div>
 			<label>File</label>
 			<label id="templateUsage" class="help-text">The template should be "EU-OSHA_OIE_Eurostat_Income_per_capita_YYYY-MM-DD"</label>
-			<input type="file" name="quantitativeEurostatFile" required accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+			<input type="file" name="quantitativeEurostatFile" required accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
 			<!-- <button>Download Excel templates</button> -->
 			<span class="with-tooltip"><a class="href-link" href="files/Eurostat_Quantitative_Templates.zip">Download Excel templates</a><span class="tootip-box">Download the Eurostat Excel templates</span></span>
 			<div class="clear-content"></div>

@@ -76,7 +76,9 @@ public class BarometerUIController extends HttpServlet{
 	private static final String USERNAME = "admin";
 	private static final String PASSWORD = "admin";
 	
-	private static String DEFAULT_SECTION_ID = "17";
+	private static String UPDATE_DATASETS_DEFAULT_SECTION_ID = "17";
+	private static String COUNTRY_REPORTS_DEFAULT_SECTION_ID = "38";
+	private static String FILE_EXTENSION = ".xlsx";
 
 	/**
 	 * The main method of the controller in charge of the redirections. Use a "service" method, so it can handle both
@@ -228,95 +230,107 @@ public class BarometerUIController extends HttpServlet{
 						String eurofoundDataFileName = configurationData.getString("file.eurofound.name");
 						String fileExtension = fileName.substring(fileName.indexOf('.'));
 						
-						LOGGER.info("File name: "+fileName);
-						InputStream fileContent = file.getInputStream();						
-						OutputStream out = null;
-						
-					    try {
-					    	inputDirectory =  configurationData.getString("directory.quantitative_file.eurofound.input");
-					    	outputDirectory = configurationData.getString("directory.etl.quantitative_file.eurofound.output");
-					    	scriptDirectory = configurationData.getString("directory.script");
-					    	logOutputDirectory = configurationData.getString("directory.quantitative_file.eurofound.log");
-					        out = new FileOutputStream(new File(inputDirectory + eurofoundDataFileName + fileExtension));
-					        
-					        resultStringBuilder = new StringBuilder();
+						if(fileExtension.equals(FILE_EXTENSION)) {
+							LOGGER.info("File name: "+fileName);
+							InputStream fileContent = file.getInputStream();						
+							OutputStream out = null;
+							
+						    try {
+						    	inputDirectory =  configurationData.getString("directory.quantitative_file.eurofound.input");
+						    	outputDirectory = configurationData.getString("directory.etl.quantitative_file.eurofound.output");
+						    	scriptDirectory = configurationData.getString("directory.script");
+						    	logOutputDirectory = configurationData.getString("directory.quantitative_file.eurofound.log");
+						        out = new FileOutputStream(new File(inputDirectory + eurofoundDataFileName + fileExtension));
+						        
+						        resultStringBuilder = new StringBuilder();
 
-					        int read = 0;
-					        final byte[] bytes = new byte[1024];
+						        int read = 0;
+						        final byte[] bytes = new byte[1024];
 
-					        while ((read = fileContent.read(bytes)) != -1) {
-					            out.write(bytes, 0, read);
-					        }
-					        LOGGER.info("File "+fileName+" being uploaded to " + inputDirectory);
-					        
-					        if(SystemUtils.IS_OS_WINDOWS) {
-					        	LOGGER.info("WINDOWS: Running script: "+scriptDirectory+"eurofound_quantitative_script.bat");
-					        	command = "cmd /c start \"\" "+scriptDirectory+"eurofound_quantitative_script.bat " 
-										+ eurofoundDataFileName+fileExtension+" "+year+" "+inputDirectory+" "+outputDirectory
-										+ " > " + scriptDirectory + "script_log_eurofound.txt 2>&1";
-					        	LOGGER.info("WINDOWS: command to execute: "+command);
-					        	Process p = Runtime.getRuntime().exec(command);
-								LOGGER.info("Waiting for script to end...");
-								p.waitFor();
-								LOGGER.info("Script process ended.");
-								LOGGER.info("WINDOWS: File "+fileName+" moved to directory " + outputDirectory);								
-							} else {
-								LOGGER.info("LINUX: Running script: "+scriptDirectory+"eurofound_quantitative_script.sh");
-								command = "sh "+scriptDirectory+"eurofound_quantitative_script.sh " 
-										+ eurofoundDataFileName+fileExtension+" "+year+" "+inputDirectory+" "+outputDirectory;
-								LOGGER.info("LINUX: command to execute: "+command);
-								Process p = Runtime.getRuntime().exec(command);
-								LOGGER.info("Waiting for script to end...");
-								p.waitFor();
-								LOGGER.info("Script process ended.");
-						        File logFile = new File(logOutputDirectory+"log.txt");
-						        LOGGER.info("Log file exists in "+logOutputDirectory+"log.txt? "+logFile.exists());
-						        LOGGER.info("Log file exists? "+logFile.exists());
-						        if(logFile.exists()) {
-									InputStream inputStream = new FileInputStream(logOutputDirectory+"log.txt");
-									if (inputStream != null) {
-									    try (BufferedReader br
-									      = new BufferedReader(new InputStreamReader(inputStream))) {
-									        String line;
-									        while ((line = br.readLine()) != null) {
-									            resultStringBuilder.append(line).append("\n");
-									        }
-									        LOGGER.info("resultStringBuilder: "+resultStringBuilder);
-									    }
-									    
-									    logFile.delete();
-									}
+						        while ((read = fileContent.read(bytes)) != -1) {
+						            out.write(bytes, 0, read);
 						        }
-							}
-					        
-					        if(resultStringBuilder.length() > 0) {
-					        	LOGGER.info("resultStringBuilder has data");
-					        	if(resultStringBuilder.toString().contains("SUCCESS")) {
-					        		LOGGER.info("LOG FILE SAYS TEST IS SUCCESSFUL");
-						        	confirmationMessage = resultStringBuilder.toString();
-						        } else if (resultStringBuilder.toString().contains("ERROR")) {
-						        	errorMessage = resultStringBuilder.toString();
-						        	LOGGER.info("LOG FILE SAYS TEST HAS ERRORS");
+						        LOGGER.info("File "+fileName+" being uploaded to " + inputDirectory);
+						        
+						        if(SystemUtils.IS_OS_WINDOWS) {
+						        	LOGGER.info("WINDOWS: Running script: "+scriptDirectory+"eurofound_quantitative_script.bat");
+						        	command = "cmd /c start \"\" "+scriptDirectory+"eurofound_quantitative_script.bat " 
+											+ eurofoundDataFileName+fileExtension+" "+year+" "+inputDirectory+" "+outputDirectory
+											+ " > " + scriptDirectory + "script_log_eurofound.txt 2>&1";
+						        	LOGGER.info("WINDOWS: command to execute: "+command);
+						        	Process p = Runtime.getRuntime().exec(command);
+									LOGGER.info("Waiting for script to end...");
+									p.waitFor();
+									LOGGER.info("Script process ended.");
+									LOGGER.info("WINDOWS: File "+fileName+" moved to directory " + outputDirectory);								
+								} else {
+									LOGGER.info("LINUX: Running script: "+scriptDirectory+"eurofound_quantitative_script.sh");
+									command = "sh "+scriptDirectory+"eurofound_quantitative_script.sh " 
+											+ eurofoundDataFileName+fileExtension+" "+year+" "+inputDirectory+" "+outputDirectory;
+									LOGGER.info("LINUX: command to execute: "+command);
+									Process p = Runtime.getRuntime().exec(command);
+									LOGGER.info("Waiting for script to end...");
+									p.waitFor();
+									LOGGER.info("Script process ended.");
+							        File logFile = new File(logOutputDirectory+"log.txt");
+							        LOGGER.info("Log file exists in "+logOutputDirectory+"log.txt? "+logFile.exists());
+							        if(logFile.exists()) {
+										InputStream inputStream = new FileInputStream(logOutputDirectory+"log.txt");
+										if (inputStream != null) {
+										    try (BufferedReader br
+										      = new BufferedReader(new InputStreamReader(inputStream))) {
+										        String line;
+										        while ((line = br.readLine()) != null) {
+										            resultStringBuilder.append(line).append("\n");
+										        }
+										        LOGGER.info("resultStringBuilder: "+resultStringBuilder);
+										    }
+										    logFile.delete();
+										}
+							        }
+							        
+							        File etlReadingFile = new File(outputDirectory+eurofoundDataFileName+fileExtension);
+							        if(etlReadingFile.exists()) {
+							        	etlReadingFile.delete();
+							        	LOGGER.info("Excel file deleted after processing it");
+							        }else {
+							        	LOGGER.info("Excel file not found");
+							        }
+								}
+						        
+						        if(resultStringBuilder.length() > 0) {
+						        	LOGGER.info("resultStringBuilder has data");
+						        	if(resultStringBuilder.toString().contains("SUCCESS")) {
+						        		LOGGER.info("LOG FILE SAYS TEST IS SUCCESSFUL");
+						        		LOGGER.info(resultStringBuilder.toString());
+						        		confirmationMessage = "The data has been correctly saved.";
+							        } else if (resultStringBuilder.toString().contains("ERROR")) {
+							        	errorMessage = "An error has occurred while processing excel file";
+							        	LOGGER.error("LOG FILE SAYS TEST HAS ERRORS");
+							        	LOGGER.error(resultStringBuilder.toString());
+							        }
+						        } else {
+						        	LOGGER.error("resultStringBuilder has NO data");
+						        	errorMessage = "An error has occurred in the process.";
 						        }
-					        } else {
-					        	LOGGER.info("resultStringBuilder has NO data");
-					        	errorMessage = "An error has occurred in the process.";
-					        }
-					    } catch (FileNotFoundException fne) {
-					        LOGGER.error("Problems during file upload. Error: "+fne.getMessage());
-					        fne.printStackTrace();
-					        errorMessage = "An error has occurred while processing excel file.";
-					    } catch (Exception e) {
-					    	LOGGER.error("An error has occurred. Error: "+e.getMessage());
-					    	e.printStackTrace();					    
-					    } finally {
-					        if (out != null) {
-					            out.close();
-					        }
-					        if (fileContent != null) {
-					        	fileContent.close();
-					        }
-					    }
+						    } catch (FileNotFoundException fne) {
+						        LOGGER.error("Problems during file upload. Error: "+fne.getMessage());
+						        fne.printStackTrace();
+						        errorMessage = "An error has occurred while processing excel file";
+						    } catch (Exception e) {
+						    	LOGGER.error("An error has occurred. Error: "+e.getMessage());
+						    	e.printStackTrace();					    
+						    } finally {
+						        if (out != null) {
+						            out.close();
+						        }
+						        if (fileContent != null) {
+						        	fileContent.close();
+						        }
+						    }
+						} else {
+							errorMessage = "The type of the file uploaded is not valid. The File type should be .xlsx";
+						}
 					}
 					
 					if(errorMessage != null) {
@@ -353,6 +367,11 @@ public class BarometerUIController extends HttpServlet{
 					String fileName = Paths.get(file.getSubmittedFileName()).getFileName().toString();
 					String eurostatDataFileName = configurationData.getString("file.eurostat.name");
 					String fileExtension = fileName.substring(fileName.indexOf('.'));
+					
+					if(!fileExtension.equals(FILE_EXTENSION)) {
+						validation = false;
+						errorMessage = "The type of the file uploaded is not valid. The File type should be .xlsx";
+					}
 					
 					if(indicatorEurostat.equals("36") || indicatorEurostat.equals("279") || indicatorEurostat.equals("53")
 							|| indicatorEurostat.equals("54")) {
@@ -446,7 +465,6 @@ public class BarometerUIController extends HttpServlet{
 								LOGGER.info("Script process ended.");
 						        File logFile = new File(logOutputDirectory+"log.txt");
 						        LOGGER.info("Log file exists in "+logOutputDirectory+"log.txt? "+logFile.exists());
-						        LOGGER.info("Log file exists? "+logFile.exists());
 						        if(logFile.exists()) {
 									InputStream inputStream = new FileInputStream(logOutputDirectory+"log.txt");
 									if (inputStream != null) {
@@ -462,6 +480,12 @@ public class BarometerUIController extends HttpServlet{
 									    logFile.delete();
 									}
 						        }
+						        
+						        File etlReadingFile = new File(outputDirectory+eurostatDataFileName+fileExtension);
+						        if(etlReadingFile.exists()) {
+						        	etlReadingFile.delete();
+						        	LOGGER.info("Excel file deleted after processing it");
+						        }
 							}
 					        
 					        LOGGER.info("Result String Builder: "+resultStringBuilder.toString());
@@ -470,14 +494,15 @@ public class BarometerUIController extends HttpServlet{
 					        	LOGGER.info("resultStringBuilder has data");
 					        	if(resultStringBuilder.toString().contains("SUCCESS")) {
 					        		LOGGER.info("LOG FILE SAYS TEST IS SUCCESSFUL");
-						        	confirmationMessage = resultStringBuilder.toString();
+					        		confirmationMessage = "The data has been correctly saved.";
 						        } else if (resultStringBuilder.toString().contains("ERROR")) {
-						        	errorMessage = resultStringBuilder.toString();
-						        	LOGGER.info("LOG FILE SAYS TEST HAS ERRORS");
+						        	errorMessage = "An error has occurred while processing excel file";
+						        	LOGGER.error("LOG FILE SAYS TEST HAS ERRORS");
 						        }
+					        	LOGGER.info(resultStringBuilder.toString());
 					        } else {
-					        	LOGGER.info("resultStringBuilder has NO data");
-					        	errorMessage = "An error has occurred in the process.";
+					        	LOGGER.error("resultStringBuilder has NO data");
+					        	errorMessage = "An error has occurred while processing excel file";
 					        }
 					        
 						} catch(Exception e) {
@@ -510,6 +535,77 @@ public class BarometerUIController extends HttpServlet{
 				LOGGER.info("Arriving to Update labels Form.");
 				nextURL = "/jsp/update_labels.jsp";
 				//TODO functionality for page update_labels
+			} else if (page.equals("country_reports_member_states")) {
+				LOGGER.info("Arriving to Country Reports for Member States.");
+				nextURL = "/jsp/country_reports_member_states.jsp";
+				String submit = req.getParameter("Submit");
+				String section = req.getParameter("section_id");
+				String country = req.getParameter("country");
+				ArrayList<HashMap<String,String>> countryList = null;
+				String outputDirectory = configurationData.getString("directory.quantitative_file.eurostat.input");
+				StringBuilder filename = new StringBuilder();
+				String confirmMessage = null;
+				String errorMessage = null;
+				
+				if(submit != null) {
+					Part file = req.getPart("pdfFile");
+					if(section != null) {
+						if(section.equals("osh_authorities")) {
+							countryList = QualitativeDataBusiness.getOshAuthoritiesCountries();
+							filename.append("OSH authorities - ");
+						} else if(section.equals("national_strategies")) {
+							countryList = QualitativeDataBusiness.getNationalStrategiesCountries();
+							filename.append("National-Strategies-Mapping_");
+						} else if(section.equals("social_dialogue")) {
+							countryList = QualitativeDataBusiness.getSocialDialogueCountries();
+							filename.append("Social_Dialogue_National-Strategies-Mapping_");
+						}
+						filename.append(country);
+					}
+					
+					String fileName = Paths.get(file.getSubmittedFileName()).getFileName().toString();
+					InputStream fileContent = file.getInputStream();						
+					OutputStream out = null;
+					
+					try {
+						outputDirectory = configurationData.getString("directory.country_reports.osh_authorities.output");
+				        out = new FileOutputStream(new File(outputDirectory + filename.toString()));
+
+				        int read = 0;
+				        final byte[] bytes = new byte[1024];
+
+				        while ((read = fileContent.read(bytes)) != -1) {
+				            out.write(bytes, 0, read);
+				        }
+				        LOGGER.info("File "+fileName+" being uploaded to " + outputDirectory);
+				        confirmMessage = "The uploaded Country Report PDF has been correctly saved";
+					} catch(Exception e) {
+						LOGGER.error("An error has occurred while uploading the pdf.");
+						e.printStackTrace();
+						errorMessage = "";
+					}
+				} else {
+					country = "Austria";
+					section = COUNTRY_REPORTS_DEFAULT_SECTION_ID;
+					countryList = QualitativeDataBusiness.getOshAuthoritiesCountries();
+				}
+				
+				if(country == null) {
+					country = "Austria";
+				}
+				
+				req.setAttribute("errorMessage", errorMessage);
+				req.setAttribute("confirmMessage", confirmMessage);
+				req.setAttribute("countrySelected", country);
+				req.setAttribute("section_id", section);
+				req.setAttribute("countryList", countryList);
+			} else if(page.equals("qualitative_data_member_states")) {
+				LOGGER.info("Arriving to Qualitative Form for Member States.");
+				nextURL = "/jsp/qualitative_data_member_states.jsp";
+				//TODO functionality of qualitative for member states
+			} else if (page.equals("methodology_data")) {
+				LOGGER.info("Arriving to Methodology Data Page.");
+				//TODO functionality for page methodology_data
 			} else if (page.equals("update_datasets")) {
 				LOGGER.info("Arriving to Update year / period of the DVT's data Form.");
 				nextURL = "/jsp/update_datasets.jsp";
@@ -543,7 +639,7 @@ public class BarometerUIController extends HttpServlet{
 				if(sectionId != null) {
 					chartsBySectionList = QualitativeDataBusiness.getChartsBySection(sectionId);
 				} else {
-					chartsBySectionList = QualitativeDataBusiness.getChartsBySection(DEFAULT_SECTION_ID);
+					chartsBySectionList = QualitativeDataBusiness.getChartsBySection(UPDATE_DATASETS_DEFAULT_SECTION_ID);
 				}
 				
 				req.setAttribute("sectionList", sectionList);

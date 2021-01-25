@@ -26,7 +26,7 @@
 				</span>
 				<span class="tootip-box">Qualitative data related to the quantitative data.</span>
 			</a>
-			<a class="box" href="">
+			<a class="box" href="user?page=country_reports_member_states">
 				<span class="content-box">
 					<span class="box-title">Country Reports<br>from Member<br>States</span>
 					<span class="box-ico"><img src="images/report.png"></span>

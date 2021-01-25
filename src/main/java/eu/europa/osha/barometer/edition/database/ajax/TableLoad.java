@@ -31,7 +31,7 @@ public class TableLoad extends HttpServlet {
     {
 		LOGGER.info("App flow arrives to TableLoad Ajax service");
 		Gson g = new Gson();
-        String returningData = "";        
+        String returningData = "";
 		String section = req.getParameter("section");
 		String chart = req.getParameter("chart");
 		String get = req.getParameter("get");

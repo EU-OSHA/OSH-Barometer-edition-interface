@@ -55,7 +55,10 @@ $(document).ready(function(){
 		}
 	};
 	
-	changeYearCombos();
+	if($('#container-eurostat-quantitative').length > 0){
+		changeYearCombos();
+	}
+	
 	
 	enableDatasetTableSaveButton = function(event, currentDatasetId, indicatorId) {
 		console.log('Enters in enableDatasetTableSaveButton');
@@ -175,6 +178,29 @@ $(document).ready(function(){
 		});
 	}
 	
+	changeCountryDisplay = function() {
+		console.log("Enters changeCountryDisplay function");
+		var sectionSelected = document.getElementById("section");
+		var valueSelected = sectionSelected.value;
+		$.get({
+			url: 'countrydisplay',
+			data: {
+				section: valueSelected
+			},
+			success: function(countryResponse) {
+		        var countryList = JSON.parse(countryResponse);
+		        var new_tbody = "";
+		        $('#country').empty();
+		        countryList.forEach(function(country){
+					new_tbody = new_tbody.concat('<option value="'+country.country_name+'" >');
+					new_tbody = new_tbody.concat(country.country_name);
+					new_tbody = new_tbody.concat('</option>');
+		        });
+		        $('#country').html(new_tbody);
+			},
+			async: true
+		});
+	}
 });
 
 })(jQuery);
