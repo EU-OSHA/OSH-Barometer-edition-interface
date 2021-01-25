@@ -381,7 +381,7 @@
         <repeat>N</repeat>
         <format/>
         <currency/>
-        <decimal/>
+        <decimal>.</decimal>
         <group/>
       </field>
       <field>
@@ -393,7 +393,7 @@
         <repeat>N</repeat>
         <format/>
         <currency/>
-        <decimal/>
+        <decimal>.</decimal>
         <group/>
       </field>
       <field>
@@ -405,7 +405,7 @@
         <repeat>N</repeat>
         <format/>
         <currency/>
-        <decimal/>
+        <decimal>.</decimal>
         <group/>
       </field>
     </fields>
@@ -548,7 +548,7 @@
     <execute_each_row>Y</execute_each_row>
     <single_statement>N</single_statement>
     <replace_variables>Y</replace_variables>
-    <quoteString>Y</quoteString>
+    <quoteString>N</quoteString>
     <sql>SET &#x40;datasetID&#x3d;&#x28;SELECT id FROM dataset WHERE source&#x3d;&#x22;Eurostat&#x22; AND date_from&#x3d;&#x22;&#x24;&#x7b;pYearFrom&#x7d;&#x22; AND date_to IS NULL&#x29;&#x3b;&#xd;&#xa;SET &#x40;profileID&#x3d;&#x28;SELECT p.id FROM profile p INNER JOIN nuts n ON p.nuts_id&#x3d;n.id INNER JOIN split_gender g ON p.gender_id&#x3d;g.id INNER JOIN translation t ON g.literal_id&#x3d;t.literal_id WHERE n.country_code&#x3d;&#x22;&#x3f;&#x22; AND t.text&#x3d;&#x22;&#x3f;&#x22; AND t.language&#x3d;&#x22;EN&#x22; AND activity_sector_id IS NULL AND age_group_id IS NULL AND answer_id IS NULL AND company_size_id IS NULL AND currency_id IS NULL AND illness_id IS NULL AND subindicator_id IS NULL AND year IS NULL&#x29;&#x3b;&#xd;&#xa;&#xd;&#xa;INSERT INTO value &#x28;dataset_id, indicator_id, profile_id, value&#x29; VALUES &#x28;&#x40;datasetID, &#x24;&#x7b;pIndicatorID&#x7d;, &#x40;profileID, &#x3f;&#x29;&#x3b;</sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -583,7 +583,7 @@
     <execute_each_row>Y</execute_each_row>
     <single_statement>N</single_statement>
     <replace_variables>Y</replace_variables>
-    <quoteString>Y</quoteString>
+    <quoteString>N</quoteString>
     <sql>SET &#x40;datasetID&#x3d;&#x28;SELECT id FROM dataset WHERE source&#x3d;&#x22;Eurostat&#x22; AND date_from&#x3d;&#x22;&#x24;&#x7b;pYearFrom&#x7d;&#x22; AND date_to&#x3d;&#x22;&#x24;&#x7b;pYearTo&#x7d;&#x22;&#x29;&#x3b;&#xd;&#xa;SET &#x40;profileID&#x3d;&#x28;SELECT p.id FROM profile p INNER JOIN nuts n ON p.nuts_id&#x3d;n.id INNER JOIN split_gender g ON p.gender_id&#x3d;g.id INNER JOIN translation t ON g.literal_id&#x3d;t.literal_id WHERE n.country_code&#x3d;&#x22;&#x3f;&#x22; AND t.text&#x3d;&#x22;&#x3f;&#x22; AND t.language&#x3d;&#x22;EN&#x22; AND activity_sector_id IS NULL AND age_group_id IS NULL AND answer_id IS NULL AND company_size_id IS NULL AND currency_id IS NULL AND illness_id IS NULL AND subindicator_id IS NULL AND year IS NULL&#x29;&#x3b;&#xd;&#xa;&#xd;&#xa;INSERT INTO value &#x28;dataset_id, indicator_id, profile_id, value&#x29; VALUES &#x28;&#x40;datasetID, &#x24;&#x7b;pIndicatorID&#x7d;, &#x40;profileID, &#x3f;&#x29;&#x3b;</sql>
     <set_params>N</set_params>
     <insert_field/>
@@ -747,7 +747,7 @@
     <single_statement>N</single_statement>
     <replace_variables>Y</replace_variables>
     <quoteString>N</quoteString>
-    <sql>SET &#x40;nutsID&#x3d;&#x28;SELECT id FROM nuts WHERE country_code&#x3d;&#x22;&#x3f;&#x22;&#x29;&#x3b;&#xd;&#xa;SET &#x40;genderID&#x3d;&#x28;SELECT g.id FROM split_gender g INNER JOIN translation t ON g.literal_id&#x3d;t.literal_id WHERE t.language&#x3d;&#x22;EN&#x22; AND t.text&#x3d;&#x22;&#x3f;&#x22;&#x29;&#x3b;&#xd;&#xa;&#xd;&#xa;SELECT &#x2a; &#xd;&#xa;FROM profile p&#xd;&#xa;WHERE nuts_id&#x3d;&#x40;nutsID&#xd;&#xa;AND gender_id&#x3d;&#x40;genderID&#xd;&#xa;AND activity_sector_id IS NULL&#xd;&#xa;AND age_group_id IS NULL&#xd;&#xa;AND answer_id IS NULL&#xd;&#xa;AND company_size_id&#xd;&#xa;AND currency_id IS NULL&#xd;&#xa;AND illness_id IS NULL&#xd;&#xa;AND subindicator_id IS NULL&#xd;&#xa;AND year IS NULL&#x3b;</sql>
+    <sql>SET &#x40;nutsID&#x3d;&#x28;SELECT id FROM nuts WHERE country_code&#x3d;&#x22;&#x3f;&#x22;&#x29;&#x3b;&#xd;&#xa;SET &#x40;genderID&#x3d;&#x28;SELECT g.id FROM split_gender g INNER JOIN translation t ON g.literal_id&#x3d;t.literal_id WHERE t.language&#x3d;&#x22;EN&#x22; AND t.text&#x3d;&#x22;&#x3f;&#x22;&#x29;&#x3b;&#xd;&#xa;&#xd;&#xa;SELECT &#x2a; &#xd;&#xa;FROM profile p&#xd;&#xa;WHERE nuts_id&#x3d;&#x40;nutsID&#xd;&#xa;AND gender_id&#x3d;&#x40;genderID&#xd;&#xa;AND activity_sector_id IS NULL&#xd;&#xa;AND age_group_id IS NULL&#xd;&#xa;AND answer_id IS NULL&#xd;&#xa;AND company_size_id IS NULL&#xd;&#xa;AND currency_id IS NULL&#xd;&#xa;AND illness_id IS NULL&#xd;&#xa;AND subindicator_id IS NULL&#xd;&#xa;AND year IS NULL&#x3b;</sql>
     <set_params>N</set_params>
     <insert_field/>
     <update_field/>
