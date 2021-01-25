@@ -18,7 +18,7 @@
         </parameter>
         <parameter>
             <name>pYear</name>
-            <default_value>2018-01-01</default_value>
+            <default_value>2015-01-01</default_value>
             <description>Year with the data for the dataset</description>
         </parameter>
     </parameters>
@@ -560,24 +560,6 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Insert Indicator Dataset</from>
-      <to>Insert Indicator Data &#x28;not Health at Risk&#x29;</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Insert Indicator Data &#x28;not Health at Risk&#x29;</from>
-      <to>Insert Health at Risk Data</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
       <from>Insert Health at Risk Data</from>
       <to>Update Methodology Data</to>
       <from_nr>0</from_nr>
@@ -607,6 +589,24 @@
     <hop>
       <from>Update Indicator Chart</from>
       <to>Write to log 8</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Insert Indicator Dataset</from>
+      <to>Insert Indicator Data &#x28;not Health at Risk&#x29;</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Insert Indicator Data &#x28;not Health at Risk&#x29;</from>
+      <to>Insert Health at Risk Data</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
