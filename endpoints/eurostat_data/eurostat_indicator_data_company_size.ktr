@@ -127,7 +127,7 @@
   <hop> <from>pYearTo is defined&#x3f;</from><to>Block 5</to><enabled>Y</enabled> </hop>
   </order>
   <step>
-    <name>Block 7</name>
+    <name>Block</name>
     <type>BlockUntilStepsFinish</type>
     <description/>
     <distribute>Y</distribute>
@@ -139,496 +139,14 @@
            </partitioning>
     <steps>
       <step>
-        <name>valueCount&#x3d;0&#x3f; 2</name>
-        <CopyNr>0</CopyNr>
-        </step>
-      <step>
-        <name>Insert Value 2</name>
+        <name>get profileCount</name>
         <CopyNr>0</CopyNr>
         </step>
       </steps>
-     <cluster_schema/>
- <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>928</xloc>
-      <yloc>416</yloc>
-      <draw>Y</draw>
-      </GUI>
-    </step>
-
-  <step>
-    <name>Block 6</name>
-    <type>BlockUntilStepsFinish</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-         <partitioning>
-           <method>none</method>
-           <schema_name/>
-           </partitioning>
-    <steps>
-      <step>
-        <name>valueCount&#x3d;0&#x3f; 2</name>
-        <CopyNr>0</CopyNr>
-        </step>
-      </steps>
-     <cluster_schema/>
- <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>1088</xloc>
-      <yloc>320</yloc>
-      <draw>Y</draw>
-      </GUI>
-    </step>
-
-  <step>
-    <name>Profile not exist&#x3f;</name>
-    <type>FilterRows</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-         <partitioning>
-           <method>none</method>
-           <schema_name/>
-           </partitioning>
-<send_true_to>Block</send_true_to>
-<send_false_to>Block 2</send_false_to>
-    <compare>
-<condition>
- <negated>N</negated>
- <leftvalue>profileCount</leftvalue>
- <function>&#x3d;</function>
- <rightvalue/>
- <value><name>constant</name><type>Integer</type><text>0</text><length>-1</length><precision>0</precision><isnull>N</isnull><mask>&#x23;</mask></value> </condition>
-    </compare>
      <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
       <xloc>320</xloc>
-      <yloc>224</yloc>
-      <draw>Y</draw>
-      </GUI>
-    </step>
-
-  <step>
-    <name>Update Value 2</name>
-    <type>ExecSQL</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-         <partitioning>
-           <method>none</method>
-           <schema_name/>
-           </partitioning>
-    <connection>osha_dvt</connection>
-    <execute_each_row>Y</execute_each_row>
-    <single_statement>N</single_statement>
-    <replace_variables>Y</replace_variables>
-    <quoteString>N</quoteString>
-    <sql>SET &#x40;datasetID&#x3d;&#x28;SELECT id FROM dataset WHERE source&#x3d;&#x22;Eurostat&#x22; AND date_from&#x3d;&#x22;&#x24;&#x7b;pYearFrom&#x7d;&#x22; AND date_to&#x3d;&#x22;&#x24;&#x7b;pYearTo&#x7d;&#x22;&#x29;&#x3b;&#xd;&#xa;SET &#x40;profileID&#x3d;&#x28;SELECT p.id FROM profile p INNER JOIN nuts n ON p.nuts_id&#x3d;n.id INNER JOIN split_company_size cs ON p.company_size_id&#x3d;cs.id INNER JOIN translation t ON cs.literal_id&#x3d;t.literal_id WHERE n.country_code&#x3d;&#x22;&#x3f;&#x22; AND t.text&#x3d;&#x22;&#x3f;&#x22; AND t.language&#x3d;&#x22;EN&#x22; AND activity_sector_id IS NULL AND age_group_id IS NULL AND answer_id IS NULL AND currency_id IS NULL AND gender_id IS NULL AND illness_id IS NULL AND subindicator_id IS NULL AND year IS NULL&#x29;&#x3b;&#xd;&#xa;&#xd;&#xa;UPDATE value SET value&#x3d;&#x3f; WHERE dataset_id&#x3d;&#x40;datasetID AND indicator_id&#x3d;&#x24;&#x7b;pIndicatorID&#x7d; AND profile_id&#x3d;&#x40;profileID&#x3b;</sql>
-    <set_params>N</set_params>
-    <insert_field/>
-    <update_field/>
-    <delete_field/>
-    <read_field/>
-    <arguments>
-       <argument><name>Country</name></argument>
-       <argument><name>companySize</name></argument>
-       <argument><name>Value</name></argument>
-    </arguments>
-     <cluster_schema/>
- <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>1088</xloc>
-      <yloc>416</yloc>
-      <draw>Y</draw>
-      </GUI>
-    </step>
-
-  <step>
-    <name>valueCount&#x3d;0&#x3f; 2</name>
-    <type>FilterRows</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-         <partitioning>
-           <method>none</method>
-           <schema_name/>
-           </partitioning>
-<send_true_to>Block 6</send_true_to>
-<send_false_to>Block 7</send_false_to>
-    <compare>
-<condition>
- <negated>N</negated>
- <leftvalue>valueCount</leftvalue>
- <function>&#x3d;</function>
- <rightvalue/>
- <value><name>constant</name><type>Integer</type><text>0</text><length>-1</length><precision>0</precision><isnull>N</isnull><mask>&#x23;&#x3b;-&#x23;</mask></value> </condition>
-    </compare>
-     <cluster_schema/>
- <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>928</xloc>
       <yloc>320</yloc>
-      <draw>Y</draw>
-      </GUI>
-    </step>
-
-  <step>
-    <name>valueCount&#x3d;0&#x3f;</name>
-    <type>FilterRows</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-         <partitioning>
-           <method>none</method>
-           <schema_name/>
-           </partitioning>
-<send_true_to>Block 3</send_true_to>
-<send_false_to>Block 4</send_false_to>
-    <compare>
-<condition>
- <negated>N</negated>
- <leftvalue>valueCount</leftvalue>
- <function>&#x3d;</function>
- <rightvalue/>
- <value><name>constant</name><type>Integer</type><text>0</text><length>-1</length><precision>0</precision><isnull>N</isnull><mask>&#x23;&#x3b;-&#x23;</mask></value> </condition>
-    </compare>
-     <cluster_schema/>
- <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>928</xloc>
-      <yloc>224</yloc>
-      <draw>Y</draw>
-      </GUI>
-    </step>
-
-  <step>
-    <name>pYearTo is defined&#x3f;</name>
-    <type>FilterRows</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-         <partitioning>
-           <method>none</method>
-           <schema_name/>
-           </partitioning>
-<send_true_to>Block 5</send_true_to>
-<send_false_to>get valueCount</send_false_to>
-    <compare>
-<condition>
- <negated>N</negated>
- <conditions>
-  <condition>
-   <negated>N</negated>
-   <leftvalue>pYearTo</leftvalue>
-   <function>IS NOT NULL</function>
-   <rightvalue/>
-   </condition>
-  <condition>
-   <negated>Y</negated>
-   <operator>AND</operator>
-   <leftvalue>pYearTo</leftvalue>
-   <function>&#x3d;</function>
-   <rightvalue/>
-   <value><name>constant</name><type>String</type><text>NULL</text><length>-1</length><precision>-1</precision><isnull>N</isnull><mask/></value>   </condition>
-  </conditions>
- </condition>
-    </compare>
-     <cluster_schema/>
- <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>688</xloc>
-      <yloc>224</yloc>
-      <draw>Y</draw>
-      </GUI>
-    </step>
-
-  <step>
-    <name>get valueCount 2</name>
-    <type>ExecSQL</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-         <partitioning>
-           <method>none</method>
-           <schema_name/>
-           </partitioning>
-    <connection>osha_dvt</connection>
-    <execute_each_row>Y</execute_each_row>
-    <single_statement>N</single_statement>
-    <replace_variables>Y</replace_variables>
-    <quoteString>N</quoteString>
-    <sql>SET &#x40;datasetID&#x3d;&#x28;SELECT id FROM dataset WHERE source&#x3d;&#x22;Eurostat&#x22; AND date_from&#x3d;&#x22;&#x24;&#x7b;pYearFrom&#x7d;&#x22; AND date_to&#x3d;&#x22;&#x24;&#x7b;pYearTo&#x7d;&#x22;&#x29;&#x3b;&#xd;&#xa;SET &#x40;profileID&#x3d;&#x28;SELECT p.id FROM profile p INNER JOIN nuts n ON p.nuts_id&#x3d;n.id INNER JOIN split_company_size cs ON p.company_size_id&#x3d;cs.id INNER JOIN translation t ON cs.literal_id&#x3d;t.literal_id WHERE n.country_code&#x3d;&#x22;&#x3f;&#x22; AND t.text&#x3d;&#x22;&#x3f;&#x22; AND t.language&#x3d;&#x22;EN&#x22; AND activity_sector_id IS NULL AND age_group_id IS NULL AND answer_id IS NULL AND currency_id IS NULL AND gender_id IS NULL AND illness_id IS NULL AND subindicator_id IS NULL AND year IS NULL&#x29;&#x3b;&#xd;&#xa;&#xd;&#xa;SELECT &#x2a; FROM value WHERE dataset_id&#x3d;&#x40;datasetID AND indicator_id&#x3d;&#x24;&#x7b;pIndicatorID&#x7d; AND profile_id&#x3d;&#x40;profileID&#x3b;</sql>
-    <set_params>N</set_params>
-    <insert_field/>
-    <update_field/>
-    <delete_field/>
-    <read_field>valueCount</read_field>
-    <arguments>
-       <argument><name>Country</name></argument>
-       <argument><name>companySize</name></argument>
-    </arguments>
-     <cluster_schema/>
- <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>800</xloc>
-      <yloc>320</yloc>
-      <draw>Y</draw>
-      </GUI>
-    </step>
-
-  <step>
-    <name>get valueCount</name>
-    <type>ExecSQL</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-         <partitioning>
-           <method>none</method>
-           <schema_name/>
-           </partitioning>
-    <connection>osha_dvt</connection>
-    <execute_each_row>Y</execute_each_row>
-    <single_statement>N</single_statement>
-    <replace_variables>Y</replace_variables>
-    <quoteString>N</quoteString>
-    <sql>SET &#x40;datasetID&#x3d;&#x28;SELECT id FROM dataset WHERE source&#x3d;&#x22;Eurostat&#x22; AND date_from&#x3d;&#x22;&#x24;&#x7b;pYearFrom&#x7d;&#x22; AND date_to IS NULL&#x29;&#x3b;&#xd;&#xa;SET &#x40;profileID&#x3d;&#x28;SELECT p.id FROM profile p INNER JOIN nuts n ON p.nuts_id&#x3d;n.id INNER JOIN split_company_size cs ON p.company_size_id&#x3d;cs.id INNER JOIN translation t ON cs.literal_id&#x3d;t.literal_id WHERE n.country_code&#x3d;&#x22;&#x3f;&#x22; AND t.text&#x3d;&#x22;&#x3f;&#x22; AND t.language&#x3d;&#x22;EN&#x22; AND activity_sector_id IS NULL AND age_group_id IS NULL AND answer_id IS NULL AND currency_id IS NULL AND gender_id IS NULL AND illness_id IS NULL AND subindicator_id IS NULL AND year IS NULL&#x29;&#x3b;&#xd;&#xa;&#xd;&#xa;SELECT &#x2a; FROM value WHERE dataset_id&#x3d;&#x40;datasetID AND indicator_id&#x3d;&#x24;&#x7b;pIndicatorID&#x7d; AND profile_id&#x3d;&#x40;profileID&#x3b;</sql>
-    <set_params>N</set_params>
-    <insert_field/>
-    <update_field/>
-    <delete_field/>
-    <read_field>valueCount</read_field>
-    <arguments>
-       <argument><name>Country</name></argument>
-       <argument><name>companySize</name></argument>
-    </arguments>
-     <cluster_schema/>
- <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>800</xloc>
-      <yloc>224</yloc>
-      <draw>Y</draw>
-      </GUI>
-    </step>
-
-  <step>
-    <name>Update Value</name>
-    <type>ExecSQL</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-         <partitioning>
-           <method>none</method>
-           <schema_name/>
-           </partitioning>
-    <connection>osha_dvt</connection>
-    <execute_each_row>Y</execute_each_row>
-    <single_statement>N</single_statement>
-    <replace_variables>Y</replace_variables>
-    <quoteString>N</quoteString>
-    <sql>SET &#x40;datasetID&#x3d;&#x28;SELECT id FROM dataset WHERE source&#x3d;&#x22;Eurostat&#x22; AND date_from&#x3d;&#x22;&#x24;&#x7b;pYearFrom&#x7d;&#x22; AND date_to IS NULL&#x29;&#x3b;&#xd;&#xa;SET &#x40;profileID&#x3d;&#x28;SELECT p.id FROM profile p INNER JOIN nuts n ON p.nuts_id&#x3d;n.id INNER JOIN split_company_size cs ON p.company_size_id&#x3d;cs.id INNER JOIN translation t ON cs.literal_id&#x3d;t.literal_id WHERE n.country_code&#x3d;&#x22;&#x3f;&#x22; AND t.text&#x3d;&#x22;&#x3f;&#x22; AND t.language&#x3d;&#x22;EN&#x22; AND activity_sector_id IS NULL AND age_group_id IS NULL AND answer_id IS NULL AND currency_id IS NULL AND gender_id IS NULL AND illness_id IS NULL AND subindicator_id IS NULL AND year IS NULL&#x29;&#x3b;&#xd;&#xa;&#xd;&#xa;UPDATE value SET value&#x3d;&#x3f; WHERE dataset_id&#x3d;&#x40;datasetID AND indicator_id&#x3d;&#x24;&#x7b;pIndicatorID&#x7d; AND profile_id&#x3d;&#x40;profileID&#x3b;</sql>
-    <set_params>N</set_params>
-    <insert_field/>
-    <update_field/>
-    <delete_field/>
-    <read_field/>
-    <arguments>
-       <argument><name>Country</name></argument>
-       <argument><name>companySize</name></argument>
-       <argument><name>Value</name></argument>
-    </arguments>
-     <cluster_schema/>
- <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>1088</xloc>
-      <yloc>144</yloc>
-      <draw>Y</draw>
-      </GUI>
-    </step>
-
-  <step>
-    <name>Insert Value 2</name>
-    <type>ExecSQL</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-         <partitioning>
-           <method>none</method>
-           <schema_name/>
-           </partitioning>
-    <connection>osha_dvt</connection>
-    <execute_each_row>Y</execute_each_row>
-    <single_statement>N</single_statement>
-    <replace_variables>Y</replace_variables>
-    <quoteString>N</quoteString>
-    <sql>SET &#x40;datasetID&#x3d;&#x28;SELECT id FROM dataset WHERE source&#x3d;&#x22;Eurostat&#x22; AND date_from&#x3d;&#x22;&#x24;&#x7b;pYearFrom&#x7d;&#x22; AND date_to&#x3d;&#x22;&#x24;&#x7b;pYearTo&#x7d;&#x22;&#x29;&#x3b;&#xd;&#xa;SET &#x40;profileID&#x3d;&#x28;SELECT p.id FROM profile p INNER JOIN nuts n ON p.nuts_id&#x3d;n.id INNER JOIN split_company_size cs ON p.company_size_id&#x3d;cs.id INNER JOIN translation t ON cs.literal_id&#x3d;t.literal_id WHERE n.country_code&#x3d;&#x22;&#x3f;&#x22; AND t.text&#x3d;&#x22;&#x3f;&#x22; AND t.language&#x3d;&#x22;EN&#x22; AND activity_sector_id IS NULL AND age_group_id IS NULL AND answer_id IS NULL AND currency_id IS NULL AND gender_id IS NULL AND illness_id IS NULL AND subindicator_id IS NULL AND year IS NULL&#x29;&#x3b;&#xd;&#xa;&#xd;&#xa;INSERT INTO value &#x28;dataset_id, indicator_id, profile_id, value&#x29; VALUES &#x28;&#x40;datasetID, &#x24;&#x7b;pIndicatorID&#x7d;, &#x40;profileID, &#x3f;&#x29;&#x3b;</sql>
-    <set_params>N</set_params>
-    <insert_field/>
-    <update_field/>
-    <delete_field/>
-    <read_field/>
-    <arguments>
-       <argument><name>Country</name></argument>
-       <argument><name>companySize</name></argument>
-       <argument><name>Value</name></argument>
-    </arguments>
-     <cluster_schema/>
- <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>1232</xloc>
-      <yloc>320</yloc>
-      <draw>Y</draw>
-      </GUI>
-    </step>
-
-  <step>
-    <name>Insert Value</name>
-    <type>ExecSQL</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-         <partitioning>
-           <method>none</method>
-           <schema_name/>
-           </partitioning>
-    <connection>osha_dvt</connection>
-    <execute_each_row>Y</execute_each_row>
-    <single_statement>N</single_statement>
-    <replace_variables>Y</replace_variables>
-    <quoteString>N</quoteString>
-    <sql>SET &#x40;datasetID&#x3d;&#x28;SELECT id FROM dataset WHERE source&#x3d;&#x22;Eurostat&#x22; AND date_from&#x3d;&#x22;&#x24;&#x7b;pYearFrom&#x7d;&#x22; AND date_to IS NULL&#x29;&#x3b;&#xd;&#xa;SET &#x40;profileID&#x3d;&#x28;SELECT p.id FROM profile p INNER JOIN nuts n ON p.nuts_id&#x3d;n.id INNER JOIN split_company_size cs ON p.company_size_id&#x3d;cs.id INNER JOIN translation t ON cs.literal_id&#x3d;t.literal_id WHERE n.country_code&#x3d;&#x22;&#x3f;&#x22; AND t.text&#x3d;&#x22;&#x3f;&#x22; AND t.language&#x3d;&#x22;EN&#x22; AND activity_sector_id IS NULL AND age_group_id IS NULL AND answer_id IS NULL AND currency_id IS NULL AND gender_id IS NULL AND illness_id IS NULL AND subindicator_id IS NULL AND year IS NULL&#x29;&#x3b;&#xd;&#xa;&#xd;&#xa;INSERT INTO value &#x28;dataset_id, indicator_id, profile_id, value&#x29; VALUES &#x28;&#x40;datasetID, &#x24;&#x7b;pIndicatorID&#x7d;, &#x40;profileID, &#x3f;&#x29;&#x3b;</sql>
-    <set_params>N</set_params>
-    <insert_field/>
-    <update_field/>
-    <delete_field/>
-    <read_field/>
-    <arguments>
-       <argument><name>Country</name></argument>
-       <argument><name>companySize</name></argument>
-       <argument><name>Value</name></argument>
-    </arguments>
-     <cluster_schema/>
- <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>1232</xloc>
-      <yloc>224</yloc>
-      <draw>Y</draw>
-      </GUI>
-    </step>
-
-  <step>
-    <name>Insert Profile</name>
-    <type>ExecSQL</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-         <partitioning>
-           <method>none</method>
-           <schema_name/>
-           </partitioning>
-    <connection>osha_dvt</connection>
-    <execute_each_row>Y</execute_each_row>
-    <single_statement>N</single_statement>
-    <replace_variables>Y</replace_variables>
-    <quoteString>N</quoteString>
-    <sql>SET &#x40;nutsID&#x3d;&#x28;SELECT id FROM nuts WHERE country_code&#x3d;&#x22;&#x3f;&#x22;&#x29;&#x3b;&#xd;&#xa;SET &#x40;companySizeID&#x3d;&#x28;SELECT cs.id FROM split_company_size cs INNER JOIN translation t ON cs.literal_id&#x3d;t.literal_id WHERE t.language&#x3d;&#x22;EN&#x22; AND t.text&#x3d;&#x22;&#x3f;&#x22;&#x29;&#x3b;&#xd;&#xa;&#xd;&#xa;INSERT INTO profile &#x28;nuts_id, company_size_id&#x29; VALUES &#x28;&#x40;nutsID, &#x40;companySizeID&#x29;&#x3b;</sql>
-    <set_params>N</set_params>
-    <insert_field/>
-    <update_field/>
-    <delete_field/>
-    <read_field/>
-    <arguments>
-       <argument><name>Country</name></argument>
-       <argument><name>companySize</name></argument>
-    </arguments>
-     <cluster_schema/>
- <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>512</xloc>
-      <yloc>320</yloc>
-      <draw>Y</draw>
-      </GUI>
-    </step>
-
-  <step>
-    <name>Block 5</name>
-    <type>BlockUntilStepsFinish</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-         <partitioning>
-           <method>none</method>
-           <schema_name/>
-           </partitioning>
-    <steps>
-      <step>
-        <name>Update Value</name>
-        <CopyNr>0</CopyNr>
-        </step>
-      <step>
-        <name>Insert Value</name>
-        <CopyNr>0</CopyNr>
-        </step>
-      </steps>
-     <cluster_schema/>
- <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>688</xloc>
-      <yloc>320</yloc>
-      <draw>Y</draw>
-      </GUI>
-    </step>
-
-  <step>
-    <name>Block 4</name>
-    <type>BlockUntilStepsFinish</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-         <partitioning>
-           <method>none</method>
-           <schema_name/>
-           </partitioning>
-    <steps>
-      <step>
-        <name>Insert Value</name>
-        <CopyNr>0</CopyNr>
-        </step>
-      <step>
-        <name>valueCount&#x3d;0&#x3f;</name>
-        <CopyNr>0</CopyNr>
-        </step>
-      </steps>
-     <cluster_schema/>
- <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>928</xloc>
-      <yloc>144</yloc>
-      <draw>Y</draw>
-      </GUI>
-    </step>
-
-  <step>
-    <name>Block 3</name>
-    <type>BlockUntilStepsFinish</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-         <partitioning>
-           <method>none</method>
-           <schema_name/>
-           </partitioning>
-    <steps>
-      <step>
-        <name>valueCount&#x3d;0&#x3f;</name>
-        <CopyNr>0</CopyNr>
-        </step>
-      </steps>
-     <cluster_schema/>
- <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>1088</xloc>
-      <yloc>224</yloc>
       <draw>Y</draw>
       </GUI>
     </step>
@@ -663,7 +181,7 @@
     </step>
 
   <step>
-    <name>Block</name>
+    <name>Block 3</name>
     <type>BlockUntilStepsFinish</type>
     <description/>
     <distribute>Y</distribute>
@@ -675,14 +193,126 @@
            </partitioning>
     <steps>
       <step>
-        <name>get profileCount</name>
+        <name>valueCount&#x3d;0&#x3f;</name>
         <CopyNr>0</CopyNr>
         </step>
       </steps>
      <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>320</xloc>
+      <xloc>1088</xloc>
+      <yloc>224</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>Block 4</name>
+    <type>BlockUntilStepsFinish</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+    <steps>
+      <step>
+        <name>Insert Value</name>
+        <CopyNr>0</CopyNr>
+        </step>
+      <step>
+        <name>valueCount&#x3d;0&#x3f;</name>
+        <CopyNr>0</CopyNr>
+        </step>
+      </steps>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>928</xloc>
+      <yloc>144</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>Block 5</name>
+    <type>BlockUntilStepsFinish</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+    <steps>
+      <step>
+        <name>Update Value</name>
+        <CopyNr>0</CopyNr>
+        </step>
+      <step>
+        <name>Insert Value</name>
+        <CopyNr>0</CopyNr>
+        </step>
+      </steps>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>688</xloc>
       <yloc>320</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>Block 6</name>
+    <type>BlockUntilStepsFinish</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+    <steps>
+      <step>
+        <name>valueCount&#x3d;0&#x3f; 2</name>
+        <CopyNr>0</CopyNr>
+        </step>
+      </steps>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>1088</xloc>
+      <yloc>320</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>Block 7</name>
+    <type>BlockUntilStepsFinish</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+    <steps>
+      <step>
+        <name>valueCount&#x3d;0&#x3f; 2</name>
+        <CopyNr>0</CopyNr>
+        </step>
+      <step>
+        <name>Insert Value 2</name>
+        <CopyNr>0</CopyNr>
+        </step>
+      </steps>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>928</xloc>
+      <yloc>416</yloc>
       <draw>Y</draw>
       </GUI>
     </step>
@@ -885,6 +515,139 @@
     </step>
 
   <step>
+    <name>Insert Profile</name>
+    <type>ExecSQL</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+    <connection>osha_dvt</connection>
+    <execute_each_row>Y</execute_each_row>
+    <single_statement>N</single_statement>
+    <replace_variables>Y</replace_variables>
+    <quoteString>N</quoteString>
+    <sql>SET &#x40;nutsID&#x3d;&#x28;SELECT id FROM nuts WHERE country_code&#x3d;&#x22;&#x3f;&#x22;&#x29;&#x3b;&#xd;&#xa;SET &#x40;companySizeID&#x3d;&#x28;SELECT cs.id FROM split_company_size cs INNER JOIN translation t ON cs.literal_id&#x3d;t.literal_id WHERE t.language&#x3d;&#x22;EN&#x22; AND t.text&#x3d;&#x22;&#x3f;&#x22;&#x29;&#x3b;&#xd;&#xa;&#xd;&#xa;INSERT INTO profile &#x28;nuts_id, company_size_id&#x29; VALUES &#x28;&#x40;nutsID, &#x40;companySizeID&#x29;&#x3b;</sql>
+    <set_params>N</set_params>
+    <insert_field/>
+    <update_field/>
+    <delete_field/>
+    <read_field/>
+    <arguments>
+       <argument><name>Country</name></argument>
+       <argument><name>companySize</name></argument>
+    </arguments>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>512</xloc>
+      <yloc>320</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>Insert Value</name>
+    <type>ExecSQL</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+    <connection>osha_dvt</connection>
+    <execute_each_row>Y</execute_each_row>
+    <single_statement>N</single_statement>
+    <replace_variables>Y</replace_variables>
+    <quoteString>N</quoteString>
+    <sql>SET &#x40;datasetID&#x3d;&#x28;SELECT id FROM dataset WHERE source&#x3d;&#x22;Eurostat&#x22; AND date_from&#x3d;&#x22;&#x24;&#x7b;pYearFrom&#x7d;&#x22; AND date_to IS NULL&#x29;&#x3b;&#xd;&#xa;SET &#x40;profileID&#x3d;&#x28;SELECT p.id FROM profile p INNER JOIN nuts n ON p.nuts_id&#x3d;n.id INNER JOIN split_company_size cs ON p.company_size_id&#x3d;cs.id INNER JOIN translation t ON cs.literal_id&#x3d;t.literal_id WHERE n.country_code&#x3d;&#x22;&#x3f;&#x22; AND t.text&#x3d;&#x22;&#x3f;&#x22; AND t.language&#x3d;&#x22;EN&#x22; AND activity_sector_id IS NULL AND age_group_id IS NULL AND answer_id IS NULL AND currency_id IS NULL AND gender_id IS NULL AND illness_id IS NULL AND subindicator_id IS NULL AND trend IS NULL AND year IS NULL&#x29;&#x3b;&#xd;&#xa;&#xd;&#xa;INSERT INTO value &#x28;dataset_id, indicator_id, profile_id, value&#x29; VALUES &#x28;&#x40;datasetID, &#x24;&#x7b;pIndicatorID&#x7d;, &#x40;profileID, &#x3f;&#x29;&#x3b;</sql>
+    <set_params>N</set_params>
+    <insert_field/>
+    <update_field/>
+    <delete_field/>
+    <read_field/>
+    <arguments>
+       <argument><name>Country</name></argument>
+       <argument><name>companySize</name></argument>
+       <argument><name>Value</name></argument>
+    </arguments>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>1232</xloc>
+      <yloc>224</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>Insert Value 2</name>
+    <type>ExecSQL</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+    <connection>osha_dvt</connection>
+    <execute_each_row>Y</execute_each_row>
+    <single_statement>N</single_statement>
+    <replace_variables>Y</replace_variables>
+    <quoteString>N</quoteString>
+    <sql>SET &#x40;datasetID&#x3d;&#x28;SELECT id FROM dataset WHERE source&#x3d;&#x22;Eurostat&#x22; AND date_from&#x3d;&#x22;&#x24;&#x7b;pYearFrom&#x7d;&#x22; AND date_to&#x3d;&#x22;&#x24;&#x7b;pYearTo&#x7d;&#x22;&#x29;&#x3b;&#xd;&#xa;SET &#x40;profileID&#x3d;&#x28;SELECT p.id FROM profile p INNER JOIN nuts n ON p.nuts_id&#x3d;n.id INNER JOIN split_company_size cs ON p.company_size_id&#x3d;cs.id INNER JOIN translation t ON cs.literal_id&#x3d;t.literal_id WHERE n.country_code&#x3d;&#x22;&#x3f;&#x22; AND t.text&#x3d;&#x22;&#x3f;&#x22; AND t.language&#x3d;&#x22;EN&#x22; AND activity_sector_id IS NULL AND age_group_id IS NULL AND answer_id IS NULL AND currency_id IS NULL AND gender_id IS NULL AND illness_id IS NULL AND subindicator_id IS NULL AND trend IS NULL AND year IS NULL&#x29;&#x3b;&#xd;&#xa;&#xd;&#xa;INSERT INTO value &#x28;dataset_id, indicator_id, profile_id, value&#x29; VALUES &#x28;&#x40;datasetID, &#x24;&#x7b;pIndicatorID&#x7d;, &#x40;profileID, &#x3f;&#x29;&#x3b;</sql>
+    <set_params>N</set_params>
+    <insert_field/>
+    <update_field/>
+    <delete_field/>
+    <read_field/>
+    <arguments>
+       <argument><name>Country</name></argument>
+       <argument><name>companySize</name></argument>
+       <argument><name>Value</name></argument>
+    </arguments>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>1232</xloc>
+      <yloc>320</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>Profile not exist&#x3f;</name>
+    <type>FilterRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+<send_true_to>Block</send_true_to>
+<send_false_to>Block 2</send_false_to>
+    <compare>
+<condition>
+ <negated>N</negated>
+ <leftvalue>profileCount</leftvalue>
+ <function>&#x3d;</function>
+ <rightvalue/>
+ <value><name>constant</name><type>Integer</type><text>0</text><length>-1</length><precision>0</precision><isnull>N</isnull><mask>&#x23;</mask></value> </condition>
+    </compare>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>320</xloc>
+      <yloc>224</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
     <name>Row Normaliser</name>
     <type>Normaliser</type>
     <description/>
@@ -920,6 +683,76 @@
     </step>
 
   <step>
+    <name>Update Value</name>
+    <type>ExecSQL</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+    <connection>osha_dvt</connection>
+    <execute_each_row>Y</execute_each_row>
+    <single_statement>N</single_statement>
+    <replace_variables>Y</replace_variables>
+    <quoteString>N</quoteString>
+    <sql>SET &#x40;datasetID&#x3d;&#x28;SELECT id FROM dataset WHERE source&#x3d;&#x22;Eurostat&#x22; AND date_from&#x3d;&#x22;&#x24;&#x7b;pYearFrom&#x7d;&#x22; AND date_to IS NULL&#x29;&#x3b;&#xd;&#xa;SET &#x40;profileID&#x3d;&#x28;SELECT p.id FROM profile p INNER JOIN nuts n ON p.nuts_id&#x3d;n.id INNER JOIN split_company_size cs ON p.company_size_id&#x3d;cs.id INNER JOIN translation t ON cs.literal_id&#x3d;t.literal_id WHERE n.country_code&#x3d;&#x22;&#x3f;&#x22; AND t.text&#x3d;&#x22;&#x3f;&#x22; AND t.language&#x3d;&#x22;EN&#x22; AND activity_sector_id IS NULL AND age_group_id IS NULL AND answer_id IS NULL AND currency_id IS NULL AND gender_id IS NULL AND illness_id IS NULL AND subindicator_id IS NULL AND trend IS NULL AND year IS NULL&#x29;&#x3b;&#xd;&#xa;&#xd;&#xa;UPDATE value SET value&#x3d;&#x3f; WHERE dataset_id&#x3d;&#x40;datasetID AND indicator_id&#x3d;&#x24;&#x7b;pIndicatorID&#x7d; AND profile_id&#x3d;&#x40;profileID&#x3b;</sql>
+    <set_params>N</set_params>
+    <insert_field/>
+    <update_field/>
+    <delete_field/>
+    <read_field/>
+    <arguments>
+       <argument><name>Country</name></argument>
+       <argument><name>companySize</name></argument>
+       <argument><name>Value</name></argument>
+    </arguments>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>1088</xloc>
+      <yloc>144</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>Update Value 2</name>
+    <type>ExecSQL</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+    <connection>osha_dvt</connection>
+    <execute_each_row>Y</execute_each_row>
+    <single_statement>N</single_statement>
+    <replace_variables>Y</replace_variables>
+    <quoteString>N</quoteString>
+    <sql>SET &#x40;datasetID&#x3d;&#x28;SELECT id FROM dataset WHERE source&#x3d;&#x22;Eurostat&#x22; AND date_from&#x3d;&#x22;&#x24;&#x7b;pYearFrom&#x7d;&#x22; AND date_to&#x3d;&#x22;&#x24;&#x7b;pYearTo&#x7d;&#x22;&#x29;&#x3b;&#xd;&#xa;SET &#x40;profileID&#x3d;&#x28;SELECT p.id FROM profile p INNER JOIN nuts n ON p.nuts_id&#x3d;n.id INNER JOIN split_company_size cs ON p.company_size_id&#x3d;cs.id INNER JOIN translation t ON cs.literal_id&#x3d;t.literal_id WHERE n.country_code&#x3d;&#x22;&#x3f;&#x22; AND t.text&#x3d;&#x22;&#x3f;&#x22; AND t.language&#x3d;&#x22;EN&#x22; AND activity_sector_id IS NULL AND age_group_id IS NULL AND answer_id IS NULL AND currency_id IS NULL AND gender_id IS NULL AND illness_id IS NULL AND subindicator_id IS NULL AND trend IS NULL AND year IS NULL&#x29;&#x3b;&#xd;&#xa;&#xd;&#xa;UPDATE value SET value&#x3d;&#x3f; WHERE dataset_id&#x3d;&#x40;datasetID AND indicator_id&#x3d;&#x24;&#x7b;pIndicatorID&#x7d; AND profile_id&#x3d;&#x40;profileID&#x3b;</sql>
+    <set_params>N</set_params>
+    <insert_field/>
+    <update_field/>
+    <delete_field/>
+    <read_field/>
+    <arguments>
+       <argument><name>Country</name></argument>
+       <argument><name>companySize</name></argument>
+       <argument><name>Value</name></argument>
+    </arguments>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>1088</xloc>
+      <yloc>416</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
     <name>get profileCount</name>
     <type>ExecSQL</type>
     <description/>
@@ -935,7 +768,7 @@
     <single_statement>N</single_statement>
     <replace_variables>Y</replace_variables>
     <quoteString>N</quoteString>
-    <sql>SET &#x40;nutsID&#x3d;&#x28;SELECT id FROM nuts WHERE country_code&#x3d;&#x22;&#x3f;&#x22;&#x29;&#x3b;&#xd;&#xa;SET &#x40;companySizeID&#x3d;&#x28;SELECT cs.id FROM split_company_size cs INNER JOIN translation t ON cs.literal_id&#x3d;t.literal_id WHERE t.language&#x3d;&#x22;EN&#x22; AND t.text&#x3d;&#x22;&#x3f;&#x22;&#x29;&#x3b;&#xd;&#xa;&#xd;&#xa;SELECT &#x2a; &#xd;&#xa;FROM profile p&#xd;&#xa;WHERE nuts_id&#x3d;&#x40;nutsID&#xd;&#xa;AND company_size_id&#x3d;&#x40;companySizeID&#xd;&#xa;AND activity_sector_id IS NULL&#xd;&#xa;AND age_group_id IS NULL&#xd;&#xa;AND answer_id IS NULL&#xd;&#xa;AND currency_id IS NULL&#xd;&#xa;AND gender_id IS NULL&#xd;&#xa;AND illness_id IS NULL&#xd;&#xa;AND subindicator_id IS NULL&#xd;&#xa;AND year IS NULL&#x3b;</sql>
+    <sql>SET &#x40;nutsID&#x3d;&#x28;SELECT id FROM nuts WHERE country_code&#x3d;&#x22;&#x3f;&#x22;&#x29;&#x3b;&#xd;&#xa;SET &#x40;companySizeID&#x3d;&#x28;SELECT cs.id FROM split_company_size cs INNER JOIN translation t ON cs.literal_id&#x3d;t.literal_id WHERE t.language&#x3d;&#x22;EN&#x22; AND t.text&#x3d;&#x22;&#x3f;&#x22;&#x29;&#x3b;&#xd;&#xa;&#xd;&#xa;SELECT &#x2a; &#xd;&#xa;FROM profile p&#xd;&#xa;WHERE nuts_id&#x3d;&#x40;nutsID&#xd;&#xa;AND company_size_id&#x3d;&#x40;companySizeID&#xd;&#xa;AND activity_sector_id IS NULL&#xd;&#xa;AND age_group_id IS NULL&#xd;&#xa;AND answer_id IS NULL&#xd;&#xa;AND currency_id IS NULL&#xd;&#xa;AND gender_id IS NULL&#xd;&#xa;AND illness_id IS NULL&#xd;&#xa;AND subindicator_id IS NULL&#xd;&#xa;AND trend IS NULL&#xd;&#xa;AND year IS NULL&#x3b;</sql>
     <set_params>N</set_params>
     <insert_field/>
     <update_field/>
@@ -949,6 +782,173 @@
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
       <xloc>192</xloc>
       <yloc>224</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>get valueCount</name>
+    <type>ExecSQL</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+    <connection>osha_dvt</connection>
+    <execute_each_row>Y</execute_each_row>
+    <single_statement>N</single_statement>
+    <replace_variables>Y</replace_variables>
+    <quoteString>N</quoteString>
+    <sql>SET &#x40;datasetID&#x3d;&#x28;SELECT id FROM dataset WHERE source&#x3d;&#x22;Eurostat&#x22; AND date_from&#x3d;&#x22;&#x24;&#x7b;pYearFrom&#x7d;&#x22; AND date_to IS NULL&#x29;&#x3b;&#xd;&#xa;SET &#x40;profileID&#x3d;&#x28;SELECT p.id FROM profile p INNER JOIN nuts n ON p.nuts_id&#x3d;n.id INNER JOIN split_company_size cs ON p.company_size_id&#x3d;cs.id INNER JOIN translation t ON cs.literal_id&#x3d;t.literal_id WHERE n.country_code&#x3d;&#x22;&#x3f;&#x22; AND t.text&#x3d;&#x22;&#x3f;&#x22; AND t.language&#x3d;&#x22;EN&#x22; AND activity_sector_id IS NULL AND age_group_id IS NULL AND answer_id IS NULL AND currency_id IS NULL AND gender_id IS NULL AND illness_id IS NULL AND subindicator_id IS NULL AND trend IS NULL AND year IS NULL&#x29;&#x3b;&#xd;&#xa;&#xd;&#xa;SELECT &#x2a; FROM value WHERE dataset_id&#x3d;&#x40;datasetID AND indicator_id&#x3d;&#x24;&#x7b;pIndicatorID&#x7d; AND profile_id&#x3d;&#x40;profileID&#x3b;</sql>
+    <set_params>N</set_params>
+    <insert_field/>
+    <update_field/>
+    <delete_field/>
+    <read_field>valueCount</read_field>
+    <arguments>
+       <argument><name>Country</name></argument>
+       <argument><name>companySize</name></argument>
+    </arguments>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>800</xloc>
+      <yloc>224</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>get valueCount 2</name>
+    <type>ExecSQL</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+    <connection>osha_dvt</connection>
+    <execute_each_row>Y</execute_each_row>
+    <single_statement>N</single_statement>
+    <replace_variables>Y</replace_variables>
+    <quoteString>N</quoteString>
+    <sql>SET &#x40;datasetID&#x3d;&#x28;SELECT id FROM dataset WHERE source&#x3d;&#x22;Eurostat&#x22; AND date_from&#x3d;&#x22;&#x24;&#x7b;pYearFrom&#x7d;&#x22; AND date_to&#x3d;&#x22;&#x24;&#x7b;pYearTo&#x7d;&#x22;&#x29;&#x3b;&#xd;&#xa;SET &#x40;profileID&#x3d;&#x28;SELECT p.id FROM profile p INNER JOIN nuts n ON p.nuts_id&#x3d;n.id INNER JOIN split_company_size cs ON p.company_size_id&#x3d;cs.id INNER JOIN translation t ON cs.literal_id&#x3d;t.literal_id WHERE n.country_code&#x3d;&#x22;&#x3f;&#x22; AND t.text&#x3d;&#x22;&#x3f;&#x22; AND t.language&#x3d;&#x22;EN&#x22; AND activity_sector_id IS NULL AND age_group_id IS NULL AND answer_id IS NULL AND currency_id IS NULL AND gender_id IS NULL AND illness_id IS NULL AND subindicator_id IS NULL AND trend IS NULL AND year IS NULL&#x29;&#x3b;&#xd;&#xa;&#xd;&#xa;SELECT &#x2a; FROM value WHERE dataset_id&#x3d;&#x40;datasetID AND indicator_id&#x3d;&#x24;&#x7b;pIndicatorID&#x7d; AND profile_id&#x3d;&#x40;profileID&#x3b;</sql>
+    <set_params>N</set_params>
+    <insert_field/>
+    <update_field/>
+    <delete_field/>
+    <read_field>valueCount</read_field>
+    <arguments>
+       <argument><name>Country</name></argument>
+       <argument><name>companySize</name></argument>
+    </arguments>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>800</xloc>
+      <yloc>320</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>pYearTo is defined&#x3f;</name>
+    <type>FilterRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+<send_true_to>Block 5</send_true_to>
+<send_false_to>get valueCount</send_false_to>
+    <compare>
+<condition>
+ <negated>N</negated>
+ <conditions>
+  <condition>
+   <negated>N</negated>
+   <leftvalue>pYearTo</leftvalue>
+   <function>IS NOT NULL</function>
+   <rightvalue/>
+   </condition>
+  <condition>
+   <negated>Y</negated>
+   <operator>AND</operator>
+   <leftvalue>pYearTo</leftvalue>
+   <function>&#x3d;</function>
+   <rightvalue/>
+   <value><name>constant</name><type>String</type><text>NULL</text><length>-1</length><precision>-1</precision><isnull>N</isnull><mask/></value>   </condition>
+  </conditions>
+ </condition>
+    </compare>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>688</xloc>
+      <yloc>224</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>valueCount&#x3d;0&#x3f;</name>
+    <type>FilterRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+<send_true_to>Block 3</send_true_to>
+<send_false_to>Block 4</send_false_to>
+    <compare>
+<condition>
+ <negated>N</negated>
+ <leftvalue>valueCount</leftvalue>
+ <function>&#x3d;</function>
+ <rightvalue/>
+ <value><name>constant</name><type>Integer</type><text>0</text><length>-1</length><precision>0</precision><isnull>N</isnull><mask>&#x23;&#x3b;-&#x23;</mask></value> </condition>
+    </compare>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>928</xloc>
+      <yloc>224</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>valueCount&#x3d;0&#x3f; 2</name>
+    <type>FilterRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+<send_true_to>Block 6</send_true_to>
+<send_false_to>Block 7</send_false_to>
+    <compare>
+<condition>
+ <negated>N</negated>
+ <leftvalue>valueCount</leftvalue>
+ <function>&#x3d;</function>
+ <rightvalue/>
+ <value><name>constant</name><type>Integer</type><text>0</text><length>-1</length><precision>0</precision><isnull>N</isnull><mask>&#x23;&#x3b;-&#x23;</mask></value> </condition>
+    </compare>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>928</xloc>
+      <yloc>320</yloc>
       <draw>Y</draw>
       </GUI>
     </step>
