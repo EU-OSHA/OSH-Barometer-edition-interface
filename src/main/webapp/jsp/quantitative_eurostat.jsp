@@ -3,6 +3,7 @@
 <%@page import="java.util.HashMap"%>
 <%@include file="includes/head.jsp"%>
 <%@include file="includes/header.jsp"%>
+<div class="wrapper">
 	<div class="container" id="container-eurostat-quantitative">
 		<%@include file="includes/breadcrumb.jsp"%>
 		<h1>Quantitative data from Eurostat</h1>
@@ -78,4 +79,5 @@
 			</div>
 		</form>
 	</div>
+</div>
 <%@include file="includes/footer.jsp"%>

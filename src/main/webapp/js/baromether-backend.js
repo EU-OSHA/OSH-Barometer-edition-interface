@@ -14,14 +14,19 @@ $(document).ready(function(){
 	$( "#oneYearContainer" ).css("display","block");
 	$("#templateUsage").text('The template should be "EU-OSHA_OIE_Eurostat indicator_Company size_YYYY-MM-DD.xlsx"');
   
-    var scroll = window.innerHeight;
-	var height = $("div.container")[1].scrollHeight;
+    //var scroll = window.innerHeight;
+	//var height = $("div.container")[1].scrollHeight;
+	/*var height = $(window).height();
 
-    if (height >= 750) {
+    if (height > 700) {
         $("footer").addClass("clear-fixed");
     } else {
         $("footer").removeClass("clear-fixed");
-    }
+    }*/
+
+	//$("#page").outerWidth($("window").width(),true); 
+	// $("#page").outerHeight($("window").height(),true); 
+	//alert($(window).height() + " " + $(document).height() + " " + $(window).width());
 	    
     changeYearCombos =  function(){
 		//console.log("Entra en changeYearCombos");
@@ -39,19 +44,21 @@ $(document).ready(function(){
 		}
 		
 		if(valueSelected == 31){
-			$("#templateUsage").text('The template should be "EU-OSHA_OIE_Eurostat indicator_Company size_YYYY-MM-DD.xlsx"');
+			$("#templateUsage").text('The template should be "EU-OSHA_OIE_Eurostat_indicator_Company_size_YYYY-MM-DD.xlsx"');
 		}else if(valueSelected == 32){
-			$("#templateUsage").text('The template should be "EU-OSHA_OIE_Eurostat indicator_Employment per sector_YYYY/MM/DD.xlsx"');
+			$("#templateUsage").text('The template should be "EU-OSHA_OIE_Eurostat_indicator_Employment_per_sector_YYYY-MM-DD.xlsx"');
 		}else if(valueSelected == 39){
-			$("#templateUsage").text('The template should be "EU-OSHA_OIE_Eurostat indicator_Employment rate T_M_F_YYYY-MM-DD.xlsx"');
+			$("#templateUsage").text('The template should be "EU-OSHA_OIE_Eurostat_indicator_Employment_rate_T_M_F_YYYY-MM-DD.xlsx"');
 		}else if(valueSelected == 36){
 			$("#templateUsage").text('The template should be "EU-OSHA_OIE_Eurostat_Income_per_capita_YYYY-MM-DD.xlsx"');
 		}else if(valueSelected == 279){
 			$("#templateUsage").text('The template should be "EU-OSHA_OIE_Eurostat_Income_per_capita_EURO_YYYY-MM-DD.xlsx"');
 		}else if(valueSelected == 53){
 			$("#templateUsage").text('The template should be "EU-OSHA_OIE_Eurostat_NonFatal_Work_accidents_YYYY-MM-DD.xlsx"');
+		}else if(valueSelected == 54){
+			$("#templateUsage").text('The template should be "EU-OSHA_OIE_Eurostat_Fatal_Work_accidents_YYYY-MM-DD.xlsx"');
 		}else{
-			$("#templateUsage").text('The template should be "EU-OSHA_OIE_Eurostat_Direct value indicators_YYYY-MM-DD.xlsx"');
+			$("#templateUsage").text('The template should be "EU-OSHA_OIE_Eurostat_Direct_value_indicators_YYYY-MM-DD.xlsx"');
 		}
 	};
 	

@@ -12,215 +12,216 @@
 </head>
 
 <body>
-	<header>
+	<div class="wrapper">
+		<header>
+			<div class="container">
+				<img src="images/logo.png" alt="OSH Barometer Logo">
+				<div class="content-header-button">
+					<form action="login.html"><button class="login">Logout</button></form>
+				</div>
+			</div>
+		</header>
 		<div class="container">
-			<img src="images/logo.png" alt="OSH Barometer Logo">
-			<div class="content-header-button">
-				<form action="login.html"><button class="login">Logout</button></form>
+			<div class="breadcrumbs">
+				<ul>
+					<li><a href="index.html">Home</a></li>
+					<li><span>Methodology data</span></li>
+				</ul>
 			</div>
 		</div>
-	</header>
-	<div class="container">
-		<div class="breadcrumbs">
-			<ul>
-				<li><a href="index.html">Home</a></li>
-				<li><span>Methodology data</span></li>
-			</ul>
-		</div>
+		<div class="container">
+			<h1>Methodology data</h1>
+			<div class="conten-input">
+				<label>Section</label>
+				<select>
+					<option>
+						Social dialogue
+					</option>
+				</select>
+			</div>
+			<div class="conten-input">
+				<label>Indicator</label>
+				<select>
+					<option>
+						Joint consultative, employment forum or similar
+					</option>
+				</select>
+			</div>
+			<div class="clear-content"><!-- only for prototype --></div>
+			<table class="literals columns-5">
+			  <tr>
+			  	<th>Publish</th>
+			  	<th>Literal type</th>
+			    <th>Published text</th>
+				<th>Updated text</th>
+				<th>Actions</th>
+			  </tr>
+			  <tr>
+			  	<td><input type="checkbox" name=""></td>
+			  	<td>Indicator name</td>
+				<td>Joint consultative, employment forum or similar</td>
+				<td></td>
+				<td><button class="view-click">Edit</button><button class="disabled">Undo</button></td>
+			  </tr>
+			  <tr>
+			  	<td><input type="checkbox" name=""></td>
+			  	<td>Description</td>
+				<td>
+					<p>The percentages of positive responses to four questions in ESENER 2019 are displayed for each Member State in a box as percentages. <strong>This indicator asks specifically about the existence of:</strong></p>
+					<ul>
+						<li><strong>A joint consultative committee</strong></li>
+						<li>Trade union representation</li>
+						<li>A health and safety representative</li>
+						<li>A health and safety committee</li>
+					</ul>
+					<p>Fifteen countries can be displayed at the same time, as well as the EU average.</p>
+				</td>
+				<td></td>
+				<td><button class="view-click">Edit</button><button class="disabled">Undo</button></td>
+			  </tr>
+			  <tr>
+			  	<td><input type="checkbox" name=""></td>
+			  	<td>Data source</td>
+				<td>
+					ESENER 2019 Survey
+	 			</td>
+				<td></td>
+				<td><button class="view-click">Edit</button><button class="disabled">Undo</button></td>
+			  </tr>
+			  <tr>
+			  	<td><input type="checkbox" name=""></td>
+			  	<td>Specific table/Question</td>
+				<td>
+					<p>The ESENER 2019 Survey Questions are:</p>
+					<p>Which of the following forms of employee representation do you have in this establishment? <strong>Specifically this indicator anwers to:</strong></p>
+					<ul>
+					<li><strong>A joint consultative committee, employee forum or equivalent body</strong></li>
+					<li>A recognised trade union representation</li>
+					<li>A health and safety representative or representative of employee safety</li>
+					<li>A health and safety representative committee</li>
+					</ul>
+					<p>Answer options: <br>1. Yes<br>2. No</p>
+	 			</td>
+				<td>
+					
+				</td>
+				<td><button class="view-click">Edit</button><button class="disabled">Undo</button></td>
+			  </tr>
+			  <tr>
+			  	<td><input type="checkbox" name=""></td>
+			  	<td>URL/source file</td>
+				<td>
+					<p>ESENER:</p>
+					<p><a target="_blank" href="https://visualisation.osha.europa.eu/esener#!/en">https://visualisation.osha.europa.eu/esener#!/en</a></p>
+	 			</td>
+				<td></td>
+				<td><button class="view-click">Edit</button><button class="disabled">Undo</button></td>
+			  </tr>
+			  <tr>
+			  	<td><input type="checkbox" name=""></td>
+			  	<td>Filtering options applied</td>
+				<td>
+					<ul>
+						<li>Activity sector: <strong>All</strong></li>
+						<li>Answer:<strong> Yes</strong></li>
+					</ul>
+	 			</td>
+				<td>
+					<ul>
+						<li>Activity sector: <strong>All</strong></li>
+						<li>Answer:<strong> No</strong></li>
+					</ul>
+				</td>
+				<td><button class="view-click">Edit</button><button>Undo</button></td>
+			  </tr>
+			  <tr>
+			  	<td><input type="checkbox" name=""></td>
+			  	<td>Reference year/period</td>
+				<td>
+					2019 for ESENER 2019 Survey and 2016/2017 for the documents
+	 			</td>
+				<td></td>
+				<td><button class="view-click">Edit</button><button class="disabled">Undo</button></td>
+			  </tr>
+			  <tr>
+			  	<td><input type="checkbox" name=""></td>
+			  	<td>Last update</td>
+				<td>
+					<p>2019 for ESENER 2019 Survey and 2018/19 for the documents</p>
+	 			</td>
+				<td></td>
+				<td><button class="view-click">Edit</button><button class="disabled">Undo</button></td>
+			  </tr>
+			  <tr>
+			  	<td><input type="checkbox" name=""></td>
+			  	<td>Coverage</td>
+				<td>
+					<p>The <strong>intended coverage</strong> is: All EU countries plus Iceland, Norway and Switzerland. Currently, not all data for Bulgaria, Cyprus, Estonia and Sweden is available.</p>
+	 			</td>
+				<td></td>
+				<td><button class="view-click">Edit</button><button class="disabled">Undo</button></td>
+			  </tr>
+			  <tr>
+			  	<td><input type="checkbox" name=""></td>
+			  	<td>Calculations on the data source</td>
+				<td></td>
+				<td></td>
+				<td><button class="view-click">Edit</button><button class="disabled">Undo</button></td>
+			  </tr>
+			   <tr>
+			  	<td><input type="checkbox" name=""></td>
+			  	<td>Unit of measure</td>
+				<td>
+					<p>Percentages</p>
+	 			</td>
+				<td></td>
+				<td><button class="view-click">Edit</button><button class="disabled">Undo</button></td>
+			  </tr>
+			  <tr>
+			  	<td><input type="checkbox" name=""></td>
+			  	<td>Visualisation</td>
+				<td>
+					<p>Percentages in boxes, country wise</p>
+	 			</td>
+				<td></td>
+				<td><button class="view-click">Edit</button><button class="disabled">Undo</button></td>
+			  </tr>
+			  
+			  <tr>
+			  	<td><input type="checkbox" name=""></td>
+			  	<td>Additional comments</td>
+				<td>
+					<p>A description of the social dialogue in each country, downloadable as a PDF file, is available too. The source of the descriptions of social dialogue is a preparatory report for DG Employment, Social Affairs and Inclusion from 2018. Most of the data were compiled in 2016 or 2017.<br> (Kooperationsstelle Hamburg IFE/EUROGIP: Development and design of a structural model for the construction and implementation of an EU OSH Information System, Final Report, March 2018, Service contract No VC/2016/0055)</p><p>The description was prepared by the contractor based on literature, particularly from Eurofound <br> <a target="_blank" href="https://www.eurofound.europa.eu/topic/social-dialogue">https://www.eurofound.europa.eu/topic/social-dialogue</a> <br> and EU-OSHA’s OSHwiki information offer<br> <a target="_blank" href="https://oshwiki.eu/wiki/Category:OSH_systems_at_national_level">https://oshwiki.eu/wiki/Category:OSH_systems_at_national_level</a></p>
+	 			</td>
+				<td>
+					
+				</td>
+				<td><button class="view-click">Edit</button><button class="disabled">Undo</button></td>
+			  </tr>
+			</table>
+			<button>Publish</button>
+			<div class="clear-content"><!-- only for prototype --></div>
+			<div class="popup">
+				<div class="close close-click">x</div>
+				<label>Published text:</label>
+				<div readonly class="textarea disabled">
+					<ul>
+						<li>Activity sector: <strong>All</strong></li>
+						<li>Answer:<strong> Yes</strong></li>
+					</ul>
+				</div>
+				<label>Updated text:</label>
+				<div class="wysi"></div>
+				<div class="textarea">
+					<ul>
+						<li>Activity sector: <strong>All</strong></li>
+						<li>Answer:<strong> No</strong></li>
+					</ul>
+				</div>
+				<button class="close-click">Save</button><button class="close-click">Cancel</button>
+			</div>
+		</div> 
 	</div>
-	<div class="container">
-		<h1>Methodology data</h1>
-		<div class="conten-input">
-			<label>Section</label>
-			<select>
-				<option>
-					Social dialogue
-				</option>
-			</select>
-		</div>
-		<div class="conten-input">
-			<label>Indicator</label>
-			<select>
-				<option>
-					Joint consultative, employment forum or similar
-				</option>
-			</select>
-		</div>
-		<div class="clear-content"><!-- only for prototype --></div>
-		<table class="literals columns-5">
-		  <tr>
-		  	<th>Publish</th>
-		  	<th>Literal type</th>
-		    <th>Published text</th>
-			<th>Updated text</th>
-			<th>Actions</th>
-		  </tr>
-		  <tr>
-		  	<td><input type="checkbox" name=""></td>
-		  	<td>Indicator name</td>
-			<td>Joint consultative, employment forum or similar</td>
-			<td></td>
-			<td><button class="view-click">Edit</button><button class="disabled">Undo</button></td>
-		  </tr>
-		  <tr>
-		  	<td><input type="checkbox" name=""></td>
-		  	<td>Description</td>
-			<td>
-				<p>The percentages of positive responses to four questions in ESENER 2019 are displayed for each Member State in a box as percentages. <strong>This indicator asks specifically about the existence of:</strong></p>
-				<ul>
-					<li><strong>A joint consultative committee</strong></li>
-					<li>Trade union representation</li>
-					<li>A health and safety representative</li>
-					<li>A health and safety committee</li>
-				</ul>
-				<p>Fifteen countries can be displayed at the same time, as well as the EU average.</p>
-			</td>
-			<td></td>
-			<td><button class="view-click">Edit</button><button class="disabled">Undo</button></td>
-		  </tr>
-		  <tr>
-		  	<td><input type="checkbox" name=""></td>
-		  	<td>Data source</td>
-			<td>
-				ESENER 2019 Survey
- 			</td>
-			<td></td>
-			<td><button class="view-click">Edit</button><button class="disabled">Undo</button></td>
-		  </tr>
-		  <tr>
-		  	<td><input type="checkbox" name=""></td>
-		  	<td>Specific table/Question</td>
-			<td>
-				<p>The ESENER 2019 Survey Questions are:</p>
-				<p>Which of the following forms of employee representation do you have in this establishment? <strong>Specifically this indicator anwers to:</strong></p>
-				<ul>
-				<li><strong>A joint consultative committee, employee forum or equivalent body</strong></li>
-				<li>A recognised trade union representation</li>
-				<li>A health and safety representative or representative of employee safety</li>
-				<li>A health and safety representative committee</li>
-				</ul>
-				<p>Answer options: <br>1. Yes<br>2. No</p>
- 			</td>
-			<td>
-				
-			</td>
-			<td><button class="view-click">Edit</button><button class="disabled">Undo</button></td>
-		  </tr>
-		  <tr>
-		  	<td><input type="checkbox" name=""></td>
-		  	<td>URL/source file</td>
-			<td>
-				<p>ESENER:</p>
-				<p><a target="_blank" href="https://visualisation.osha.europa.eu/esener#!/en">https://visualisation.osha.europa.eu/esener#!/en</a></p>
- 			</td>
-			<td></td>
-			<td><button class="view-click">Edit</button><button class="disabled">Undo</button></td>
-		  </tr>
-		  <tr>
-		  <tr>
-		  	<td><input type="checkbox" name=""></td>
-		  	<td>Filtering options applied</td>
-			<td>
-				<ul>
-					<li>Activity sector: <strong>All</strong></li>
-					<li>Answer:<strong> Yes</strong></li>
-				</ul>
- 			</td>
-			<td>
-				<ul>
-					<li>Activity sector: <strong>All</strong></li>
-					<li>Answer:<strong> No</strong></li>
-				</ul>
-			</td>
-			<td><button class="view-click">Edit</button><button>Undo</button></td>
-		  </tr>
-		  <tr>
-		  	<td><input type="checkbox" name=""></td>
-		  	<td>Reference year/period</td>
-			<td>
-				2019 for ESENER 2019 Survey and 2016/2017 for the documents
- 			</td>
-			<td></td>
-			<td><button class="view-click">Edit</button><button class="disabled">Undo</button></td>
-		  </tr>
-		  <tr>
-		  	<td><input type="checkbox" name=""></td>
-		  	<td>Last update</td>
-			<td>
-				<p>2019 for ESENER 2019 Survey and 2018/19 for the documents</p>
- 			</td>
-			<td></td>
-			<td><button class="view-click">Edit</button><button class="disabled">Undo</button></td>
-		  </tr>
-		  <tr>
-		  	<td><input type="checkbox" name=""></td>
-		  	<td>Coverage</td>
-			<td>
-				<p>The <strong>intended coverage</strong> is: All EU countries plus Iceland, Norway and Switzerland. Currently, not all data for Bulgaria, Cyprus, Estonia and Sweden is available.</p>
- 			</td>
-			<td></td>
-			<td><button class="view-click">Edit</button><button class="disabled">Undo</button></td>
-		  </tr>
-		  <tr>
-		  	<td><input type="checkbox" name=""></td>
-		  	<td>Calculations on the data source</td>
-			<td></td>
-			<td></td>
-			<td><button class="view-click">Edit</button><button class="disabled">Undo</button></td>
-		  </tr>
-		   <tr>
-		  	<td><input type="checkbox" name=""></td>
-		  	<td>Unit of measure</td>
-			<td>
-				<p>Percentages</p>
- 			</td>
-			<td></td>
-			<td><button class="view-click">Edit</button><button class="disabled">Undo</button></td>
-		  </tr>
-		  <tr>
-		  	<td><input type="checkbox" name=""></td>
-		  	<td>Visualisation</td>
-			<td>
-				<p>Percentages in boxes, country wise</p>
- 			</td>
-			<td></td>
-			<td><button class="view-click">Edit</button><button class="disabled">Undo</button></td>
-		  </tr>
-		  
-		  <tr>
-		  	<td><input type="checkbox" name=""></td>
-		  	<td>Additional comments</td>
-			<td>
-				<p>A description of the social dialogue in each country, downloadable as a PDF file, is available too. The source of the descriptions of social dialogue is a preparatory report for DG Employment, Social Affairs and Inclusion from 2018. Most of the data were compiled in 2016 or 2017.<br> (Kooperationsstelle Hamburg IFE/EUROGIP: Development and design of a structural model for the construction and implementation of an EU OSH Information System, Final Report, March 2018, Service contract No VC/2016/0055)</p><p>The description was prepared by the contractor based on literature, particularly from Eurofound <br> <a target="_blank" href="https://www.eurofound.europa.eu/topic/social-dialogue">https://www.eurofound.europa.eu/topic/social-dialogue</a> <br> and EU-OSHA’s OSHwiki information offer<br> <a target="_blank" href="https://oshwiki.eu/wiki/Category:OSH_systems_at_national_level">https://oshwiki.eu/wiki/Category:OSH_systems_at_national_level</a></p>
- 			</td>
-			<td>
-				
-			</td>
-			<td><button class="view-click">Edit</button><button class="disabled">Undo</button></td>
-		  </tr>
-		</table>
-		<button>Publish</button>
-		<div class="clear-content"><!-- only for prototype --></div>
-		<div class="popup">
-			<div class="close close-click">x</div>
-			<label>Published text:</label>
-			<div readonly class="textarea disabled">
-				<ul>
-					<li>Activity sector: <strong>All</strong></li>
-					<li>Answer:<strong> Yes</strong></li>
-				</ul>
-			</div>
-			<label>Updated text:</label>
-			<div class="wysi"></div>
-			<div class="textarea">
-				<ul>
-					<li>Activity sector: <strong>All</strong></li>
-					<li>Answer:<strong> No</strong></li>
-				</ul>
-			</div>
-			<button class="close-click">Save</button><button class="close-click">Cancel</button>
-		</div>
-	</div> 
 	<footer class="clear-fixed">
 		<div class="container">
 			© 2020 EU-OSHA | <a href="https://osha.europa.eu/" target="_blank">an agency of the European Union</a>

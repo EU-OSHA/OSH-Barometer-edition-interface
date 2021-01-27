@@ -46,8 +46,10 @@ import org.apache.logging.log4j.Logger;
 import com.sun.security.auth.UserPrincipal;
 
 import eu.europa.osha.barometer.edition.webui.bean.User;
+import eu.europa.osha.barometer.edition.webui.business.CountryReportBusiness;
 import eu.europa.osha.barometer.edition.webui.business.QualitativeDataBusiness;
 import eu.europa.osha.barometer.edition.webui.business.QuantitativeDataBusiness;
+import eu.europa.osha.barometer.edition.webui.business.UpdateLabelsBusiness;
 import eu.europa.osha.barometer.edition.webui.security.ConfigurationImpl;
 import eu.europa.osha.barometer.edition.webui.security.PassiveCallbackHandler;
 
@@ -79,6 +81,17 @@ public class BarometerUIController extends HttpServlet{
 	private static String UPDATE_DATASETS_DEFAULT_SECTION_ID = "17";
 	private static String COUNTRY_REPORTS_DEFAULT_SECTION_ID = "38";
 	private static String FILE_EXTENSION = ".xlsx";
+	
+	private static String COMPANY_SIZE_TEMPLATE = "EU-OSHA_OIE_Eurostat_indicator_Company_size";
+	private static String EMPLOYMENT_PER_SECTOR_TEMPLATE = "EU-OSHA_OIE_Eurostat_indicator_Employment_per_sector";
+	private static String EMPLOYMENT_RATE_TEMPLATE = "EU-OSHA_OIE_Eurostat_indicator_Employment_rate_T_M_F";
+	private static String INCOME_PER_CAPITA_TEMPLATE = "EU-OSHA_OIE_Eurostat_Income_per_capita";
+	private static String INCOME_PER_CAPITA_EURO_TEMPLATE = "EU-OSHA_OIE_Eurostat_Income_per_capita_EURO";
+	private static String NON_FATAL_WORK_ACCIDENTS_TEMPLATE = "EU-OSHA_OIE_Eurostat_NonFatal_Work_accidents";
+	private static String FATAL_WORK_ACCIDENTS_TEMPLATE = "EU-OSHA_OIE_Eurostat_Fatal_Work_accidents";
+	private static String GENERAL_TEMPLATE = "EU-OSHA_OIE_Eurostat_Direct_value_indicators";
+	
+	private static String DEFAULT_SECTION_UPDATE_LABELS = "37";
 
 	/**
 	 * The main method of the controller in charge of the redirections. Use a "service" method, so it can handle both
@@ -398,6 +411,49 @@ public class BarometerUIController extends HttpServlet{
 						}
 					}
 					
+					//Validate that the template uploaded is coherent to the indicator selected in the form
+					if(indicatorEurostat.equals("31")){
+						if(!fileName.contains(COMPANY_SIZE_TEMPLATE)) {
+							validation = false;
+							errorMessage = "Template should be: "+COMPANY_SIZE_TEMPLATE+"_YYYY-MM-DD.xlsx";
+						}
+					}else if(indicatorEurostat.equals("32")){
+						if(!fileName.contains(EMPLOYMENT_PER_SECTOR_TEMPLATE)) {
+							validation = false;
+							errorMessage = "Template should be: "+EMPLOYMENT_PER_SECTOR_TEMPLATE+"_YYYY-MM-DD.xlsx";
+						}
+					}else if(indicatorEurostat.equals("39")){
+						if(!fileName.contains(EMPLOYMENT_RATE_TEMPLATE)) {
+							validation = false;
+							errorMessage = "Template should be: "+EMPLOYMENT_RATE_TEMPLATE+"_YYYY-MM-DD.xlsx";
+						}
+					}else if(indicatorEurostat.equals("36")){
+						if(!fileName.contains(INCOME_PER_CAPITA_TEMPLATE)) {
+							validation = false;
+							errorMessage = "Template should be: "+INCOME_PER_CAPITA_TEMPLATE+"_YYYY-MM-DD.xlsx";
+						}
+					}else if(indicatorEurostat.equals("279")){
+						if(!fileName.contains(INCOME_PER_CAPITA_EURO_TEMPLATE)) {
+							validation = false;
+							errorMessage = "Template should be: "+INCOME_PER_CAPITA_EURO_TEMPLATE+"_YYYY-MM-DD.xlsx";
+						}
+					}else if(indicatorEurostat.equals("53")){
+						if(!fileName.contains(NON_FATAL_WORK_ACCIDENTS_TEMPLATE)) {
+							validation = false;
+							errorMessage = "Template should be: "+NON_FATAL_WORK_ACCIDENTS_TEMPLATE+"_YYYY-MM-DD.xlsx";
+						}
+					}else if(indicatorEurostat.equals("54")){
+						if(!fileName.contains(FATAL_WORK_ACCIDENTS_TEMPLATE)) {
+							validation = false;
+							errorMessage = "Template should be: "+FATAL_WORK_ACCIDENTS_TEMPLATE+"_YYYY-MM-DD.xlsx";
+						}
+					}else{
+						if(!fileName.contains(GENERAL_TEMPLATE)) {
+							validation = false;
+							errorMessage = "Template should be: "+GENERAL_TEMPLATE+"_YYYY-MM-DD.xlsx";
+						}
+					}
+					
 					if(validation) {
 						LOGGER.info("File name: "+fileName);
 						InputStream fileContent = file.getInputStream();						
@@ -551,13 +607,13 @@ public class BarometerUIController extends HttpServlet{
 					Part file = req.getPart("pdfFile");
 					if(section != null) {
 						if(section.equals("osh_authorities")) {
-							countryList = QualitativeDataBusiness.getOshAuthoritiesCountries();
+							countryList = CountryReportBusiness.getOshAuthoritiesCountries();
 							filename.append("OSH authorities - ");
 						} else if(section.equals("national_strategies")) {
-							countryList = QualitativeDataBusiness.getNationalStrategiesCountries();
+							countryList = CountryReportBusiness.getNationalStrategiesCountries();
 							filename.append("National-Strategies-Mapping_");
 						} else if(section.equals("social_dialogue")) {
-							countryList = QualitativeDataBusiness.getSocialDialogueCountries();
+							countryList = CountryReportBusiness.getSocialDialogueCountries();
 							filename.append("Social_Dialogue_National-Strategies-Mapping_");
 						}
 						filename.append(country);
@@ -587,7 +643,7 @@ public class BarometerUIController extends HttpServlet{
 				} else {
 					country = "Austria";
 					section = COUNTRY_REPORTS_DEFAULT_SECTION_ID;
-					countryList = QualitativeDataBusiness.getOshAuthoritiesCountries();
+					countryList = CountryReportBusiness.getOshAuthoritiesCountries();
 				}
 				
 				if(country == null) {

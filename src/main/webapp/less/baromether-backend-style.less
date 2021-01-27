@@ -38,15 +38,27 @@ header{
 	}
 }
 
+html, body {
+  /* IE 10-11 didn't like using min-height */
+  height: 100%;
+}
+
 body{
 	font-family: arial , sans-serif;
 	margin: 0;
 	font-size: 10px;
+	display: flex;
+  	flex-direction: column;
+}
+
+.wrapper{
+	flex: 1 0 auto;
+	padding-bottom: 2em;
 }
 
 .container{
 	padding: 0 15px 0 15px;
-	max-width: 1280px;
+	width: 1280px;
 	margin: 0 auto;
 }
 
@@ -444,7 +456,6 @@ p.table{
 }
 
 #home-boxes{
-	min-height: 575px;
 	padding-top: 2em;
 	a.box{
 		position: relative;
@@ -551,9 +562,8 @@ p.table{
 }
 
 footer{
-	position: fixed;
+	flex-shrink: 0;
 	background: #B0B2B3;
-	bottom: 0;
 	color: #333;
     margin: 0 auto;
     width: 100%;

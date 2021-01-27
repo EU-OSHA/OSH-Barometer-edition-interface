@@ -15,7 +15,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 
-import eu.europa.osha.barometer.edition.webui.business.QualitativeDataBusiness;
+import eu.europa.osha.barometer.edition.webui.business.CountryReportBusiness;
 
 @WebServlet
 (
@@ -35,13 +35,13 @@ public class CountryDisplay extends HttpServlet {
         String section = req.getParameter("section");
         ArrayList<HashMap<String,String>> countryList = null;
         if(section.equals("osh_authorities")) {
-        	countryList = QualitativeDataBusiness.getOshAuthoritiesCountries();
+        	countryList = CountryReportBusiness.getOshAuthoritiesCountries();
         	LOGGER.info("countryList OSH Authorities length: "+countryList.size());
         } else if(section.equals("national_strategies")) {
-        	countryList = QualitativeDataBusiness.getNationalStrategiesCountries();
+        	countryList = CountryReportBusiness.getNationalStrategiesCountries();
         	LOGGER.info("countryList National Strategies length: "+countryList.size());
         } else if(section.equals("social_dialogue")) {
-        	countryList = QualitativeDataBusiness.getSocialDialogueCountries();
+        	countryList = CountryReportBusiness.getSocialDialogueCountries();
         	LOGGER.info("countryList Social Dialogue length: "+countryList.size());
         }
         

@@ -49,28 +49,4 @@ public class QualitativeDataBusiness {
 		updatedCorrectly = dataDAO.updateIndicatorsDataset(chart_id, indicator_id, dataset_id);
 		return updatedCorrectly;
 	}
-	
-	public static ArrayList<HashMap<String,String>> getOshAuthoritiesCountries(){
-		LOGGER.info("Accessing data DAO in order to get available countries for OSH Authorities");
-		QualitativeDataDAO dataDAO = QualitativeDataDAO.getInstance();
-		ArrayList<HashMap<String,String>> dataList = dataDAO.getOshAuthoritiesCountries();
-		LOGGER.info("Retrieved data from database. Data list length: "+dataList.size());
-		return dataList;
-	}
-	
-	public static ArrayList<HashMap<String,String>> getNationalStrategiesCountries(){
-		LOGGER.info("Accessing data DAO in order to get available countries for National Strategies");
-		QualitativeDataDAO dataDAO = QualitativeDataDAO.getInstance();
-		ArrayList<HashMap<String,String>> dataList = dataDAO.getNationalStrategiesCountries();
-		LOGGER.info("Retrieved data from database. Data list length: "+dataList.size());
-		return dataList;
-	}
-	
-	public static ArrayList<HashMap<String,String>> getSocialDialogueCountries(){
-		LOGGER.info("Accessing data DAO in order to get available countries for Social Dialogue");
-		QualitativeDataDAO dataDAO = QualitativeDataDAO.getInstance();
-		ArrayList<HashMap<String,String>> dataList = dataDAO.getSocialDialogueCountries();
-		LOGGER.info("Retrieved data from database. Data list length: "+dataList.size());
-		return dataList;
-	}
 }

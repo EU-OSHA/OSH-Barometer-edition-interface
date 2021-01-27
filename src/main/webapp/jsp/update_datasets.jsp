@@ -3,6 +3,7 @@
 <%@page import="eu.europa.osha.barometer.edition.webui.business.QualitativeDataBusiness"%>
 <%@include file="includes/head.jsp"%>
 <%@include file="includes/header.jsp"%>
+<div class="wrapper">
 	<div class="container">
 		<%@include file="includes/breadcrumb.jsp"%>
 		<h1>Update year / period of the DVT's data</h1>
@@ -84,4 +85,5 @@
 		<% } %>
 		</div>
 	</div>
+</div>
 <%@include file="includes/footer.jsp"%>

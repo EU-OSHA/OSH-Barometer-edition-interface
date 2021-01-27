@@ -12,125 +12,127 @@
 </head>
 
 <body>
-	<header>
+	<div class="wrapper">
+		<header>
+			<div class="container">
+				<img src="images/logo.png" alt="OSH Barometer Logo">
+				<div class="content-header-button">
+					<form action="login.html"><button class="login">Logout</button></form>
+				</div>
+			</div>
+		</header>
 		<div class="container">
-			<img src="images/logo.png" alt="OSH Barometer Logo">
-			<div class="content-header-button">
-				<form action="login.html"><button class="login">Logout</button></form>
+			<div class="breadcrumbs">
+				<ul>
+					<li><a href="index.html">Home</a></li>
+					<li><span>Qualitative data from Member States, EU and International</span></li>
+				</ul>
 			</div>
 		</div>
-	</header>
-	<div class="container">
-		<div class="breadcrumbs">
-			<ul>
-				<li><a href="index.html">Home</a></li>
-				<li><span>Qualitative data from Member States, EU and International</span></li>
-			</ul>
-		</div>
+		<div class="container">
+			<h1>Qualitative data from Member States, EU and International</h1>
+			<div class="conten-input">
+				<label>Section</label>
+				<select>
+					<option>
+						OSH authorities
+					</option>
+					<option>
+						
+					</option>
+				</select>
+			</div>
+			<div class="conten-input">
+				<label>Country</label>
+				<select>
+					<option>
+						Austria
+					</option>
+					<option>
+						
+					</option>
+				</select>
+			</div>
+			<div class="conten-input">
+				<label>Institution type</label>
+				<select>
+					<option>
+						OSH authority
+					</option>
+					<option>
+						
+					</option>
+				</select>
+			</div>
+			<div class="clear-content"><!-- only for prototype --></div>
+			<table class="literals">
+			  <tr>
+			  	<th>Publish</th>
+			    <th>Published text</th>
+				<th>Updated text</th>
+				<th>Actions</th>
+			  </tr>
+			  <tr>
+			  	<td><input type="checkbox" name=""></td>
+				<td>Federal Ministry of Labour, Social Affairs, Health and Consumer Protection (Bundesministerium für Arbeit, Soziales, Gesundheit und Konsumentenschutz)</td>
+				<td>Federal Ministry of Labour, Social Affairs, Health and Consumer Protection (Bundesministerium für Arbeit, Soziales, Gesundheit und Konsumentenschutz) Edited</td>
+				<td><button class="view-click">Edit</button><button>Undo</button></td>
+			  </tr>
+			  <tr>
+			  	<td><input type="checkbox" name=""></td>
+				<td>See more in its <a target="_blank" href=" https://www.sozialministerium.at/en.html">website</a> and in <a target="_blank" href=" https://oshwiki.eu/wiki/OSH_system_at_national_level_-_Austria ">OSHwiki</a>.</td>
+				<td></td>
+				<td><button class="view-click">Edit</button><button class="disabled">Undo</button></td>
+			  </tr>
+			  <tr>
+			  	<td><input type="checkbox" name=""></td>
+				<td>The competent authority in occupational safety and health (OSH) matters is the Federal Ministry of Labour, Social Affairs, Health and Consumer Protection. It is responsible for most employment-related issues, namely social security (insurance for pensions and unemployment), industrial relations, labour market policy, labour conditions and inspections, statistics, OSH and vocational training.</td>
+				<td></td>
+				<td><button class="view-click">Edit</button><button class="disabled">Undo</button></td>
+			  </tr>
+			</table>
+			<button>Publish</button>
+			<div class="clear-content"><!-- only for prototype --></div>
+			<table class="literals">
+			  <tr>
+			  	<th>Publish</th>
+			    <th>Published text</th>
+				<th>Updated text</th>
+				<th>Actions</th>
+			  </tr>
+			  <tr>
+			  	<td><input type="checkbox" name=""></td>
+				<td>Labour inspectorate (Arbeitsinpektion)</td>
+				<td>Labour inspectorate (Arbeitsinpektion)Edited</td>
+				<td><button class="view-click">Edit</button><button>Undo</button></td>
+			  </tr>
+			  <tr>
+			  	<td><input type="checkbox" name=""></td>
+				<td>See more in its <a target="_blank" href="https://www.sozialministerium.at/en/Topics/Social-Affairs/People-with-Disabilities/The-participation-in-employment-of-people-with-disabilities.html">website</a> and in <a target="_blank" href="https://oshwiki.eu/wiki/OSH_system_at_national_level_-_Austria">OSHwiki</a>.</td>
+				<td></td>
+				<td><button class="view-click">Edit</button><button class="disabled">Undo</button></td>
+			  </tr>
+			  <tr>
+			  	<td><input type="checkbox" name=""></td>
+				<td>The general labour inspectorate (Arbeitsinspektion) is by far the largest of the bodies that have been established to monitor the safety and health of employees. It covers industries, services, the public sector and transport — following the July 2012 merger with the Inspectorate of Transport. It is centralised and acts nationally through 16 regional departments and one central office. Newly recruited inspectors follow a 2-year training programme, with the emphasis on legislation and general OSH principles. At the level of the federal states, nine regional labour inspectorates for agriculture and forestry have been established.</td>
+				<td></td>
+				<td><button class="view-click">Edit</button><button class="disabled">Undo</button></td>
+			  </tr>
+			</table>
+			<button>Publish</button>
+			<div class="clear-content"><!-- only for prototype --></div>
+			<div class="popup">
+				<div class="close close-click">x</div>
+				<label>Published text:</label>
+				<div readonly class="textarea disabled"><p>Federal Ministry of Labour, Social Affairs, Health and Consumer Protection (Bundesministerium für Arbeit, Soziales, Gesundheit und Konsumentenschutz)</p></div>
+				<label>Updated text:</label>
+				<div class="wysi"></div>
+				<div class="textarea">Federal Ministry of Labour, Social Affairs, Health and Consumer Protection (Bundesministerium für Arbeit, Soziales, Gesundheit und Konsumentenschutz) Edited</div>
+				<button class="close-click">Save</button><button class="close-click">Cancel</button>
+			</div>
+		</div> 
 	</div>
-	<div class="container">
-		<h1>Qualitative data from Member States, EU and International</h1>
-		<div class="conten-input">
-			<label>Section</label>
-			<select>
-				<option>
-					OSH authorities
-				</option>
-				<option>
-					
-				</option>
-			</select>
-		</div>
-		<div class="conten-input">
-			<label>Country</label>
-			<select>
-				<option>
-					Austria
-				</option>
-				<option>
-					
-				</option>
-			</select>
-		</div>
-		<div class="conten-input">
-			<label>Institution type</label>
-			<select>
-				<option>
-					OSH authority
-				</option>
-				<option>
-					
-				</option>
-			</select>
-		</div>
-		<div class="clear-content"><!-- only for prototype --></div>
-		<table class="literals">
-		  <tr>
-		  	<th>Publish</th>
-		    <th>Published text</th>
-			<th>Updated text</th>
-			<th>Actions</th>
-		  </tr>
-		  <tr>
-		  	<td><input type="checkbox" name=""></td>
-			<td>Federal Ministry of Labour, Social Affairs, Health and Consumer Protection (Bundesministerium für Arbeit, Soziales, Gesundheit und Konsumentenschutz)</td>
-			<td>Federal Ministry of Labour, Social Affairs, Health and Consumer Protection (Bundesministerium für Arbeit, Soziales, Gesundheit und Konsumentenschutz) Edited</td>
-			<td><button class="view-click">Edit</button><button>Undo</button></td>
-		  </tr>
-		  <tr>
-		  	<td><input type="checkbox" name=""></td>
-			<td>See more in its <a target="_blank" href=" https://www.sozialministerium.at/en.html">website</a> and in <a target="_blank" href=" https://oshwiki.eu/wiki/OSH_system_at_national_level_-_Austria ">OSHwiki</a>.</td>
-			<td></td>
-			<td><button class="view-click">Edit</button><button class="disabled">Undo</button></td>
-		  </tr>
-		  <tr>
-		  	<td><input type="checkbox" name=""></td>
-			<td>The competent authority in occupational safety and health (OSH) matters is the Federal Ministry of Labour, Social Affairs, Health and Consumer Protection. It is responsible for most employment-related issues, namely social security (insurance for pensions and unemployment), industrial relations, labour market policy, labour conditions and inspections, statistics, OSH and vocational training.</td>
-			<td></td>
-			<td><button class="view-click">Edit</button><button class="disabled">Undo</button></td>
-		  </tr>
-		</table>
-		<button>Publish</button>
-		<div class="clear-content"><!-- only for prototype --></div>
-		<table class="literals">
-		  <tr>
-		  	<th>Publish</th>
-		    <th>Published text</th>
-			<th>Updated text</th>
-			<th>Actions</th>
-		  </tr>
-		  <tr>
-		  	<td><input type="checkbox" name=""></td>
-			<td>Labour inspectorate (Arbeitsinpektion)</td>
-			<td>Labour inspectorate (Arbeitsinpektion)Edited</td>
-			<td><button class="view-click">Edit</button><button>Undo</button></td>
-		  </tr>
-		  <tr>
-		  	<td><input type="checkbox" name=""></td>
-			<td>See more in its <a target="_blank" href="https://www.sozialministerium.at/en/Topics/Social-Affairs/People-with-Disabilities/The-participation-in-employment-of-people-with-disabilities.html">website</a> and in <a target="_blank" href="https://oshwiki.eu/wiki/OSH_system_at_national_level_-_Austria">OSHwiki</a>.</td>
-			<td></td>
-			<td><button class="view-click">Edit</button><button class="disabled">Undo</button></td>
-		  </tr>
-		  <tr>
-		  	<td><input type="checkbox" name=""></td>
-			<td>The general labour inspectorate (Arbeitsinspektion) is by far the largest of the bodies that have been established to monitor the safety and health of employees. It covers industries, services, the public sector and transport — following the July 2012 merger with the Inspectorate of Transport. It is centralised and acts nationally through 16 regional departments and one central office. Newly recruited inspectors follow a 2-year training programme, with the emphasis on legislation and general OSH principles. At the level of the federal states, nine regional labour inspectorates for agriculture and forestry have been established.</td>
-			<td></td>
-			<td><button class="view-click">Edit</button><button class="disabled">Undo</button></td>
-		  </tr>
-		</table>
-		<button>Publish</button>
-		<div class="clear-content"><!-- only for prototype --></div>
-		<div class="popup">
-			<div class="close close-click">x</div>
-			<label>Published text:</label>
-			<div readonly class="textarea disabled"><p>Federal Ministry of Labour, Social Affairs, Health and Consumer Protection (Bundesministerium für Arbeit, Soziales, Gesundheit und Konsumentenschutz)</p></div>
-			<label>Updated text:</label>
-			<div class="wysi"></div>
-			<div class="textarea">Federal Ministry of Labour, Social Affairs, Health and Consumer Protection (Bundesministerium für Arbeit, Soziales, Gesundheit und Konsumentenschutz) Edited</div>
-			<button class="close-click">Save</button><button class="close-click">Cancel</button>
-		</div>
-	</div> 
-	<footer class="clear-fixed">
+	<footer>
 		<div class="container">
 			© 2020 EU-OSHA | <a href="https://osha.europa.eu/" target="_blank">an agency of the European Union</a>
 		</div>
