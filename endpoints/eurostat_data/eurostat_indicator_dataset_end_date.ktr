@@ -105,7 +105,7 @@
   <order>
   <hop> <from>Execute SQL script 3</from><to>Filter rows 2</to><enabled>Y</enabled> </hop>
   <hop> <from>Filter rows 2</from><to>Execute SQL script 2 2</to><enabled>Y</enabled> </hop>
-  <hop> <from>Obtener Variables</from><to>Execute SQL script 3</to><enabled>Y</enabled> </hop>
+  <hop> <from>Get Variables</from><to>Execute SQL script 3</to><enabled>Y</enabled> </hop>
   </order>
   <step>
     <name>Execute SQL script 2 2</name>
@@ -201,7 +201,7 @@
     </step>
 
   <step>
-    <name>Obtener Variables</name>
+    <name>Get Variables</name>
     <type>GetVariable</type>
     <description/>
     <distribute>Y</distribute>

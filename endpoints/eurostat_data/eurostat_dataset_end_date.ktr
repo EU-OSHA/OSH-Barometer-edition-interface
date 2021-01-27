@@ -108,12 +108,12 @@
     </attributes>
   </connection>
   <order>
-  <hop> <from>dataset Exists&#x3f;</from><to>Ejecutar script SQL</to><enabled>Y</enabled> </hop>
+  <hop> <from>dataset Exists&#x3f;</from><to>Insert Dataset</to><enabled>Y</enabled> </hop>
   <hop> <from>Execute SQL script</from><to>dataset Exists&#x3f;</to><enabled>Y</enabled> </hop>
-  <hop> <from>Obtener Variables</from><to>Execute SQL script</to><enabled>Y</enabled> </hop>
+  <hop> <from>Get Variables</from><to>Execute SQL script</to><enabled>Y</enabled> </hop>
   </order>
   <step>
-    <name>Ejecutar script SQL</name>
+    <name>Insert Dataset</name>
     <type>ExecSQL</type>
     <description/>
     <distribute>Y</distribute>
@@ -177,7 +177,7 @@
     </step>
 
   <step>
-    <name>Obtener Variables</name>
+    <name>Get Variables</name>
     <type>GetVariable</type>
     <description/>
     <distribute>N</distribute>
@@ -232,7 +232,7 @@
            <method>none</method>
            <schema_name/>
            </partitioning>
-<send_true_to>Ejecutar script SQL</send_true_to>
+<send_true_to>Insert Dataset</send_true_to>
 <send_false_to/>
     <compare>
 <condition>
