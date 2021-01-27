@@ -18,12 +18,12 @@
         </parameter>
         <parameter>
             <name>pIndicatorID</name>
-            <default_value>33</default_value>
+            <default_value>35</default_value>
             <description>ID of the indicator that will load</description>
         </parameter>
         <parameter>
             <name>pYearFrom</name>
-            <default_value>2021-01-01</default_value>
+            <default_value>2019-01-01</default_value>
             <description>Initial year with the data for the dataset</description>
         </parameter>
         <parameter>
