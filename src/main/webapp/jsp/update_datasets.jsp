@@ -50,7 +50,7 @@
 						<tr>
 							<td><%=indicator.get("chart_name") %></td>
 							<td>
-							<form id="formChart<%=indicator.get("indicator_id")%>" action="user?page=update_datasets" method="post">
+								<form id="formChart<%=indicator.get("indicator_id")%>" action="user?page=update_datasets" method="post">
 									<input type="hidden" value="<%=indicator.get("chart_id")%>" name="chart_id">
 									<input type="hidden" value="<%=indicator.get("indicator_id")%>" name="indicator_id">
 									<input type="hidden" value="<%=data.get("section_id")%>" name="section_id">

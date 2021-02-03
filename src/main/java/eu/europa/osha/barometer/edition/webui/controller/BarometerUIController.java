@@ -91,7 +91,10 @@ public class BarometerUIController extends HttpServlet{
 	private static String FATAL_WORK_ACCIDENTS_TEMPLATE = "EU-OSHA_OIE_Eurostat_Fatal_Work_accidents";
 	private static String GENERAL_TEMPLATE = "EU-OSHA_OIE_Eurostat_Direct_value_indicators";
 	
+	private static String QUANTITATIVE_EUROSTAT_DEFAULT_YEAR_FROM = "2010-01-01";
+	
 	private static String DEFAULT_SECTION_UPDATE_LABELS = "37";
+	private static String DEFAULT_CHART_UPDATE_LABELS = "0";
 
 	/**
 	 * The main method of the controller in charge of the redirections. Use a "service" method, so it can handle both
@@ -116,6 +119,9 @@ public class BarometerUIController extends HttpServlet{
 		String page = req.getParameter("page");
 		//Getting the current session
 		HttpSession session = req.getSession();
+		
+		String confirmationMessage = null;
+		String errorMessage = null;
 
 		LOGGER.info("Current page: " + page);
 
@@ -149,7 +155,7 @@ public class BarometerUIController extends HttpServlet{
 				nextURL = "/jsp/login.jsp";
 			}else if(page.equals("home")) {
 				LOGGER.info("Accessing home page");
-				String errorMessage = null;
+				errorMessage = null;
 				boolean loginCorrect = false;
 				String username = req.getParameter("username");
 				String password = req.getParameter("password");
@@ -218,15 +224,13 @@ public class BarometerUIController extends HttpServlet{
 				//					errorMessage = "Incorrect user/mail or password. Please try again.";
 				//				}
 
-				if(errorMessage != null) {
-					req.setAttribute("errorMessage", errorMessage);
-				}
+				sendAlertsToUser(req, confirmationMessage, errorMessage);
 			} else if (page.equals("quantitative_eurofound")) {
 				nextURL = "/jsp/quantitative_eurofound.jsp";
 				LOGGER.info("Arriving to Quantitative Data from Eurofound.");
 				String submit = req.getParameter("formSent");
-				String errorMessage = null;
-				String confirmationMessage = null;
+				errorMessage = null;
+				confirmationMessage = null;
 				String scriptDirectory = null;
 				String outputDirectory = null;
 				String inputDirectory = null;
@@ -346,21 +350,15 @@ public class BarometerUIController extends HttpServlet{
 						}
 					}
 					
-					if(errorMessage != null) {
-						req.setAttribute("errorMessage", errorMessage);
-					}
-					
-					if(confirmationMessage != null) {
-						req.setAttribute("confirmationMessage", confirmationMessage);
-					}
+					sendAlertsToUser(req, confirmationMessage, errorMessage);
 					req.setAttribute("year", year);
 				}
 			} else if (page.equals("quantitative_eurostat")) {
 				LOGGER.info("Arriving to Quantitative Data from Eurostat.");
 				nextURL = "/jsp/quantitative_eurostat.jsp";
 				ArrayList<HashMap<String,String>> indicatorsList = QuantitativeDataBusiness.getIndicatorsForEurostat();
-				String errorMessage = null;
-				String confirmationMessage = null;
+				errorMessage = null;
+				confirmationMessage = null;
 				String scriptDirectory = null;
 				String outputDirectory = null;
 				String inputDirectory = null;
@@ -580,17 +578,59 @@ public class BarometerUIController extends HttpServlet{
 					req.setAttribute("indicatorEurostat", indicatorEurostat);
 				}
 				req.setAttribute("indicatorsList", indicatorsList);
-				if(errorMessage != null) {
-					req.setAttribute("errorMessage", errorMessage);
-				}
-				
-				if(confirmationMessage != null) {
-					req.setAttribute("confirmationMessage", confirmationMessage);
-				}
+				sendAlertsToUser(req, confirmationMessage, errorMessage);
 			} else if (page.equals("update_labels")) {
 				LOGGER.info("Arriving to Update labels Form.");
 				nextURL = "/jsp/update_labels.jsp";
 				//TODO functionality for page update_labels
+				String saveButton = req.getParameter("formSent");
+				String section = req.getParameter("section");
+				String chart = req.getParameter("chart");
+				confirmationMessage = null;
+				errorMessage = null;
+				//Save updated text in draft_text column in table translation
+				if (saveButton != null) {
+					String translation_id = req.getParameter("translation_id"); 
+					String updatedTextEditor = req.getParameter("updatedTextEditor");
+					boolean textUpdated = false;
+					if(saveButton.equals("saveDraft")) {
+						textUpdated = UpdateLabelsBusiness.updateDraftText(updatedTextEditor, translation_id);
+						
+						if(textUpdated) {
+							confirmationMessage = "Updated text saved successfully";
+						} else { 
+							errorMessage = "Updated text could not be saved";
+						}
+					}else if(saveButton.equals("undoUpdate")) {
+						textUpdated = UpdateLabelsBusiness.undoDraftText(translation_id);
+						
+						if(textUpdated) {
+							confirmationMessage = "Deleted 'Updated Text' content successfully";
+						} else { 
+							errorMessage = "Updated text could not be deleted";
+						}
+					}
+				}
+				
+				if(section == null) {
+					section = DEFAULT_SECTION_UPDATE_LABELS;
+				}
+				
+				if(chart == null) {
+					chart = DEFAULT_CHART_UPDATE_LABELS;
+				}
+								
+				sendAlertsToUser(req, confirmationMessage, errorMessage);
+				
+				ArrayList<HashMap<String,String>> sectionList = UpdateLabelsBusiness.getSectionList();
+				ArrayList<HashMap<String,String>> chartList = QualitativeDataBusiness.getChartsBySection(section);
+				ArrayList<HashMap<String,String>> literalList = UpdateLabelsBusiness.getLiteralsBySectionAndChart(section, chart);				
+				
+				req.setAttribute("sectionList", sectionList);
+				req.setAttribute("chartList", chartList);
+				req.setAttribute("sectionSelected", section);
+				req.setAttribute("chartSelected", chart);
+				req.setAttribute("literalList", literalList);
 			} else if (page.equals("country_reports_member_states")) {
 				LOGGER.info("Arriving to Country Reports for Member States.");
 				nextURL = "/jsp/country_reports_member_states.jsp";
@@ -600,8 +640,8 @@ public class BarometerUIController extends HttpServlet{
 				ArrayList<HashMap<String,String>> countryList = null;
 				String outputDirectory = configurationData.getString("directory.quantitative_file.eurostat.input");
 				StringBuilder filename = new StringBuilder();
-				String confirmMessage = null;
-				String errorMessage = null;
+				confirmationMessage = null;
+				errorMessage = null;
 				
 				if(submit != null) {
 					Part file = req.getPart("pdfFile");
@@ -634,7 +674,7 @@ public class BarometerUIController extends HttpServlet{
 				            out.write(bytes, 0, read);
 				        }
 				        LOGGER.info("File "+fileName+" being uploaded to " + outputDirectory);
-				        confirmMessage = "The uploaded Country Report PDF has been correctly saved";
+				        confirmationMessage = "The uploaded Country Report PDF has been correctly saved";
 					} catch(Exception e) {
 						LOGGER.error("An error has occurred while uploading the pdf.");
 						e.printStackTrace();
@@ -650,8 +690,8 @@ public class BarometerUIController extends HttpServlet{
 					country = "Austria";
 				}
 				
-				req.setAttribute("errorMessage", errorMessage);
-				req.setAttribute("confirmMessage", confirmMessage);
+				sendAlertsToUser(req, confirmationMessage, errorMessage);
+
 				req.setAttribute("countrySelected", country);
 				req.setAttribute("section_id", section);
 				req.setAttribute("countryList", countryList);
@@ -665,8 +705,8 @@ public class BarometerUIController extends HttpServlet{
 			} else if (page.equals("update_datasets")) {
 				LOGGER.info("Arriving to Update year / period of the DVT's data Form.");
 				nextURL = "/jsp/update_datasets.jsp";
-				String errorMessage = null;
-				String confirmationMessage = null;
+				errorMessage = null;
+				confirmationMessage = null;
 				String sectionId = req.getParameter("section_id");
 				String formSent = req.getParameter("formSent");
 				ArrayList<HashMap<String,String>> chartsBySectionList = null;
@@ -684,12 +724,7 @@ public class BarometerUIController extends HttpServlet{
 						errorMessage = "An error has occurred while updating the database.";
 					}
 					
-					if(errorMessage != null) {
-						req.setAttribute("errorMessage", errorMessage);
-					}					
-					if(confirmationMessage != null) {
-						req.setAttribute("confirmationMessage", confirmationMessage);
-					}
+					sendAlertsToUser(req, confirmationMessage, errorMessage);
 				}
 				
 				if(sectionId != null) {
@@ -717,6 +752,18 @@ public class BarometerUIController extends HttpServlet{
 	
 	private void processUploadedExcels(Part file, String fileName) {
 		//TODO after the process is finished for both cases optimise code in here
+	}
+	
+	private void sendAlertsToUser(HttpServletRequest req, String confirmation, String error) {
+		if(error != null) {
+			req.setAttribute("errorMessage", error);
+		}					
+		if(confirmation != null) {
+			req.setAttribute("confirmationMessage", confirmation);
+		}
+		
+		req.setAttribute("errorMessage", error);
+		req.setAttribute("confirmationMessage", confirmation);
 	}
 
 	/**

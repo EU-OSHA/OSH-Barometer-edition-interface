@@ -16,6 +16,7 @@ import org.apache.logging.log4j.Logger;
 import com.google.gson.Gson;
 
 import eu.europa.osha.barometer.edition.webui.business.QualitativeDataBusiness;
+import eu.europa.osha.barometer.edition.webui.business.UpdateLabelsBusiness;
 
 @WebServlet
 (
@@ -24,6 +25,7 @@ import eu.europa.osha.barometer.edition.webui.business.QualitativeDataBusiness;
     urlPatterns = {"/tableload"}
 )
 public class TableLoad extends HttpServlet {
+	private static final long serialVersionUID = 1L;
 	private static final Logger LOGGER = LogManager.getLogger(TableLoad.class);
  
 	public void service(HttpServletRequest req, HttpServletResponse res)
@@ -48,6 +50,10 @@ public class TableLoad extends HttpServlet {
 			ArrayList<HashMap<String,String>> datasetsList = QualitativeDataBusiness.getDatasetsForIndicator(indicatorId);
 			LOGGER.info("datasetsList length: "+datasetsList.size());
 			returningData = g.toJson(datasetsList);
+		} else if(get.equals("literals")) {
+			ArrayList<HashMap<String,String>> literalsList = UpdateLabelsBusiness.getLiteralsBySectionAndChart(section, chart);
+			LOGGER.info("literalsList length: "+literalsList.size());
+			returningData = g.toJson(literalsList);
 		}
 		
 		res.setContentType("text/plain");

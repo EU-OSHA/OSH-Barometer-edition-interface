@@ -2,7 +2,15 @@
   
 $(document).ready(function(){
     $( ".close-click" ).click(function() {
-      $( ".popup" ).fadeOut( "slow" );
+    	$( ".popup" ).fadeOut( "slow" );
+    });
+
+    $( ".close-click" ).click(function() {
+      $( ".popup-warning" ).fadeOut( "slow" );
+    });
+
+    $( ".close-click" ).click(function() {
+      $( ".popup-confirm" ).fadeOut( "slow" );
     });
     
     $( ".view-click" ).click(function() {
@@ -97,8 +105,7 @@ $(document).ready(function(){
 		        var new_tbody = "";
 		        $('div#tablesContainer').empty();
 		        chartList.forEach(function(chart){
-					new_tbody = new_tbody.concat('<label>Chart '+chartIndex+':</label>');
-					new_tbody = new_tbody.concat('<p class="table">'+chart.chart_name+'</p>');
+					new_tbody = new_tbody.concat('<label>Chart '+chartIndex+' <b>'+chart.chart_name+'</b>:</label>');
 					new_tbody = new_tbody.concat('<table>');
 					new_tbody = new_tbody.concat('<thead>');
 					new_tbody = new_tbody.concat('<tr>');
@@ -207,6 +214,212 @@ $(document).ready(function(){
 			},
 			async: true
 		});
+	}
+	
+	disableChartSelect = function() {
+		console.log("Enters disableChartSelect function");
+		var sectionSelected = document.getElementById("sectionSelect");
+		var valueSelected = sectionSelected.value;
+		$.get({
+			url: 'chartload',
+			data: {
+				section: valueSelected
+			},
+			success: function(chartResponse) {
+		        var chartList = JSON.parse(chartResponse);
+		        var new_tbody = "";
+		        $('#chartSelect').empty();
+					new_tbody = new_tbody.concat('<option "selected" value="0" >');
+					new_tbody = new_tbody.concat('No chart selected');
+					new_tbody = new_tbody.concat('</option>');
+		        chartList.forEach(function(chart){
+					new_tbody = new_tbody.concat('<option value="'+chart.chart_id+'" >');
+					new_tbody = new_tbody.concat(chart.chart_name);
+					new_tbody = new_tbody.concat('</option>');
+		        });
+		        $('#chartSelect').html(new_tbody);
+				if(chartList.length > 0) {
+					$('#chartSelect').prop('disabled', false);
+				} else {
+					$('#chartSelect').prop('disabled', true);
+				}
+			},
+			async: true
+		});
+		loadLiteralsTable();
+	}
+	
+	loadLiteralsTable = function() {
+		//literalListBody
+		console.log("Enters loadLiteralsTable function");
+		var section = document.getElementById("sectionSelect");
+		var sectionSelected = section.value;
+		
+		var chart = document.getElementById("chartSelect");
+		var chartSelected = chart.value;
+		
+		$.get({
+			url: 'tableload',
+			data: {
+				section: sectionSelected,
+				chart: chartSelected,
+				get: 'literals'
+			},
+			success: function(literalsResponse) {
+		        var literalsList = JSON.parse(literalsResponse);
+		        var new_tbody = "";
+		        $('#literalListBody').empty();
+		        literalsList.forEach(function(literal){
+					new_tbody = new_tbody.concat('<tr>');
+					new_tbody = new_tbody.concat('<td><input type="checkbox" name="publishCheck"></td>');
+					new_tbody = new_tbody.concat('<td>'+ literal.published_text +'</td>');
+					if(literal.updated_text == null){
+						new_tbody = new_tbody.concat('<td> </td>');
+					}else{
+						new_tbody = new_tbody.concat('<td>'+literal.updated_text+'</td>');
+					}
+					//new_tbody = new_tbody.concat('<td><button class="view-click">Edit</button>');
+					new_tbody = new_tbody.concat('<td><button class="view-click" onclick="editModal(\''+literal.translation_id);
+					new_tbody = new_tbody.concat('\', \''+literal.published_text+'\', \''+literal.updated_text+'\')">');
+					new_tbody = new_tbody.concat('Edit</button>');
+					new_tbody = new_tbody.concat('<button class="disabled">Undo</button></td>');
+					new_tbody = new_tbody.concat('</tr>');
+		        });
+		        $('#literalListBody').html(new_tbody);
+			},
+			async: true
+		});
+	}
+	
+	if($('div#update-labels').length > 0){		
+		CKEDITOR.instances.updatedTextEditor.on('change', function() {
+			var text = CKEDITOR.instances.updatedTextEditor.getData()
+			if(text != null && text != "" && text !=$('#publishedText')[0].textContent){
+				if($('#modalSaveButton').hasClass('disabled')){
+					$('#modalSaveButton').removeClass('disabled');
+				}
+			}
+		});
+		CKEDITOR.instances.updatedTextEditor.on('key', function() {
+			var text = CKEDITOR.instances.updatedTextEditor.getData()
+			if(text != null && text != "" && text !=$('#publishedText')[0].textContent){
+				if($('#modalSaveButton').hasClass('disabled')){
+					$('#modalSaveButton').removeClass('disabled');
+				}
+			}
+		});
+	}
+	
+	editModal = function(translation_id/*, published_text, updated_text*/){
+		console.log("Arrives to editModal");
+		
+		var section = document.getElementById("sectionSelect");
+		var sectionSelected = section.value;
+		
+		var chart = document.getElementById("chartSelect");
+		var chartSelected = chart.value;
+		
+		var published_text = $("#published_text_"+translation_id)[0].textContent;
+		var updated_text = $("#updated_text_"+translation_id)[0].textContent;
+		
+		//$(".popup input#literal_id").val(literal_id);
+		$("#edit-popup input#translation_id").val(translation_id);
+		$("#edit-popup input#popUpSection").val(sectionSelected);
+		$("#edit-popup input#popUpChart").val(chartSelected);
+		$("#edit-popup p#publishedText").text(published_text);
+		$("#edit-popup #updatedTextEditor").text(updated_text);
+		CKEDITOR.instances.updatedTextEditor.setData(updated_text);
+		
+		$("#edit-popup").css("display","block");
+	};
+	
+	disableSaveButton = function(){
+		CKEDITOR.instances.updatedTextEditor.setData("");
+		if(!$('#modalSaveButton').hasClass('disabled')){
+			$('#modalSaveButton').addClass('disabled');
+		}
+	};
+	
+	undoPopup = function(translation_id/*, published_text, updated_text*/){
+		console.log("Arrives to undoPopup");
+		var section = document.getElementById("sectionSelect");
+		var sectionSelected = section.value;
+		
+		var chart = document.getElementById("chartSelect");
+		var chartSelected = chart.value;
+		
+		//var published_text = $("#published_text_"+translation_id)[0].textContent;
+		//var updated_text = $("#updated_text_"+translation_id)[0].textContent;
+		
+		/*if(updated_text != "null"){
+			if(updated_text != published_text){
+				$('#modalUndoButton').removeClass('disabled');
+			}else{
+				$('#modalUndoButton').addClass('disabled');
+			}
+		}else{
+			$('#modalUndoButton').addClass('disabled');
+		}*/
+		
+		$("#undo-popup input#undo_translation_id").val(translation_id);
+		$("#undo-popup input#popUpUndoSection").val(sectionSelected);
+		$("#undo-popup input#popUpUndoChart").val(chartSelected);
+		
+		$("#undo-popup").css("display","block");
+	};
+	
+	checkTextChanges = function(/*translation_id, published_text, updated_text*/) { 
+		console.log("Arrives checkTextChanges");
+		var checks = $('input[type=checkbox]');
+		
+		var i = 0;
+		var valid = false;
+		var update_text_i = "null";
+		var published_text_i = "null";
+		while (i < checks.length && !valid) {
+			if(checks[i].checked == true){
+				var checkId = checks[i].id.substring(checks[i].id.indexOf('-')+1);
+				update_text_i = $("#updated_text_"+checkId)[0].textContent;
+				published_text_i = $("#published_text_"+checkId)[0].textContent;
+				if(update_text_i != "null" && update_text_i != "" && update_text_i != published_text_i){
+					valid = true;
+				}
+			}
+			i++;
+        }
+		
+		if(valid){
+			$('#publishButton').removeClass('disabled');
+		}else{
+			if(!$('#publishButton').hasClass('disabled')){
+				$('#publishButton').addClass('disabled');
+			}
+		}
+	}
+	
+	openConfirmationModal = function() {
+		$("#confirm-popup").css("display","block");
+	}
+	
+	publishLiterals = function(currentPage) {
+		var checks = $('input[type=checkbox]:checked');
+		for (var i = 0; i < checks.length; i++) {
+			if(checks[i].checked == true){
+				var form = $(checks[i].parentElement);
+				if(i == length-1){
+					form.children('input[name="lastForm"]').val('true');
+				}
+				
+				$.post(
+					form.attr('action')+'?page='+currentPage, 
+					form.serialize(), 
+					function( data ) {
+						console.log('AJAX POST SUCCESS');
+						window.location.replace('user?page=update_labels');
+					});
+				checks[i].checked = false;
+			}
+        }
 	}
 });
 
