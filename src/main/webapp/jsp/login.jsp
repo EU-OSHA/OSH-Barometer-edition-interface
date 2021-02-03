@@ -1,6 +1,7 @@
 <%@include file="includes/head.jsp"%>
-<%@include file="includes/header.jsp"%>
+
 <div class="wrapper">
+	<%@include file="includes/header.jsp"%>
 	<div class="container">
 		<%
 	           String errorMessage = (String) request.getAttribute("errorMessage");

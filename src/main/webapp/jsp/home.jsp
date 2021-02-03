@@ -1,6 +1,6 @@
 <%@include file="includes/head.jsp"%>
-<%@include file="includes/header.jsp"%>
 <div class="wrapper">
+	<%@include file="includes/header.jsp"%>
 	<div class="container">
 		<%@include file="includes/breadcrumb.jsp"%>
 		<h1>Edition tool</h1>
