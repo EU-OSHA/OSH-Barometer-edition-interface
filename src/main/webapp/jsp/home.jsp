@@ -18,7 +18,7 @@
 						<span class="box-title">Quantitative<br>data from<br>Eurostat</span>
 						<span class="box-ico"><img src="images/logo-eurostat.png"></span>
 					</span>
-					<span class="tootip-box">Upload Eurostat the corresponding excel template with the new data.</span>
+					<span class="tootip-box">Upload the corresponding Eurostat excel template with the new data.</span>
 				</a>
 				<a class="box" href="user?page=update_labels">
 					<span class="content-box">
@@ -54,7 +54,7 @@
 						<span class="box-title">Update year /<br>period of the<br>DVT's data</span>
 						<span class="box-ico"><img src="images/update-data.png"></span>
 					</span>
-					<span class="tootip-box more-text">Select the year that should be displayed in the DVT for each indicator. (my name or title change proposals are also meant for the tooltips)</span>
+					<span class="tootip-box more-text">Select the year that should be displayed in the DVT for each indicator.</span>
 				</a>
 			</div>
 		</section>
