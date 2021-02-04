@@ -91,7 +91,7 @@ public class BarometerUIController extends HttpServlet{
 	private static String FATAL_WORK_ACCIDENTS_TEMPLATE = "EU-OSHA_OIE_Eurostat_Fatal_Work_accidents";
 	private static String GENERAL_TEMPLATE = "EU-OSHA_OIE_Eurostat_Direct_value_indicators";
 	
-	private static String QUANTITATIVE_EUROSTAT_DEFAULT_YEAR_FROM = "2010-01-01";
+	private static String QUANTITATIVE_EUROSTAT_DEFAULT_YEAR_FROM = "2010";
 	
 	private static String DEFAULT_SECTION_UPDATE_LABELS = "37";
 	private static String DEFAULT_CHART_UPDATE_LABELS = "0";
@@ -360,6 +360,7 @@ public class BarometerUIController extends HttpServlet{
 				ArrayList<HashMap<String,String>> indicatorsList = QuantitativeDataBusiness.getIndicatorsForEurostat();
 				errorMessage = null;
 				confirmationMessage = null;
+				String yearFrom = null;
 				String scriptDirectory = null;
 				String outputDirectory = null;
 				String inputDirectory = null;
@@ -372,7 +373,7 @@ public class BarometerUIController extends HttpServlet{
 				String submit = req.getParameter("formSent");
 				if(submit != null) {
 					String indicatorEurostat = req.getParameter("indicatorEurostat");
-					String yearFrom = null;
+					
 					String yearTo = null;
 					String oneYear = null;
 					Part file = req.getPart("quantitativeEurostatFile");
@@ -573,11 +574,15 @@ public class BarometerUIController extends HttpServlet{
 					        }
 						}
 					}
-					req.setAttribute("yearFrom", yearFrom);
 					req.setAttribute("yearTo", yearTo);
 					req.setAttribute("oneYear", oneYear);
 					req.setAttribute("indicatorEurostat", indicatorEurostat);
 				}
+				if(yearFrom == null) {
+					yearFrom = QUANTITATIVE_EUROSTAT_DEFAULT_YEAR_FROM;
+				}
+				
+				req.setAttribute("yearFrom", yearFrom);
 				req.setAttribute("indicatorsList", indicatorsList);
 				sendAlertsToUser(req, confirmationMessage, errorMessage);
 			} else if (page.equals("update_labels")) {

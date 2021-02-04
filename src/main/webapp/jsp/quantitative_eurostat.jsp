@@ -2,8 +2,9 @@
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.HashMap"%>
 <%@include file="includes/head.jsp"%>
-<%@include file="includes/header.jsp"%>
+
 <div class="wrapper">
+	<%@include file="includes/header.jsp"%>
 	<div class="container" id="container-eurostat-quantitative">
 		<%@include file="includes/breadcrumb.jsp"%>
 		<h1>Quantitative data from Eurostat</h1>
@@ -31,11 +32,10 @@
 			<div id="yearFromContainer" class="conten-input">
 				<%int year = Calendar.getInstance().get(Calendar.YEAR);%>
 				<% String yearFromSelected = (String) request.getAttribute("yearFrom");
+				System.out.println("yearFromSelected: "+yearFromSelected);
 				String yearToSelected = (String) request.getAttribute("yearTo");
 				String oneYearSelected = (String) request.getAttribute("oneYear");
-				if(yearFromSelected == null){
-					yearFromSelected = year+"-01-01";
-				}
+				yearFromSelected = yearFromSelected+"-01-01";
 				if(yearToSelected == null){
 					yearToSelected = year+"-12-31";
 				}
