@@ -10,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,30 +34,14 @@ public class SubmitMultipleForms extends HttpServlet {
 		LOGGER.info("App flow arrives to SubmitMultipleForms Ajax service");
 		String translationId = req.getParameter("translation_id");
 		String updatedText = req.getParameter("updated_text");
-		String lastForm = req.getParameter("lastForm");
-		String section = req.getParameter("section");
-		String chart = req.getParameter("chart");
-		String page = req.getParameter("page");
+        String section = req.getParameter("section");
+        String chart = req.getParameter("chart");
+        
+        HttpSession session = req.getSession();
+        session.setAttribute("section", section);
+        session.setAttribute("chart", chart);
 		
 		boolean updatedLiteral = UpdateLabelsBusiness.publishLiteral(translationId, updatedText);
-		
-//		if(lastForm != null) {
-//			ArrayList<HashMap<String,String>> sectionList = UpdateLabelsBusiness.getSectionList();
-//			ArrayList<HashMap<String,String>> chartList = QualitativeDataBusiness.getChartsBySection(section);
-//			ArrayList<HashMap<String,String>> literalList = UpdateLabelsBusiness.getLiteralsBySectionAndChart(section, chart);				
-//			
-//			req.setAttribute("sectionList", sectionList);
-//			req.setAttribute("chartList", chartList);
-//			req.setAttribute("literalList", literalList);
-//			req.setAttribute("sectionSelected", section);
-//			req.setAttribute("chartSelected", chart);
-//			req.setAttribute("page", page);
-//			
-//			if(updatedLiteral) {
-//				req.setAttribute("confirmationMessage", "Literals updated correctly");
-//			} else {
-//				req.setAttribute("errorMessage", "An error has occurred while updating the literals");
-//			}
-//		}
+		LOGGER.info("Literal with id: "+translationId+" updated in database: "+updatedLiteral);
     }
 }

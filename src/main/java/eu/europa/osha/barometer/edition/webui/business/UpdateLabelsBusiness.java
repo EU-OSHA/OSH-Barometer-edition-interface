@@ -6,8 +6,8 @@ import java.util.HashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import eu.europa.osha.barometer.edition.database.model.QualitativeDataDAO;
 import eu.europa.osha.barometer.edition.database.model.UpdateLabelsDAO;
+import eu.europa.osha.barometer.edition.webui.utils.EscapeHtmlTags;
 
 public class UpdateLabelsBusiness {
 	private static final Logger LOGGER = LogManager.getLogger(UpdateLabelsBusiness.class);
@@ -24,6 +24,14 @@ public class UpdateLabelsBusiness {
 		LOGGER.info("Accessing data DAO in order to get available literals of the sections and charts");
 		UpdateLabelsDAO dataDAO = UpdateLabelsDAO.getInstance();
 		ArrayList<HashMap<String,String>> dataList = dataDAO.getLiteralsBySectionAndChart(section_id, chart_id);
+		String update_text = null;
+		String published_text = null;
+		for(HashMap<String,String> data : dataList) {
+			update_text = data.get("updated_text");
+			published_text = data.get("published_text");
+			data.put("updated_text", EscapeHtmlTags.escapeHTML(update_text));
+			data.put("escaped_published_text", EscapeHtmlTags.escapeHTML(published_text));
+		}
 		LOGGER.info("Retrieved data from database. Data list length: "+dataList.size());
 		return dataList;
 	}

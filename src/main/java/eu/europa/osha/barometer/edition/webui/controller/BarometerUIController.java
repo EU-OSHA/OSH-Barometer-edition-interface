@@ -223,7 +223,8 @@ public class BarometerUIController extends HttpServlet{
 				//					nextURL = "/jsp/login.jsp";
 				//					errorMessage = "Incorrect user/mail or password. Please try again.";
 				//				}
-
+				session.removeAttribute("section");
+				session.removeAttribute("chart");
 				sendAlertsToUser(req, confirmationMessage, errorMessage);
 			} else if (page.equals("quantitative_eurofound")) {
 				nextURL = "/jsp/quantitative_eurofound.jsp";
@@ -582,7 +583,6 @@ public class BarometerUIController extends HttpServlet{
 			} else if (page.equals("update_labels")) {
 				LOGGER.info("Arriving to Update labels Form.");
 				nextURL = "/jsp/update_labels.jsp";
-				//TODO functionality for page update_labels
 				String saveButton = req.getParameter("formSent");
 				String section = req.getParameter("section");
 				String chart = req.getParameter("chart");
@@ -610,7 +610,12 @@ public class BarometerUIController extends HttpServlet{
 							errorMessage = "Updated text could not be deleted";
 						}
 					}
+					session.setAttribute("section",section);
+					session.setAttribute("chart",chart);
 				}
+				
+				section = (String) session.getAttribute("section");
+				chart = (String) session.getAttribute("chart");
 				
 				if(section == null) {
 					section = DEFAULT_SECTION_UPDATE_LABELS;
@@ -631,6 +636,9 @@ public class BarometerUIController extends HttpServlet{
 				req.setAttribute("sectionSelected", section);
 				req.setAttribute("chartSelected", chart);
 				req.setAttribute("literalList", literalList);
+				
+				session.removeAttribute("section");
+				session.removeAttribute("chart");
 			} else if (page.equals("country_reports_member_states")) {
 				LOGGER.info("Arriving to Country Reports for Member States.");
 				nextURL = "/jsp/country_reports_member_states.jsp";

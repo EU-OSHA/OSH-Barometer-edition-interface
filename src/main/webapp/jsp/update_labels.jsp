@@ -49,31 +49,25 @@
 				</tr>
 			</thead>
 			<tbody id="literalListBody">
-				<% ArrayList<HashMap<String,String>> literalList = (ArrayList<HashMap<String,String>>) request.getAttribute("literalList");
-				int i = 1;%>
+				<% ArrayList<HashMap<String,String>> literalList = (ArrayList<HashMap<String,String>>) request.getAttribute("literalList");%>
 				<% for (HashMap<String,String> data : literalList) { %>
-				<% String escaped_updated_text = EscapeHtmlTags.escapeHTML(data.get("updated_text"));
-				String escaped_published_text = EscapeHtmlTags.escapeHTML(data.get("published_text"));%>
 				<tr>
 					<td>
 						<form id="form-<%=data.get("translation_id")%>" action="multipleforms" method="post">
 							<input id="check-<%=data.get("translation_id")%>" type="checkbox" onchange="checkTextChanges()" name="publishCheck" >
 							<input type="hidden" value="<%=data.get("translation_id")%>" name="translation_id">
-							<input type="hidden" value="<%=escaped_updated_text%>" name="updated_text">
+							<input type="hidden" value="<%=data.get("updated_text")%>" name="updated_text">
 							<input type="hidden" value="<%=sectionSelected%>" name="section">
-							<input type="hidden" value="<%=chartSelected%>" name="chart">
-							<input type="hidden" value="" name="lastForm">
-							<input type="hidden" value="" name="formSent">
+                            <input type="hidden" value="<%=chartSelected%>" name="chart">
 						</form>
 					</td>
 					<td><span id="published_text_<%=data.get("translation_id")%>"><%=data.get("published_text")%></span></td>
-					<td><span id="updated_text_<%=data.get("translation_id")%>"><%=escaped_updated_text != null ? escaped_updated_text : ""%></span></td>
+					<td><span id="updated_text_<%=data.get("translation_id")%>"><%=data.get("updated_text") != null ? data.get("updated_text") : ""%></span></td>
 					<td><button class="view-click" onclick='editModal("<%=data.get("translation_id") %>")'>Edit</button>
-					<button onclick="undoPopup('<%=data.get("translation_id") %>')" class="<%=(escaped_updated_text != null && !escaped_published_text.equals(escaped_updated_text)) ? "" : "disabled"%>">Undo</button>
+					<button onclick="undoPopup('<%=data.get("translation_id") %>')" class="<%=(data.get("updated_text") != null && !data.get("escaped_published_text").equals(data.get("updated_text"))) ? "" : "disabled"%>">Undo</button>
 					</td> 
 				</tr>
-				<% i++; 
-				} %>
+				<% } %>
 			</tbody>
 		</table>
 		<button id="publishButton" class="disabled" onclick="openConfirmationModal()">Publish</button>
@@ -83,7 +77,6 @@
 			<label>Published text:</label>
 			<div id="publishedContainer" readonly class="textarea disabled"><p id="publishedText"></p></div>
 			<form id="formPopUp" action="user?page=update_labels" method="post">
-				<!-- <input type="hidden" value="" name="literal_id" id="literal_id">  -->
 				<input type="hidden" value="" name="translation_id" id="translation_id">
 				<input type="hidden" value="" name="section" id="popUpSection">
 				<input type="hidden" value="" name="chart" id="popUpChart">
@@ -108,7 +101,7 @@
 		<div id="confirm-popup" class="popup-confirm">
 			<div class="close close-click">x</div>
 			<p>Have you checked your new text/data in this <a href="https://test-visualisation.osha.europa.eu/osh-barometer#!/">URL</a> test environment and it is ok, press the 'Publish' button and the text/data will be updated in the dataset. To be able to see it in production environment, please request the corresponding deployment to the developers.</p>
-			<button class="close-click" id="modalConfirmButton" type="submit" name="formSent" value="confirmUpdate" onclick="publishLiterals('<%=currentPage%>')">Confirm</button>
+			<button class="close-click" id="modalConfirmButton" type="submit" name="formSent" value="confirmUpdate" onclick="publishLiterals()">Confirm</button>
 			<button class="close-click" id="modalConfirmCancelButton">Cancel</button>
 		</div>
 	</div>

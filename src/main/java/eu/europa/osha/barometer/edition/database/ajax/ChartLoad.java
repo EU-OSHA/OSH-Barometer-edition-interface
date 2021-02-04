@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -48,5 +49,8 @@ private static final Logger LOGGER = LogManager.getLogger(ChartLoad.class);
         res.getWriter().write(returningData);
         LOGGER.info("Wrote Json in http response");
         res.getWriter().flush();
+        
+//        HttpSession session = req.getSession();
+//        session.setAttribute("section", section);
     }
 }

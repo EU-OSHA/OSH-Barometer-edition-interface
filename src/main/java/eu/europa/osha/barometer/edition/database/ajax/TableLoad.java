@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -55,6 +56,10 @@ public class TableLoad extends HttpServlet {
 			LOGGER.info("literalsList length: "+literalsList.size());
 			returningData = g.toJson(literalsList);
 		}
+		
+//        HttpSession session = req.getSession();
+//        session.setAttribute("section", section);
+//        session.setAttribute("chart", chart);
 		
 		res.setContentType("text/plain");
         res.setCharacterEncoding("UTF-8");
