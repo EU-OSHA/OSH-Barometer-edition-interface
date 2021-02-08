@@ -79,8 +79,9 @@ public class BarometerUIController extends HttpServlet{
 	private static final String PASSWORD = "admin";
 	
 	private static String UPDATE_DATASETS_DEFAULT_SECTION_ID = "17";
-	private static String COUNTRY_REPORTS_DEFAULT_SECTION_ID = "38";
-	private static String FILE_EXTENSION = ".xlsx";
+	private static String COUNTRY_REPORTS_DEFAULT_SECTION_ID = "osh_authorities";
+	private static String COUNTRY_REPORTS_DEFAULT_COUNTRY = "Austria";
+	private static String FILE_EXTENSION_QUANTITATIVE_DATA = ".xlsx";
 	
 	private static String COMPANY_SIZE_TEMPLATE = "EU-OSHA_OIE_Eurostat_indicator_Company_size";
 	private static String EMPLOYMENT_PER_SECTOR_TEMPLATE = "EU-OSHA_OIE_Eurostat_indicator_Employment_per_sector";
@@ -95,6 +96,8 @@ public class BarometerUIController extends HttpServlet{
 	
 	private static String DEFAULT_SECTION_UPDATE_LABELS = "37";
 	private static String DEFAULT_CHART_UPDATE_LABELS = "0";
+	
+	private static String FILE_EXTENSION_COUNTRY_REPORT = ".pdf";
 
 	/**
 	 * The main method of the controller in charge of the redirections. Use a "service" method, so it can handle both
@@ -248,7 +251,7 @@ public class BarometerUIController extends HttpServlet{
 						String eurofoundDataFileName = configurationData.getString("file.eurofound.name");
 						String fileExtension = fileName.substring(fileName.indexOf('.'));
 						
-						if(fileExtension.equals(FILE_EXTENSION)) {
+						if(fileExtension.equals(FILE_EXTENSION_QUANTITATIVE_DATA)) {
 							LOGGER.info("File name: "+fileName);
 							InputStream fileContent = file.getInputStream();						
 							OutputStream out = null;
@@ -381,7 +384,7 @@ public class BarometerUIController extends HttpServlet{
 					String eurostatDataFileName = configurationData.getString("file.eurostat.name");
 					String fileExtension = fileName.substring(fileName.indexOf('.'));
 					
-					if(!fileExtension.equals(FILE_EXTENSION)) {
+					if(!fileExtension.equals(FILE_EXTENSION_QUANTITATIVE_DATA)) {
 						validation = false;
 						errorMessage = "The type of the file uploaded is not valid. The File type should be .xlsx";
 					}
@@ -658,54 +661,75 @@ public class BarometerUIController extends HttpServlet{
 				
 				if(submit != null) {
 					Part file = req.getPart("pdfFile");
-					if(section != null) {
-						if(section.equals("osh_authorities")) {
-							LOGGER.info("Uploading osh authorities pdf file");
-							countryList = CountryReportBusiness.getOshAuthoritiesCountries();
-							filename.append("OSH authorities - ");
-						} else if(section.equals("national_strategies")) {
-							LOGGER.info("Uploading national strategies pdf file");
-							countryList = CountryReportBusiness.getNationalStrategiesCountries();
-							filename.append("National-Strategies-Mapping_");
-						} else if(section.equals("social_dialogue")) {
-							LOGGER.info("Uploading social dialogue pdf file");
-							countryList = CountryReportBusiness.getSocialDialogueCountries();
-							filename.append("Social_Dialogue_National-Strategies-Mapping_");
+					String submittedFileName = Paths.get(file.getSubmittedFileName()).getFileName().toString();
+					String fileExtension = submittedFileName.substring(submittedFileName.indexOf('.'));
+					if(fileExtension.equals(FILE_EXTENSION_COUNTRY_REPORT)) {
+						if(section != null) {
+							if(section.equals("osh_authorities")) {
+								LOGGER.info("Uploading osh authorities pdf file");
+								countryList = CountryReportBusiness.getOshAuthoritiesCountries();
+								filename.append("OSH authorities - ");
+								if(country.equals("European Union")) {
+									filename.append("EU28");
+								} else if(country.equals("Czechia")) {
+									filename.append("Czech Republic");
+								} else {
+									filename.append(country);
+								}
+							} else if(section.equals("national_strategies")) {
+								LOGGER.info("Uploading national strategies pdf file");
+								countryList = CountryReportBusiness.getNationalStrategiesCountries();
+								filename.append("National-Strategies-Mapping_");
+								filename.append(country);
+								if(country.equals("Germany")) {
+									filename.append("2017_Germany");
+								} else if(country.equals("Czechia")) {
+									filename.append("Czech Republic");
+								} else {
+									filename.append(country);
+								}
+							} else if(section.equals("social_dialogue")) {
+								LOGGER.info("Uploading social dialogue pdf file");
+								countryList = CountryReportBusiness.getSocialDialogueCountries();
+								filename.append("Social_Dialogue_");
+								filename.append(country);
+							}
 						}
-						filename.append(country);
-					}
-					
-					LOGGER.info("Updating file: "+filename);
-					
-					String fileName = Paths.get(file.getSubmittedFileName()).getFileName().toString();
-					InputStream fileContent = file.getInputStream();						
-					OutputStream out = null;
-					
-					try {
-						outputDirectory = configurationData.getString("directory.country_reports.osh_authorities.output");
-				        out = new FileOutputStream(new File(outputDirectory + filename.toString() + ".pdf"));
+						
+						LOGGER.info("Updating file: "+filename);
+						
+						String fileName = Paths.get(file.getSubmittedFileName()).getFileName().toString();
+						InputStream fileContent = file.getInputStream();						
+						OutputStream out = null;
+						
+						try {
+							outputDirectory = configurationData.getString("directory.country_reports.osh_authorities.output");
+					        out = new FileOutputStream(new File(outputDirectory + filename.toString() + ".pdf"));
 
-				        int read = 0;
-				        final byte[] bytes = new byte[1024];
+					        int read = 0;
+					        final byte[] bytes = new byte[1024];
 
-				        while ((read = fileContent.read(bytes)) != -1) {
-				            out.write(bytes, 0, read);
-				        }
-				        LOGGER.info("File "+fileName+" being uploaded to " + outputDirectory);
-				        confirmationMessage = "The uploaded Country Report PDF has been correctly saved";
-					} catch(Exception e) {
-						LOGGER.error("An error has occurred while uploading the pdf.");
-						e.printStackTrace();
-						errorMessage = "An error has occurred while uploading the pdf.";
+					        while ((read = fileContent.read(bytes)) != -1) {
+					            out.write(bytes, 0, read);
+					        }
+					        LOGGER.info("File "+fileName+" being uploaded to " + outputDirectory);
+					        confirmationMessage = "The uploaded Country Report PDF has been correctly saved";
+						} catch(Exception e) {
+							LOGGER.error("An error has occurred while uploading the pdf.");
+							e.printStackTrace();
+							errorMessage = "An error has occurred while uploading the pdf.";
+						}
+					} else { 
+						errorMessage = "File extension is not .pdf";
 					}
 				} else {
-					country = "Austria";
+					country = COUNTRY_REPORTS_DEFAULT_COUNTRY;
 					section = COUNTRY_REPORTS_DEFAULT_SECTION_ID;
 					countryList = CountryReportBusiness.getOshAuthoritiesCountries();
 				}
 				
 				if(country == null) {
-					country = "Austria";
+					country = COUNTRY_REPORTS_DEFAULT_COUNTRY;
 				}
 				
 				sendAlertsToUser(req, confirmationMessage, errorMessage);
