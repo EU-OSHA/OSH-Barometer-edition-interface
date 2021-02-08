@@ -1,9 +1,9 @@
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.HashMap"%>
 <%@include file="includes/head.jsp"%>
-<%@include file="includes/header.jsp"%>
 
 <div class="wrapper">
+	<%@include file="includes/header.jsp"%>
 	<div class="container" id="country-report-member-states">
 		<%@include file="includes/breadcrumb.jsp"%>
 		<h1>Country Reports from Member States</h1>

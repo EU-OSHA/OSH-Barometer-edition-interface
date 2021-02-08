@@ -105,7 +105,7 @@ $(document).ready(function(){
 		        var new_tbody = "";
 		        $('div#tablesContainer').empty();
 		        chartList.forEach(function(chart){
-					new_tbody = new_tbody.concat('<label>Chart '+chartIndex+' <b>'+chart.chart_name+'</b>:</label>');
+					new_tbody = new_tbody.concat('<label>Chart '+chartIndex+': <b>'+chart.chart_name+'</b>:</label>');
 					new_tbody = new_tbody.concat('<table>');
 					new_tbody = new_tbody.concat('<thead>');
 					new_tbody = new_tbody.concat('<tr>');
@@ -250,7 +250,6 @@ $(document).ready(function(){
 	}
 	
 	loadLiteralsTable = function() {
-		//literalListBody
 		console.log("Enters loadLiteralsTable function");
 		var section = document.getElementById("sectionSelect");
 		var sectionSelected = section.value;
@@ -271,6 +270,30 @@ $(document).ready(function(){
 		        $('#literalListBody').empty();
 		        literalsList.forEach(function(literal){
 					new_tbody = new_tbody.concat('<tr>');
+					new_tbody = new_tbody.concat('<td>');
+					new_tbody = new_tbody.concat('<form id="form-'+literal.translation_id+'" action="multipleforms" method="post">');
+					new_tbody = new_tbody.concat('<input id="check-'+literal.translation_id+'" type="checkbox" onchange="checkTextChanges()" name="publishCheck">');
+					new_tbody = new_tbody.concat('<input type="hidden" value="'+literal.translation_id+'" name="translation_id">');
+					new_tbody = new_tbody.concat('<input type="hidden" value="'+literal.updated_text+'" name="updated_text">');
+					new_tbody = new_tbody.concat('</form>');
+					new_tbody = new_tbody.concat('</td>');
+					new_tbody = new_tbody.concat('<td><span id="published_text_'+literal.translation_id+'">'+literal.published_text+'</span></td>');
+					if(literal.updated_text != null){
+						new_tbody = new_tbody.concat('<td><span id="updated_text_'+literal.translation_id+'">'+literal.updated_text+'</span></td>');
+					}else{
+						new_tbody = new_tbody.concat('<td><span id="updated_text_'+literal.translation_id+'"></span></td>');	
+					}
+					new_tbody = new_tbody.concat('<td><button class="view-click" onclick="editModal('+literal.translation_id+')">Edit</button>');
+					if(literal.updated_text != null && literal.updated_text != literal.escaped_published_text){
+						new_tbody = new_tbody.concat('<button onclick="undoPopup('+literal.translation_id+')" class="">Undo</button>');
+					}else{
+						new_tbody = new_tbody.concat('<button onclick="undoPopup('+literal.translation_id+')" class="disabled">Undo</button>');
+					}
+					new_tbody = new_tbody.concat('</td>');
+					new_tbody = new_tbody.concat('</tr>');
+					
+					
+					/*new_tbody = new_tbody.concat('<tr>');
 					new_tbody = new_tbody.concat('<td><input type="checkbox" name="publishCheck"></td>');
 					new_tbody = new_tbody.concat('<td>'+ literal.published_text +'</td>');
 					if(literal.updated_text == null){
@@ -278,12 +301,11 @@ $(document).ready(function(){
 					}else{
 						new_tbody = new_tbody.concat('<td>'+literal.updated_text+'</td>');
 					}
-					//new_tbody = new_tbody.concat('<td><button class="view-click">Edit</button>');
 					new_tbody = new_tbody.concat('<td><button class="view-click" onclick="editModal(\''+literal.translation_id);
 					new_tbody = new_tbody.concat('\', \''+literal.published_text+'\', \''+literal.updated_text+'\')">');
 					new_tbody = new_tbody.concat('Edit</button>');
 					new_tbody = new_tbody.concat('<button class="disabled">Undo</button></td>');
-					new_tbody = new_tbody.concat('</tr>');
+					new_tbody = new_tbody.concat('</tr>');*/
 		        });
 		        $('#literalListBody').html(new_tbody);
 			},
@@ -348,19 +370,6 @@ $(document).ready(function(){
 		var chart = document.getElementById("chartSelect");
 		var chartSelected = chart.value;
 		
-		//var published_text = $("#published_text_"+translation_id)[0].textContent;
-		//var updated_text = $("#updated_text_"+translation_id)[0].textContent;
-		
-		/*if(updated_text != "null"){
-			if(updated_text != published_text){
-				$('#modalUndoButton').removeClass('disabled');
-			}else{
-				$('#modalUndoButton').addClass('disabled');
-			}
-		}else{
-			$('#modalUndoButton').addClass('disabled');
-		}*/
-		
 		$("#undo-popup input#undo_translation_id").val(translation_id);
 		$("#undo-popup input#popUpUndoSection").val(sectionSelected);
 		$("#undo-popup input#popUpUndoChart").val(chartSelected);
@@ -401,7 +410,7 @@ $(document).ready(function(){
 		$("#confirm-popup").css("display","block");
 	}
 	
-	publishLiterals = function(currentPage) {
+	publishLiterals = function() {
 		var checks = $('input[type=checkbox]:checked');
 		for (var i = 0; i < checks.length; i++) {
 			if(checks[i].checked == true){
@@ -411,7 +420,7 @@ $(document).ready(function(){
 				}
 				
 				$.post(
-					form.attr('action')+'?page='+currentPage, 
+					form.attr('action'), 
 					form.serialize(), 
 					function( data ) {
 						console.log('AJAX POST SUCCESS');

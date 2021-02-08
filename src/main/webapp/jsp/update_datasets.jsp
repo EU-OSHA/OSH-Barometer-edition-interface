@@ -33,8 +33,7 @@
 		<% ArrayList<HashMap<String,String>> chartsBySectionList = (ArrayList<HashMap<String,String>>) request.getAttribute("chartsBySectionList");%>
 		<% int chartIndex = 1; %>
 		<% for (HashMap<String,String> data : chartsBySectionList) { %>
-			<label>Chart <%=chartIndex %>:</label>
-			<p class="table"><%=data.get("chart_name") %></p>
+			<label>Chart <%=chartIndex %>: <b><%=data.get("chart_name") %></b></label>
 			<table>
 				<thead>
 					<tr>

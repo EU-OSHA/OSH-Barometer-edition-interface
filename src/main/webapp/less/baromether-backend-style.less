@@ -387,7 +387,7 @@ p.table{
     margin-top: 0;
 }
 
-.popup{
+.popup, .popup-warning, .popup-confirm{
 	position: relative;
 	display: none;
 	font-size: 1rem;
@@ -428,7 +428,7 @@ p.table{
 			    font-size: 0.9rem;
 			    color: #529FA2;
 			    text-decoration: none;
-			    font-weight: bold;
+			    //font-weight: bold;
 			    padding-left: 18px;
 			}
 		}
@@ -436,13 +436,14 @@ p.table{
 			span{
 				padding-left: 22px;
 				background: url(../images/home-ico.png) no-repeat;
-				text-decoration: underline;
-				text-decoration-style: dotted;
-				text-decoration-color: #F6A400;
+				//text-decoration: underline;
+				//text-decoration-style: dotted;
+				//text-decoration-color: #F6A400;
 			}
 			a{
 				padding-left: 22px;
 				background: url(../images/home-ico.png) no-repeat;
+				font-weight: bold;
 				text-decoration: underline;
 				text-decoration-style: dotted;
 				text-decoration-color: #F6A400;
@@ -628,4 +629,15 @@ footer{
 			}
 		}
 	}
+}
+
+.closebtn {
+  margin-left: 15px;
+  color: black;
+  float: right;
+  font-size: 22px;
+  line-height: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+  padding-top: 7px;
 }

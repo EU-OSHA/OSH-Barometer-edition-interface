@@ -22,7 +22,7 @@
 			<select id="indicatorEurostat" name="indicatorEurostat" onchange="changeYearCombos()">
 			<% for (HashMap<String,String> data : indicatorsList) { %>
 				<option value="<%=data.get("indicator_id")%>" <%= data.get("indicator_id").equals(indicatorEurostat) ? "selected": "" %> >
-					<%=data.get("indicator_name") %>
+					<%=data.get("indicator_name_2") %>
 				</option>
 			<% } %>
 			</select>
