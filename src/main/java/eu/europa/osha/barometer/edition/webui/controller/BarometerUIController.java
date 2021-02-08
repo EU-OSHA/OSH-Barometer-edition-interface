@@ -647,7 +647,7 @@ public class BarometerUIController extends HttpServlet{
 			} else if (page.equals("country_reports_member_states")) {
 				LOGGER.info("Arriving to Country Reports for Member States.");
 				nextURL = "/jsp/country_reports_member_states.jsp";
-				String submit = req.getParameter("Submit");
+				String submit = req.getParameter("formSent");
 				String section = req.getParameter("section_id");
 				String country = req.getParameter("country");
 				ArrayList<HashMap<String,String>> countryList = null;

@@ -26,7 +26,7 @@
 				%>
 				<select id="country" name="country">
 					<% for (HashMap<String,String> data : countryList) { %>
-					<option value="'<%=data.get("country_name")%>'" <%= data.get("country_name").equals(countrySelected) ? "selected": "" %> >
+					<option value="'<%=data.get("real_name")%>'" <%= data.get("country_name").equals(countrySelected) ? "selected": "" %> >
 						<%=data.get("country_name")%>
 					</option>
 					<% } %>
