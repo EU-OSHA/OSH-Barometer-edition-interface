@@ -683,7 +683,7 @@ public class BarometerUIController extends HttpServlet{
 					
 					try {
 						outputDirectory = configurationData.getString("directory.country_reports.osh_authorities.output");
-				        out = new FileOutputStream(new File(outputDirectory + filename.toString()));
+				        out = new FileOutputStream(new File(outputDirectory + filename.toString() + ".pdf"));
 
 				        int read = 0;
 				        final byte[] bytes = new byte[1024];
