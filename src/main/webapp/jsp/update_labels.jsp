@@ -18,7 +18,7 @@
 			<select id="sectionSelect" name="section" onchange="disableChartSelect()">
 			<% for (HashMap<String,String> data : sectionList) { %>
 				<option value="<%=data.get("section_id")%>" <%=sectionSelected.equals(data.get("section_id")) ? "selected" : "" %>>
-					<%= data.get("section_name") %>
+					<%= data.get("section_name").replace("_", " ") %>
 				</option>
 			<% } %>
 			</select>
