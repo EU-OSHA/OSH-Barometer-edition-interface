@@ -6,7 +6,7 @@
 	<%@include file="includes/header.jsp"%>
 	<div class="container" id="country-report-member-states">
 		<%@include file="includes/breadcrumb.jsp"%>
-		<h1>Country Reports from Member States</h1>
+		<h1>Country Report from Member States</h1>
 		<%@include file="includes/alerts.jsp"%>
 		<form action="user?page=country_reports_member_states" method="post" enctype="multipart/form-data">
 			<div class="conten-input">
