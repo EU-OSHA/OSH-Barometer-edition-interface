@@ -660,17 +660,22 @@ public class BarometerUIController extends HttpServlet{
 					Part file = req.getPart("pdfFile");
 					if(section != null) {
 						if(section.equals("osh_authorities")) {
+							LOGGER.info("Uploading osh authorities pdf file");
 							countryList = CountryReportBusiness.getOshAuthoritiesCountries();
 							filename.append("OSH authorities - ");
 						} else if(section.equals("national_strategies")) {
+							LOGGER.info("Uploading national strategies pdf file");
 							countryList = CountryReportBusiness.getNationalStrategiesCountries();
 							filename.append("National-Strategies-Mapping_");
 						} else if(section.equals("social_dialogue")) {
+							LOGGER.info("Uploading social dialogue pdf file");
 							countryList = CountryReportBusiness.getSocialDialogueCountries();
 							filename.append("Social_Dialogue_National-Strategies-Mapping_");
 						}
 						filename.append(country);
 					}
+					
+					LOGGER.info("Updating file: "+filename);
 					
 					String fileName = Paths.get(file.getSubmittedFileName()).getFileName().toString();
 					InputStream fileContent = file.getInputStream();						
@@ -691,7 +696,7 @@ public class BarometerUIController extends HttpServlet{
 					} catch(Exception e) {
 						LOGGER.error("An error has occurred while uploading the pdf.");
 						e.printStackTrace();
-						errorMessage = "";
+						errorMessage = "An error has occurred while uploading the pdf.";
 					}
 				} else {
 					country = "Austria";

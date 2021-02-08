@@ -430,6 +430,11 @@ $(document).ready(function(){
 			}
         }
 	}
+	
+	loadingScreen = function(){
+		console.log('Enters loadingScreen function');
+		$('div.loading-screen').css('display', 'block');
+	}
 });
 
 })(jQuery);

@@ -1,5 +1,12 @@
 <%@page import="java.util.Calendar"%>
 <%@include file="includes/head.jsp"%>
+<div class="loading-screen">
+	<div class="loader"></div>
+	<div class="message">
+		<span>This process can take several minutes. A new process cannot be executed again until a message appears indicating if the current process
+		has failed or succeeded.</span>
+	</div>
+</div>
 <div class="wrapper" id="quantitative-page">
 	<%@include file="includes/header.jsp"%>
 	<div class="container">
@@ -8,7 +15,7 @@
 		
 		<%@include file="includes/alerts.jsp"%>
 		
-		<form action="user?page=quantitative_eurofound" method="post" enctype="multipart/form-data">
+		<form action="user?page=quantitative_eurofound" method="post" enctype="multipart/form-data" onsubmit="loadingScreen()">
 			<!-- Year input -->
 			<label>Year</label>
 			<%int year = Calendar.getInstance().get(Calendar.YEAR);%>
