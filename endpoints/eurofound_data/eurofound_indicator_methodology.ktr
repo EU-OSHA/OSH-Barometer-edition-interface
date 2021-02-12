@@ -108,8 +108,8 @@
     </attributes>
   </connection>
   <order>
-  <hop> <from>Excel IN</from><to>Get Variables</to><enabled>Y</enabled> </hop>
   <hop> <from>Modified Java Script Value</from><to>Update Methodology</to><enabled>Y</enabled> </hop>
+  <hop> <from>Excel IN</from><to>Get Variables</to><enabled>Y</enabled> </hop>
   <hop> <from>Escape &#x22; character</from><to>Modified Java Script Value</to><enabled>Y</enabled> </hop>
   <hop> <from>Get Variables</from><to>Get Indicator Name</to><enabled>Y</enabled> </hop>
   <hop> <from>Get Indicator Name</from><to>Get Section Name</to><enabled>Y</enabled> </hop>
@@ -741,12 +741,12 @@
     <sql>SET &#x40;datasetId &#x3d; &#x28;SELECT id FROM dataset WHERE source&#x3d;&#x22;European Working Conditions Survey &#x28;EWCS&#x29;&#x22; AND date_from&#x3d;&#x22;&#x24;&#x7b;pYear&#x7d;&#x22;&#x29;&#x3b;&#xd;&#xa;SET &#x40;sectionID &#x3d; &#x28;SELECT id FROM section WHERE name&#x3d;&#x22;&#x3f;&#x22;&#x29;&#x3b;&#xd;&#xa;SET &#x40;indicatorID &#x3d; &#x28;SELECT id FROM indicator WHERE name&#x3d;&#x22;&#x3f;&#x22;&#x29;&#x3b;&#xd;&#xa;&#xd;&#xa;UPDATE methodology SET dataset_id&#x3d;&#x40;datasetId WHERE section_id&#x3d;&#x40;sectionID AND indicator_id&#x3d;&#x40;indicatorID&#x3b;&#xd;&#xa;&#xd;&#xa;-- Reference&#xd;&#xa;SET &#x40;referenceLiteralID &#x3d; &#x28;SELECT reference_year_literal_id FROM methodology m WHERE m.indicator_id&#x3d;&#x40;indicatorID AND m.section_id&#x3d;&#x40;sectionID&#x29;&#x3b;&#xd;&#xa;UPDATE translation SET text&#x3d;&#x22;&#x3f;&#x22; WHERE literal_id&#x3d;&#x40;referenceLiteralID&#x3b;&#xd;&#xa;-- Last Update&#xd;&#xa;SET &#x40;lastUpdateLiteralID &#x3d; &#x28;SELECT last_update_literal_id FROM methodology m WHERE m.indicator_id&#x3d;&#x40;indicatorID AND m.section_id&#x3d;&#x40;sectionID&#x29;&#x3b;&#xd;&#xa;UPDATE translation SET text&#x3d;&#x22;&#x3f;&#x22; WHERE literal_id&#x3d;&#x40;lastUpdateLiteralID&#x3b;&#xd;&#xa;-- Coverage&#xd;&#xa;SET &#x40;coverageLiteralID &#x3d; &#x28;SELECT coverage_literal_id FROM methodology m WHERE m.indicator_id&#x3d;&#x40;indicatorID AND m.section_id&#x3d;&#x40;sectionID&#x29;&#x3b;&#xd;&#xa;UPDATE translation SET text&#x3d;&#x22;&#x3f;&#x22; WHERE literal_id&#x3d;&#x40;coverageLiteralID&#x3b;&#xd;&#xa;-- Filtering Options&#xd;&#xa;SET &#x40;filteringOptionsLiteralID &#x3d; &#x28;SELECT filtering_options_literal_id FROM methodology m WHERE m.indicator_id&#x3d;&#x40;indicatorID AND m.section_id&#x3d;&#x40;sectionID&#x29;&#x3b;&#xd;&#xa;UPDATE translation SET text&#x3d;&#x22;&#x3f;&#x22; WHERE literal_id&#x3d;&#x40;filteringOptionsLiteralID&#x3b;&#xd;&#xa;-- Visualisation&#xd;&#xa;SET &#x40;visualisationLiteralID &#x3d; &#x28;SELECT visualisation_literal_id FROM methodology m WHERE m.indicator_id&#x3d;&#x40;indicatorID AND m.section_id&#x3d;&#x40;sectionID&#x29;&#x3b;&#xd;&#xa;UPDATE translation SET text&#x3d;&#x22;&#x3f;&#x22; WHERE literal_id&#x3d;&#x40;visualisationLiteralID&#x3b;&#xd;&#xa;&#xd;&#xa;&#xd;&#xa;&#xd;&#xa;&#xd;&#xa;&#xd;&#xa;&#xd;&#xa;&#xd;&#xa;&#xd;&#xa;</sql>
     <set_params>N</set_params>
     <insert_field/>
-    <update_field/>
+    <update_field>updateCount</update_field>
     <delete_field/>
     <read_field/>
     <arguments>
-       <argument><name>indicatorName</name></argument>
        <argument><name>sectionName</name></argument>
+       <argument><name>indicatorName</name></argument>
        <argument><name>referenceText</name></argument>
        <argument><name>lastUpdateText</name></argument>
        <argument><name>coverageText</name></argument>
