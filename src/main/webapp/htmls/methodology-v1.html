@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>OSH Barometer Backend</title>
+	<link href="css/baromether-backend-style.css" rel="stylesheet" type="text/css">
+	<link href="css/baromether-backend-responsive.css" rel="stylesheet" type="text/css">
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="js/baromether-backend.js"></script>
+</head>
+
+<body>
+	<div class="wrapper">
+		<header>
+			<div class="container">
+				<img src="images/logo.png" alt="OSH Barometer Logo">
+				<div class="content-header-button">
+					<form action="login.html"><button class="login">Logout</button></form>
+				</div>
+			</div>
+		</header>
+		<div class="container">
+			<div class="breadcrumbs">
+				<ul>
+					<li><a href="index.html">Home</a></li>
+					<li><span>Methodology data</span></li>
+				</ul>
+			</div>
+		</div>
+		<div class="container">
+			<h1>Methodology data</h1>
+			<div class="conten-input">
+				<label>Section</label>
+				<select>
+					<option>
+						OSH authorities
+					</option>
+				</select>
+			</div>
+			<div class="conten-input">
+				<label>Indicator</label>
+				<select>
+					<option>
+						Compensation and insurance bodies
+					</option>
+				</select>
+			</div>
+			<div class="clear-content"><!-- only for prototype --></div>
+			<table class="literals columns-5">
+			  <tr>
+			  	<th>Publish</th>
+			  	<th>Literal type</th>
+			    <th>Published text</th>
+				<th>Updated text</th>
+				<th>Actions</th>
+			  </tr>
+			  <tr>
+			  	<td><input type="checkbox" name=""></td>
+			  	<td>Indicator name</td>
+				<td>Compensation and insurance bodies</td>
+				<td></td>
+				<td><button class="view-click">Edit</button><button class="disabled">Undo</button></td>
+			  </tr>
+			  <tr>
+			  	<td><input type="checkbox" name=""></td>
+			  	<td>Description</td>
+				<td>
+					<p>This part consists of a harmonised short description of OSH authorities and OSH institutions in Member States. You can select one of the Member States, the European Union or one of four categories of the ‘Institution types’. <strong>Specifically this indicator relates to:</strong></p>
+					<ul>
+						<li>OSH authority</li>
+						<li><strong>Compensation and insurance body</strong></li>
+						<li>Prevention institute</li>
+						<li>Standardisation body</li>
+					</ul>
+				</td>
+				<td></td>
+				<td><button class="view-click">Edit</button><button class="disabled">Undo</button></td>
+			  </tr>
+			  <tr>
+			  	<td><input type="checkbox" name=""></td>
+			  	<td>Data source</td>
+				<td>
+					<p>The source for OSH-authorities and OSH-institutions is a preparatory report for DG Employment from 2018. Most of the data has been compiled in 2016 or 2017.
+					  <br>(Kooperationsstelle Hamburg IFE / EUROGIP: Development and design of a structural model for the construction and implementation of an EU OSH Information System, Final Report, March 2018, Service contract No VC/2016/0055). 
+					  <br>The National Contact Points updated the information at the end of 2019.</p>
+	 			</td>
+				<td></td>
+				<td><button class="view-click">Edit</button><button class="disabled">Undo</button></td>
+			  </tr>
+			  <tr>
+			  	<td><input type="checkbox" name=""></td>
+			  	<td>Reference year/period</td>
+				<td>
+					2016/2017
+	 			</td>
+				<td>
+					
+				</td>
+				<td><button class="view-click">Edit</button><button class="disabled">Undo</button></td>
+			  </tr>
+			  <tr>
+			  	<td><input type="checkbox" name=""></td>
+			  	<td>Last update</td>
+				<td>
+					2019
+	 			</td>
+				<td>
+					2020
+				</td>
+				<td><button class="view-click">Edit</button><button>Undo</button></td>
+			  </tr>
+			  <tr>
+			  	<td><input type="checkbox" name=""></td>
+			  	<td>Coverage</td>
+				<td>
+					<p>The <strong>intended coverage</strong> is: All EU countries. All data for the coverage is available.</p>
+	 			</td>
+				<td>
+					
+				</td>
+				<td><button class="view-click">Edit</button><button class="disabled">Undo</button></td>
+			  </tr>
+			  <tr>
+			  	<td><input type="checkbox" name=""></td>
+			  	<td>Visualisation</td>
+				<td>
+					<p>Text boxes for all countries, selection of countries and institution type possible.</p>
+	 			</td>
+				<td>
+					
+				</td>
+				<td><button class="view-click">Edit</button><button class="disabled">Undo</button></td>
+			  </tr>
+			  <tr>
+			  	<td><input type="checkbox" name=""></td>
+			  	<td>Additional comments</td>
+				<td>
+
+	 			</td>
+				<td>
+					
+				</td>
+				<td><button class="view-click">Edit</button><button class="disabled">Undo</button></td>
+			  </tr>
+			</table>
+			<button>Publish</button>
+			<div class="clear-content"><!-- only for prototype --></div>
+			<div class="popup">
+				<div class="close close-click">x</div>
+				<label>Published text:</label>
+				<div readonly class="textarea disabled">
+					2019
+				</div>
+				<label>Updated text:</label>
+				<div class="wysi"></div>
+				<div class="textarea">
+					2020
+				</div>
+				<button class="close-click">Save</button><button class="close-click">Cancel</button>
+			</div>
+		</div> 
+	</div>
+	<footer class="clear-fixed">
+		<div class="container">
+			© 2020 EU-OSHA | <a href="https://osha.europa.eu/" target="_blank">an agency of the European Union</a>
+		</div>
+	</footer>
+</body>
+
+
+</html>

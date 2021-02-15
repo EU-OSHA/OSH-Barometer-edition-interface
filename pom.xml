@@ -1,0 +1,349 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>osh-barometer</groupId>
+	<artifactId>osh-barometer</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>war</packaging>
+	<name>osh-barometer</name>
+	<description>OSHBarometer Interface Edition for backend</description>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>1.7</maven.compiler.source>
+		<maven.compiler.target>1.7</maven.compiler.target>
+		<log4j2.version>2.11.0</log4j2.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.9</version>
+		</dependency>
+		<dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.46</version>
+        </dependency>		
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>4.0.1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>${log4j2.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>${log4j2.version}</version>
+		</dependency>
+		<dependency>
+	        <groupId>com.google.code.gson</groupId>
+	        <artifactId>gson</artifactId>
+	        <version>2.8.6</version>
+	        <scope>compile</scope>
+	    </dependency>
+	</dependencies>
+
+	<profiles>
+		<!-- DEVELOP PROFILE -->
+		<profile>
+			<id>develop</id>
+			<properties>
+				<envClassifier>develop</envClassifier>
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-antrun-plugin</artifactId>
+
+						<executions>
+							<execution>
+								<phase>package</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<tasks>
+										<delete
+											file="${project.build.outputDirectory}/eu/europa/osha/barometer/edition/webui/conf/configuration.properties" />
+										<copy
+											file="${project.build.outputDirectory}/eu/europa/osha/barometer/edition/webui/conf/develop-configuration.properties"
+											tofile="${project.build.outputDirectory}/eu/europa/osha/barometer/edition/webui/conf/configuration.properties" />
+										<delete
+											file="${project.build.outputDirectory}/eu/europa/osha/barometer/edition/webui/conf/staging-configuration.properties" />
+										<delete
+											file="${project.build.outputDirectory}/eu/europa/osha/barometer/edition/webui/conf/testing-configuration.properties" />
+										<delete
+											file="${project.build.outputDirectory}/eu/europa/osha/barometer/edition/webui/conf/develop-configuration.properties" />
+										<delete file="${project.build.outputDirectory}/log4j2.xml"/>
+					                    <copy file="${project.build.outputDirectory}/log4j2_test.xml"
+					                          tofile="${project.build.outputDirectory}/log4j2.xml"/>
+					                    <delete file="${project.build.outputDirectory}/log4j2_test.xml"/>
+									</tasks>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-dependency-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>copy-dependencies</id>
+								<phase>prepare-package</phase>
+								<goals>
+									<goal>copy-dependencies</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>C:/OSHBarometer/lib</outputDirectory>
+									<overWriteReleases>false</overWriteReleases>
+									<overWriteSnapshots>false</overWriteSnapshots>
+									<overWriteIfNewer>true</overWriteIfNewer>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<configuration>
+							<skip>true</skip>
+						</configuration>
+					</plugin>
+					<plugin>
+						<artifactId>maven-war-plugin</artifactId>
+						<executions>
+							<execution>
+								<phase>install</phase>
+								<goals>
+									<goal>war</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>C:/OSHBarometer/packages</outputDirectory>
+									<classifier>${envClassifier}</classifier>
+								</configuration>
+								<!--configuration> <classifier>testnaniero</classifier> </configuration> -->
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<!-- TESTING PROFILE -->
+		<profile>
+			<id>testing</id>
+			<properties>
+				<envClassifier>testing</envClassifier>
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-antrun-plugin</artifactId>
+
+						<executions>
+							<execution>
+								<phase>package</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<tasks>
+										<delete
+											file="${project.build.outputDirectory}/eu/europa/osha/barometer/edition/webui/conf/configuration.properties" />
+										<copy
+											file="${project.build.outputDirectory}/eu/europa/osha/barometer/edition/webui/conf/testing-configuration.properties"
+											tofile="${project.build.outputDirectory}/eu/europa/osha/barometer/edition/webui/conf/configuration.properties" />
+										<delete
+											file="${project.build.outputDirectory}/eu/europa/osha/barometer/edition/webui/conf/staging-configuration.properties" />
+										<delete
+											file="${project.build.outputDirectory}/eu/europa/osha/barometer/edition/webui/conf/testing-configuration.properties" />
+										<delete file="${project.build.outputDirectory}/log4j2.xml"/>
+					                    <copy file="${project.build.outputDirectory}/log4j2_test.xml"
+					                          tofile="${project.build.outputDirectory}/log4j2.xml"/>
+					                    <delete file="${project.build.outputDirectory}/log4j2_test.xml"/>
+									</tasks>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-dependency-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>copy-dependencies</id>
+								<phase>prepare-package</phase>
+								<goals>
+									<goal>copy-dependencies</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>C:/OSHBarometer/lib</outputDirectory>
+									<overWriteReleases>false</overWriteReleases>
+									<overWriteSnapshots>false</overWriteSnapshots>
+									<overWriteIfNewer>true</overWriteIfNewer>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<configuration>
+							<skip>true</skip>
+						</configuration>
+					</plugin>
+					<plugin>
+						<artifactId>maven-war-plugin</artifactId>
+						<executions>
+							<execution>
+								<phase>install</phase>
+								<goals>
+									<goal>war</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>C:/OSHBarometer/packages</outputDirectory>
+									<classifier>${envClassifier}</classifier>
+								</configuration>
+								<!--configuration> <classifier>testnaniero</classifier> </configuration> -->
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<!-- STAGING PROFILE -->
+		<profile>
+			<id>osha_staging</id>
+			<properties>
+				<envClassifier>staging</envClassifier>
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<phase>package</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<tasks>
+										<delete
+											file="${project.build.outputDirectory}/eu/europa/osha/barometer/edition/webui/conf/configuration.properties" />
+										<copy
+											file="${project.build.outputDirectory}/eu/europa/osha/barometer/edition/webui/conf/staging-configuration.properties"
+											tofile="${project.build.outputDirectory}/eu/europa/osha/barometer/edition/webui/conf/configuration.properties" />
+										<delete
+											file="${project.build.outputDirectory}/eu/europa/osha/barometer/edition/webui/conf/staging-configuration.properties" />
+										<delete
+											file="${project.build.outputDirectory}/eu/europa/osha/barometer/edition/webui/conf/testing-configuration.properties" />
+									</tasks>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-dependency-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>copy-dependencies</id>
+								<phase>prepare-package</phase>
+								<goals>
+									<goal>copy-dependencies</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>C:/OSHBarometer/lib/</outputDirectory>
+									<overWriteReleases>false</overWriteReleases>
+									<overWriteSnapshots>false</overWriteSnapshots>
+									<overWriteIfNewer>true</overWriteIfNewer>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<configuration>
+							<skip>true</skip>
+						</configuration>
+					</plugin>
+					<plugin>
+						<artifactId>maven-war-plugin</artifactId>
+						<executions>
+							<execution>
+								<phase>install</phase>
+								<goals>
+									<goal>war</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>C:/OSHBarometer/packages</outputDirectory>
+									<classifier>${envClassifier}</classifier>
+								</configuration>
+								<!--configuration> <classifier>testnaniero</classifier> </configuration> -->
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+	<build>
+		<finalName>osh-barometer</finalName>
+
+		<pluginManagement>
+			<!-- lock down plugins versions to avoid using Maven defaults (may be 
+				moved to parent pom) -->
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-ear-plugin</artifactId>
+					<version>2.8.0</version>
+					<configuration>
+						<modules>
+							<webModule>
+								<groupId>osh-barometer</groupId>
+								<artifactId>osh-barometer</artifactId>
+								<contextRoot>/osh-barometer</contextRoot>
+							</webModule>
+						</modules>
+					</configuration>
+				</plugin>
+				<plugin>
+					<artifactId>maven-clean-plugin</artifactId>
+					<version>3.1.0</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>3.0.2</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.8.0</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.22.1</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-war-plugin</artifactId>
+					<version>3.2.2</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-install-plugin</artifactId>
+					<version>2.5.2</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<version>2.8.2</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+</project>

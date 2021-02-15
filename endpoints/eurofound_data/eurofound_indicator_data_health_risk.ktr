@@ -115,12 +115,10 @@
   <hop> <from>Block 3</from><to>Value exists&#x3f;</to><enabled>Y</enabled> </hop>
   <hop> <from>Block 4</from><to>Update Value with Age</to><enabled>Y</enabled> </hop>
   <hop> <from>Get Profile Count</from><to>Profile Exists&#x3f;</to><enabled>Y</enabled> </hop>
-  <hop> <from>Get Value Count</from><to>Block 3</to><enabled>Y</enabled> </hop>
   <hop> <from>Insert Profile with Age</from><to>Block 2</to><enabled>Y</enabled> </hop>
   <hop> <from>Profile Exists&#x3f;</from><to>Block</to><enabled>Y</enabled> </hop>
   <hop> <from>Profile Exists&#x3f;</from><to>Block 2</to><enabled>Y</enabled> </hop>
   <hop> <from>Value exists&#x3f;</from><to>Block 4</to><enabled>Y</enabled> </hop>
-  <hop> <from>Value exists&#x3f;</from><to>Create Value with Age</to><enabled>Y</enabled> </hop>
   <hop> <from>Change Subset Value</from><to>Age&#x3f;</to><enabled>Y</enabled> </hop>
   <hop> <from>Block 6</from><to>Insert Profile with Sector</to><enabled>Y</enabled> </hop>
   <hop> <from>Block 7</from><to>Get Value Count 2</to><enabled>Y</enabled> </hop>
