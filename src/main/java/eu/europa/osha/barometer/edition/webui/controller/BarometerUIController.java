@@ -257,10 +257,14 @@ public class BarometerUIController extends HttpServlet{
 							OutputStream out = null;
 							
 						    try {
-						    	inputDirectory =  configurationData.getString("directory.quantitative_file.eurofound.input");
-						    	outputDirectory = configurationData.getString("directory.etl.quantitative_file.eurofound.output");
-						    	scriptDirectory = configurationData.getString("directory.script");
-						    	logOutputDirectory = configurationData.getString("directory.quantitative_file.eurofound.log");
+						    	inputDirectory =  configurationData.getString("directory.etl")+configurationData.getString("directory.quantitative_file.eurofound.input");
+						    	LOGGER.info("inputDirectory: "+inputDirectory);
+						    	outputDirectory = configurationData.getString("directory.etl")+configurationData.getString("directory.etl.quantitative_file.eurofound.output");
+						    	LOGGER.info("outputDirectory: "+outputDirectory);
+						    	scriptDirectory = configurationData.getString("directory.etl")+configurationData.getString("directory.script");
+						    	LOGGER.info("scriptDirectory: "+scriptDirectory);
+						    	logOutputDirectory = configurationData.getString("directory.etl")+configurationData.getString("directory.quantitative_file.eurofound.log");
+						    	LOGGER.info("logOutputDirectory: "+logOutputDirectory);
 						        out = new FileOutputStream(new File(inputDirectory + eurofoundDataFileName + fileExtension));
 						        
 						        resultStringBuilder = new StringBuilder();
@@ -317,6 +321,21 @@ public class BarometerUIController extends HttpServlet{
 							        }else {
 							        	LOGGER.info("Excel file not found");
 							        }
+							        
+							        command = "sh "+scriptDirectory+"literals.sh";
+									LOGGER.info("LINUX: command to execute: "+command);
+									Process literalCreator = Runtime.getRuntime().exec(command);
+									LOGGER.info("Waiting for script to end...");
+									literalCreator.waitFor();
+									LOGGER.info("Script process ended.");
+									
+									try {
+										copyFilesToDVT();
+									} catch (Exception e) {
+										LOGGER.error("ERROR WHILE MOVING FILES TO DVT. "+e.getMessage());
+										e.printStackTrace();
+										errorMessage = "An error has occurred while processing literals";
+									}
 								}
 						        
 						        if(resultStringBuilder.length() > 0) {
@@ -463,10 +482,14 @@ public class BarometerUIController extends HttpServlet{
 						OutputStream out = null;
 						
 						try {
-							inputDirectory = configurationData.getString("directory.quantitative_file.eurostat.input");
-							outputDirectory = configurationData.getString("directory.etl.quantitative_file.eurostat.output");
-					    	scriptDirectory = configurationData.getString("directory.script");
-					    	logOutputDirectory = configurationData.getString("directory.quantitative_file.eurostat.log");
+							inputDirectory = configurationData.getString("directory.etl")+configurationData.getString("directory.quantitative_file.eurostat.input");
+							LOGGER.info("inputDirectory: "+inputDirectory);
+							outputDirectory = configurationData.getString("directory.etl")+configurationData.getString("directory.etl.quantitative_file.eurostat.output");
+							LOGGER.info("outputDirectory: "+outputDirectory);
+					    	scriptDirectory = configurationData.getString("directory.etl")+configurationData.getString("directory.script");
+					    	LOGGER.info("scriptDirectory: "+scriptDirectory);
+					    	logOutputDirectory = configurationData.getString("directory.etl")+configurationData.getString("directory.quantitative_file.eurostat.log");
+					    	LOGGER.info("logOutputDirectory: "+logOutputDirectory);
 					        out = new FileOutputStream(new File(inputDirectory + eurostatDataFileName + fileExtension));
 					        resultStringBuilder = new StringBuilder();
 
@@ -616,7 +639,8 @@ public class BarometerUIController extends HttpServlet{
 					}
 					
 					try {
-						String scriptDirectory = configurationData.getString("directory.script");
+						String scriptDirectory = configurationData.getString("directory.etl")+configurationData.getString("directory.script");
+						LOGGER.info("scriptDirectory: "+scriptDirectory);
 						String command = "sh "+scriptDirectory+"literals.sh";
 						LOGGER.info("LINUX: command to execute: "+command);
 						Process p = Runtime.getRuntime().exec(command);
@@ -624,10 +648,19 @@ public class BarometerUIController extends HttpServlet{
 						p.waitFor();
 						LOGGER.info("Script process ended.");
 						
+						try {
+							copyFilesToDVT();
+						} catch (Exception e) {
+							LOGGER.error("ERROR WHILE MOVING FILES TO DVT. "+e.getMessage());
+							e.printStackTrace();
+							errorMessage = "An error has occurred while processing literals";
+						}
+							
 					} catch (Exception e) {
 						LOGGER.error("An error has occurred while creating json file for literals.");
+						LOGGER.error("Error: "+e.getMessage());
 						e.printStackTrace();
-						errorMessage = "An error has occurred in the ETL while updating literals file.";
+						errorMessage = "An error has occurred while processing literals";
 					}			
 					
 					session.setAttribute("section",section);
@@ -679,7 +712,8 @@ public class BarometerUIController extends HttpServlet{
 						if(section != null) {
 							if(section.equals("osh_authorities")) {
 								LOGGER.info("Uploading osh authorities pdf file");
-								outputDirectory = configurationData.getString("directory.country_reports.osh_authorities.output");
+								outputDirectory = configurationData.getString("directory.barometer")+configurationData.getString("directory.country_reports.osh_authorities.output");
+								LOGGER.info("outputDirectory: "+outputDirectory);
 								countryList = CountryReportBusiness.getOshAuthoritiesCountries();
 								filename.append("OSH authorities - ");
 								if(country.equals("European Union")) {
@@ -691,7 +725,8 @@ public class BarometerUIController extends HttpServlet{
 								}
 							} else if(section.equals("national_strategies")) {
 								LOGGER.info("Uploading national strategies pdf file");
-								outputDirectory = configurationData.getString("directory.country_reports.national_strategies.output");
+								outputDirectory = configurationData.getString("directory.barometer")+configurationData.getString("directory.country_reports.national_strategies.output");
+								LOGGER.info("outputDirectory: "+outputDirectory);
 								countryList = CountryReportBusiness.getNationalStrategiesCountries();
 								filename.append("National-Strategies-Mapping_");
 								if(country.equals("Germany")) {
@@ -703,7 +738,8 @@ public class BarometerUIController extends HttpServlet{
 								}
 							} else if(section.equals("social_dialogue")) {
 								LOGGER.info("Uploading social dialogue pdf file");
-								outputDirectory = configurationData.getString("directory.country_reports.social_dialogue.output");
+								outputDirectory = configurationData.getString("directory.barometer")+configurationData.getString("directory.country_reports.social_dialogue.output");
+								LOGGER.info("outputDirectory: "+outputDirectory);
 								countryList = CountryReportBusiness.getSocialDialogueCountries();
 								filename.append("Social_Dialogue_");
 								filename.append(country);
@@ -814,8 +850,61 @@ public class BarometerUIController extends HttpServlet{
 		dispatcher.forward(req, res);
 	}
 	
-	private void processUploadedExcels(Part file, String fileName) {
-		//TODO after the process is finished for both cases optimise code in here
+	private void copyFilesToDVT() throws Exception {
+		FileInputStream instream = null;
+		FileOutputStream outstream = null;
+		String jsonDirectory = configurationData.getString("directory.etl")+configurationData.getString("directory.etl.literals.output");
+		LOGGER.info("jsonDirectory: "+jsonDirectory);
+		String literalsDirectory = configurationData.getString("directory.barometer")+configurationData.getString("directory.model.files");
+		LOGGER.info("literalsDirectory: "+literalsDirectory);
+		File linksFileInput = new File(jsonDirectory+"Links-List.txt");
+		LOGGER.info("linksFileInput: "+linksFileInput);
+		File linksFileOutput = new File(literalsDirectory+"Links-List.txt");
+		LOGGER.info("linksFileOutput: "+linksFileOutput);
+		File draftLiteralsFileInput = new File(jsonDirectory+"Draft_Literals.json");
+		LOGGER.info("draftLiteralsFileInput: "+draftLiteralsFileInput);
+		File draftLiteralsFileOutput = new File(literalsDirectory+"Literals.json");
+		LOGGER.info("draftLiteralsFileInput: "+draftLiteralsFileInput);
+//		File publishedLiteralsFileInput = new File(jsonDirectory+"Published_Literals.json");
+//		LOGGER.info("publishedLiteralsFileInput: "+publishedLiteralsFileInput);
+//		File publishedLiteralsFileOutput = new File(literalsDirectory+"Published_Literals.json");
+//		LOGGER.info("publishedLiteralsFileOutput: "+publishedLiteralsFileOutput);
+		
+		//Links
+		instream = new FileInputStream(linksFileInput);
+		outstream = new FileOutputStream(linksFileOutput);
+	    byte[] buffer = new byte[1024];
+	    
+	    int length;
+	    while ((length = instream.read(buffer)) > 0){
+	    	outstream.write(buffer, 0, length);
+	    }
+	    instream.close();
+	    outstream.close();
+	    LOGGER.info("Links File ended reading. Closing streams");
+	    
+	    //Draft literals
+		instream = new FileInputStream(draftLiteralsFileInput);
+		outstream = new FileOutputStream(draftLiteralsFileOutput);
+	    buffer = new byte[1024];
+	    
+	    while ((length = instream.read(buffer)) > 0){
+	    	outstream.write(buffer, 0, length);
+	    }
+	    instream.close();
+	    outstream.close();
+	    LOGGER.info("Draft Literals File ended reading. Closing streams");
+	    
+//		instream = new FileInputStream(publishedLiteralsFileInput);
+//		outstream = new FileOutputStream(publishedLiteralsFileOutput);
+//	    buffer = new byte[1024];
+//	    //Published literals
+//	    while ((length = instream.read(buffer)) > 0){
+//	    	outstream.write(buffer, 0, length);
+//	    }
+//	    instream.close();
+//	    outstream.close();
+//	    LOGGER.info("Published Literals File ended reading. Closing streams");
 	}
 	
 	private void sendAlertsToUser(HttpServletRequest req, String confirmation, String error) {

@@ -9,7 +9,10 @@
 		<%@include file="includes/breadcrumb.jsp"%>
 		<h1>Explanations related to the quantitative data</h1>
 		<%@include file="includes/alerts.jsp"%>
-		
+		<div id="wait-message" class="alert-success">
+		    <p>Literal changes have been saved. Before changing another literal, please wait a couple of minutes for the system to process last changes.</p>
+		</div>
+		<div id="wait-message-space" class="clear-content"></div>
 		<div class="conten-input">
 			<label>Section</label>
 			<% ArrayList<HashMap<String,String>> sectionList = (ArrayList<HashMap<String,String>>) request.getAttribute("sectionList"); 
@@ -81,7 +84,7 @@
 			<div class="close close-click" onclick="disableSaveButton()">x</div>
 			<label>Published text:</label>
 			<div id="publishedContainer" readonly class="textarea disabled"><p id="publishedText"></p></div>
-			<form id="formPopUp" action="user?page=update_labels" method="post">
+			<form id="formPopUp" action="user?page=update_labels" method="post" onsubmit="showWaitAlert()">
 				<input type="hidden" value="" name="translation_id" id="translation_id">
 				<input type="hidden" value="" name="section" id="popUpSection">
 				<input type="hidden" value="" name="chart" id="popUpChart">
@@ -94,7 +97,7 @@
 		</div>
 		<div id="undo-popup" class="popup-warning">
 			<div class="close close-click">x</div>
-			<form id="formUndoPopUp" action="user?page=update_labels" method="post">
+			<form id="formUndoPopUp" action="user?page=update_labels" method="post" onsubmit="showWaitAlert()">
 				<input type="hidden" value="" name="translation_id" id="undo_translation_id">
 				<input type="hidden" value="" name="section" id="popUpUndoSection">
 				<input type="hidden" value="" name="chart" id="popUpUndoChart">

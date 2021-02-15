@@ -324,7 +324,7 @@ $(document).ready(function(){
 		});
 	}
 	
-	if($('div#update-labels').length > 0){		
+	if($('div#update-labels').length > 0){
 		CKEDITOR.instances.updatedTextEditor.on('change', function() {
 			var text = CKEDITOR.instances.updatedTextEditor.getData()
 			if(text != null && text != "" && text !=$('#publishedText')[0].textContent){
@@ -341,6 +341,9 @@ $(document).ready(function(){
 				}
 			}
 		});
+		
+		$('div#wait-message').css("display","none");
+		$('div#wait-message-space').css("display","none");
 	}
 	
 	editModal = function(translation_id/*, published_text, updated_text*/){
@@ -352,7 +355,7 @@ $(document).ready(function(){
 		var chart = document.getElementById("chartSelect");
 		var chartSelected = chart.value;
 		
-		var published_text = $("#published_text_"+translation_id)[0].textContent;
+		var published_text = $("#published_text_"+translation_id)[0].innerHTML;
 		var updated_text = $("#updated_text_"+translation_id)[0].textContent;
 		var escaped_published_text = $("#escaped_published_text-"+translation_id).val();
 		var escaped_updated_text = $("#escaped_updated_text-"+translation_id).val();
@@ -374,7 +377,7 @@ $(document).ready(function(){
 		$("#edit-popup input#translation_id").val(translation_id);
 		$("#edit-popup input#popUpSection").val(sectionSelected);
 		$("#edit-popup input#popUpChart").val(chartSelected);
-		$("#edit-popup p#publishedText").text(published_text);
+		$("#edit-popup p#publishedText").html(published_text);
 		
 		$("#edit-popup").css("display","block");
 	};
@@ -448,6 +451,9 @@ $(document).ready(function(){
 	}
 	
 	publishLiterals = function() {
+		console.log("Arrives publishLiterals function");
+		$('div#wait-message').css("display","block");
+		$('div#wait-message-space').css("display","block");
 		var checks = $('input[type=checkbox]:checked');
 		for (var i = 0; i < checks.length; i++) {
 			if(checks[i].checked == true){
@@ -456,16 +462,33 @@ $(document).ready(function(){
 					form.children('input[name="lastForm"]').val('true');
 				}
 				
-				$.post(
+				$.ajax({
+					type:"POST",
+					url: form.attr('action'),
+					data: form.serialize(), 
+					function( data ) {
+						console.log('AJAX POST SUCCESS');
+						window.location.replace('user?page=update_labels');
+					},
+					async:false
+				});
+				
+				/*$.post(
 					form.attr('action'), 
 					form.serialize(), 
 					function( data ) {
 						console.log('AJAX POST SUCCESS');
 						window.location.replace('user?page=update_labels');
-					});
+					});*/
 				checks[i].checked = false;
 			}
         }
+	}
+	
+	showWaitAlert = function(){
+		console.log('Enters showWaitAlert function');
+		$('div#wait-message').css("display","block");
+		$('div#wait-message-space').css("display","block");
 	}
 	
 	loadingScreen = function(){
