@@ -32,7 +32,6 @@
 			<div id="yearFromContainer" class="conten-input">
 				<%int year = Calendar.getInstance().get(Calendar.YEAR);%>
 				<% String yearFromSelected = (String) request.getAttribute("yearFrom");
-				System.out.println("yearFromSelected: "+yearFromSelected);
 				String yearToSelected = (String) request.getAttribute("yearTo");
 				String oneYearSelected = (String) request.getAttribute("oneYear");
 				yearFromSelected = yearFromSelected+"-01-01";

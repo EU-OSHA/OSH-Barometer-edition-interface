@@ -42,7 +42,8 @@ public class UpdateLabelsDAO {
     		//String query = "database.select.getSectionList";
     		StringBuilder query =  new StringBuilder();
     		query.append("SELECT l.id as literal_id, t.id as translation_id, l.chart_id as chart_id, ");
-    		query.append("l.section_id as section_id, t.text as published_text, t.draft_text as updated_text ");
+    		query.append("l.section_id as section_id, t.text as published_text, t.draft_text as updated_text, ");
+    		query.append("l.type as literal_type ");
     		query.append("FROM literal l, translation t ");
     		query.append("WHERE l.section_id = ");
     		query.append(section_id);

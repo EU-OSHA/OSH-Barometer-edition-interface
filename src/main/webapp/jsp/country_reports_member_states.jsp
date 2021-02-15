@@ -39,7 +39,7 @@
 			
 			<div class="clear-content"></div>
 			<div class="conten-button">
-				<button name="clearButton" value="Clear" >Clear</button>
+				<button name="clearButton" value="Clear" onclick="resetFields()">Clear</button>
 				<button type="submit" name="formSent" value="Submit">Submit</button>
 			</div>
 		</form>
