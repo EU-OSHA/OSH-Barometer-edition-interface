@@ -29,7 +29,7 @@ public class UpdateLabelsBusiness {
 		for(HashMap<String,String> data : dataList) {
 			update_text = data.get("updated_text");
 			published_text = data.get("published_text");
-			data.put("updated_text", EscapeHtmlTags.escapeHTML(update_text));
+			data.put("escaped_updated_text", EscapeHtmlTags.escapeHTML(update_text));
 			data.put("escaped_published_text", EscapeHtmlTags.escapeHTML(published_text));
 		}
 		LOGGER.info("Retrieved data from database. Data list length: "+dataList.size());

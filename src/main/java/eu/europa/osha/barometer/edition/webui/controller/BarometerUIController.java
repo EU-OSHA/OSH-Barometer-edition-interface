@@ -604,20 +604,32 @@ public class BarometerUIController extends HttpServlet{
 					if(saveButton.equals("saveDraft")) {
 						textUpdated = UpdateLabelsBusiness.updateDraftText(updatedTextEditor, translation_id);
 						
-						if(textUpdated) {
-							confirmationMessage = "Updated text saved successfully";
-						} else { 
+						if(!textUpdated) {
 							errorMessage = "Updated text could not be saved";
 						}
 					}else if(saveButton.equals("undoUpdate")) {
 						textUpdated = UpdateLabelsBusiness.undoDraftText(translation_id);
 						
-						if(textUpdated) {
-							confirmationMessage = "Deleted 'Updated Text' content successfully";
-						} else { 
+						if(!textUpdated) {
 							errorMessage = "Updated text could not be deleted";
 						}
 					}
+					
+					try {
+						String scriptDirectory = configurationData.getString("directory.script");
+						String command = "sh "+scriptDirectory+"literals.sh";
+						LOGGER.info("LINUX: command to execute: "+command);
+						Process p = Runtime.getRuntime().exec(command);
+						LOGGER.info("Waiting for script to end...");
+						p.waitFor();
+						LOGGER.info("Script process ended.");
+						
+					} catch (Exception e) {
+						LOGGER.error("An error has occurred while creating json file for literals.");
+						e.printStackTrace();
+						errorMessage = "An error has occurred in the ETL while updating literals file.";
+					}			
+					
 					session.setAttribute("section",section);
 					session.setAttribute("chart",chart);
 				}
@@ -654,7 +666,7 @@ public class BarometerUIController extends HttpServlet{
 				String section = req.getParameter("section_id");
 				String country = req.getParameter("country");
 				ArrayList<HashMap<String,String>> countryList = null;
-				String outputDirectory = configurationData.getString("directory.quantitative_file.eurostat.input");
+				String outputDirectory = null;
 				StringBuilder filename = new StringBuilder();
 				confirmationMessage = null;
 				errorMessage = null;
@@ -667,6 +679,7 @@ public class BarometerUIController extends HttpServlet{
 						if(section != null) {
 							if(section.equals("osh_authorities")) {
 								LOGGER.info("Uploading osh authorities pdf file");
+								outputDirectory = configurationData.getString("directory.country_reports.osh_authorities.output");
 								countryList = CountryReportBusiness.getOshAuthoritiesCountries();
 								filename.append("OSH authorities - ");
 								if(country.equals("European Union")) {
@@ -678,9 +691,9 @@ public class BarometerUIController extends HttpServlet{
 								}
 							} else if(section.equals("national_strategies")) {
 								LOGGER.info("Uploading national strategies pdf file");
+								outputDirectory = configurationData.getString("directory.country_reports.national_strategies.output");
 								countryList = CountryReportBusiness.getNationalStrategiesCountries();
 								filename.append("National-Strategies-Mapping_");
-								filename.append(country);
 								if(country.equals("Germany")) {
 									filename.append("2017_Germany");
 								} else if(country.equals("Czechia")) {
@@ -690,6 +703,7 @@ public class BarometerUIController extends HttpServlet{
 								}
 							} else if(section.equals("social_dialogue")) {
 								LOGGER.info("Uploading social dialogue pdf file");
+								outputDirectory = configurationData.getString("directory.country_reports.social_dialogue.output");
 								countryList = CountryReportBusiness.getSocialDialogueCountries();
 								filename.append("Social_Dialogue_");
 								filename.append(country);
@@ -703,7 +717,7 @@ public class BarometerUIController extends HttpServlet{
 						OutputStream out = null;
 						
 						try {
-							outputDirectory = configurationData.getString("directory.country_reports.osh_authorities.output");
+							//outputDirectory = configurationData.getString("directory.country_reports.osh_authorities.output");
 					        out = new FileOutputStream(new File(outputDirectory + filename.toString() + ".pdf"));
 
 					        int read = 0;
@@ -713,7 +727,7 @@ public class BarometerUIController extends HttpServlet{
 					            out.write(bytes, 0, read);
 					        }
 					        LOGGER.info("File "+fileName+" being uploaded to " + outputDirectory);
-					        confirmationMessage = "The uploaded Country Report PDF has been correctly saved";
+					        confirmationMessage = "The Country report pdf has been correctly saved. You can see the changes in staging environment <a href=\"https://test-visualisation.osha.europa.eu/osh-barometer#!/\" target=\"_blank\">here</a>.";
 						} catch(Exception e) {
 							LOGGER.error("An error has occurred while uploading the pdf.");
 							e.printStackTrace();
@@ -733,6 +747,14 @@ public class BarometerUIController extends HttpServlet{
 				}
 				
 				sendAlertsToUser(req, confirmationMessage, errorMessage);
+				
+				if(section.equals(COUNTRY_REPORTS_DEFAULT_SECTION_ID)) {
+					countryList = CountryReportBusiness.getOshAuthoritiesCountries();
+				} else if(section.equals("national_strategies")) {
+					countryList = CountryReportBusiness.getNationalStrategiesCountries();
+				} else {
+					countryList = CountryReportBusiness.getSocialDialogueCountries();
+				}
 
 				req.setAttribute("countrySelected", country);
 				req.setAttribute("section_id", section);

@@ -206,7 +206,12 @@ $(document).ready(function(){
 		        var new_tbody = "";
 		        $('#country').empty();
 		        countryList.forEach(function(country){
-					new_tbody = new_tbody.concat('<option value="'+country.country_name+'" >');
+					if(country.real_name == 'Austria'){
+						new_tbody = new_tbody.concat('<option value="'+country.real_name+'" selected>');
+					}else{
+						new_tbody = new_tbody.concat('<option value="'+country.real_name+'" >');
+					}
+					
 					new_tbody = new_tbody.concat(country.country_name);
 					new_tbody = new_tbody.concat('</option>');
 		        });
@@ -275,7 +280,13 @@ $(document).ready(function(){
 					new_tbody = new_tbody.concat('<input id="check-'+literal.translation_id+'" type="checkbox" onchange="checkTextChanges()" name="publishCheck">');
 					new_tbody = new_tbody.concat('<input type="hidden" value="'+literal.translation_id+'" name="translation_id">');
 					new_tbody = new_tbody.concat('<input type="hidden" value="'+literal.updated_text+'" name="updated_text">');
+					new_tbody = new_tbody.concat('<input type="hidden" value="" name="lastForm">');
+					new_tbody = new_tbody.concat('<input type="hidden" value="'+literal.escaped_updated_text+'" name="escaped_updated_text" id="escaped_updated_text-'+literal.translation_id+'">');
+					new_tbody = new_tbody.concat('<input type="hidden" value="'+literal.escaped_published_text+'" name="escaped_published_text" id="escaped_published_text-'+literal.translation_id+'">');
 					new_tbody = new_tbody.concat('</form>');
+					new_tbody = new_tbody.concat('</td>');
+					new_tbody = new_tbody.concat('<td>');
+					new_tbody = new_tbody.concat(literal.literal_type);
 					new_tbody = new_tbody.concat('</td>');
 					new_tbody = new_tbody.concat('<td><span id="published_text_'+literal.translation_id+'">'+literal.published_text+'</span></td>');
 					if(literal.updated_text != null){
@@ -343,14 +354,27 @@ $(document).ready(function(){
 		
 		var published_text = $("#published_text_"+translation_id)[0].textContent;
 		var updated_text = $("#updated_text_"+translation_id)[0].textContent;
+		var escaped_published_text = $("#escaped_published_text-"+translation_id).val();
+		var escaped_updated_text = $("#escaped_updated_text-"+translation_id).val();
+		
+		if(updated_text != null && updated_text != ""){
+			if(published_text != updated_text){
+				$("#edit-popup #updatedTextEditor").text(escaped_updated_text);
+				CKEDITOR.instances.updatedTextEditor.setData(escaped_updated_text);
+			}else{
+				$("#edit-popup #updatedTextEditor").text(escaped_published_text);
+				CKEDITOR.instances.updatedTextEditor.setData(escaped_published_text);
+			}
+		}else{
+			$("#edit-popup #updatedTextEditor").text(escaped_published_text);
+			CKEDITOR.instances.updatedTextEditor.setData(escaped_published_text);
+		}
 		
 		//$(".popup input#literal_id").val(literal_id);
 		$("#edit-popup input#translation_id").val(translation_id);
 		$("#edit-popup input#popUpSection").val(sectionSelected);
 		$("#edit-popup input#popUpChart").val(chartSelected);
 		$("#edit-popup p#publishedText").text(published_text);
-		$("#edit-popup #updatedTextEditor").text(updated_text);
-		CKEDITOR.instances.updatedTextEditor.setData(updated_text);
 		
 		$("#edit-popup").css("display","block");
 	};
@@ -369,6 +393,19 @@ $(document).ready(function(){
 		
 		var chart = document.getElementById("chartSelect");
 		var chartSelected = chart.value;
+		
+		var published_text = $("#published_text_"+translation_id)[0].textContent;
+		var updated_text = $("#updated_text_"+translation_id)[0].textContent;
+		
+		if(updated_text != "null"){
+            if(updated_text != published_text){
+                $('#modalUndoButton').removeClass('disabled');
+            }else{
+                $('#modalUndoButton').addClass('disabled');
+            }
+        }else{
+            $('#modalUndoButton').addClass('disabled');
+        }
 		
 		$("#undo-popup input#undo_translation_id").val(translation_id);
 		$("#undo-popup input#popUpUndoSection").val(sectionSelected);
@@ -433,7 +470,13 @@ $(document).ready(function(){
 	
 	loadingScreen = function(){
 		console.log('Enters loadingScreen function');
-		$('div.loading-screen').css('display', 'block');
+		//$('div.loading-screen').css('display', 'block');
+	}
+	
+	resetFields = function(){
+		console.log('Enters resetFields');
+		$('#section').val('osh_authorities');
+		$('#country').val('Austria');
 	}
 });
 

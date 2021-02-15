@@ -39,10 +39,11 @@
 			</select>
 		</div>
 		<div class="clear-content"></div>
-		<table class="literals columns-4">
+		<table class="literals columns-5">
 			<thead>
 				<tr>
 				  	<th>Publish</th>
+				  	<th>Literal type</th>
 				    <th>Published text</th>
 					<th>Updated text</th>
 					<th>Actions</th>
@@ -59,12 +60,16 @@
 							<input type="hidden" value="<%=data.get("updated_text")%>" name="updated_text">
 							<input type="hidden" value="<%=sectionSelected%>" name="section">
                             <input type="hidden" value="<%=chartSelected%>" name="chart">
+                            <input type="hidden" value="" name="lastForm">
+                            <input type="hidden" value="<%=data.get("escaped_updated_text")%>" name="escaped_updated_text" id="escaped_updated_text-<%=data.get("translation_id")%>">
+                            <input type="hidden" value="<%=data.get("escaped_published_text")%>" name="escaped_published_text" id="escaped_published_text-<%=data.get("translation_id")%>">
 						</form>
 					</td>
+					<td><%=data.get("literal_type") != null ? data.get("literal_type").replace("_", " ") : ""%></td>
 					<td><span id="published_text_<%=data.get("translation_id")%>"><%=data.get("published_text")%></span></td>
-					<td><span id="updated_text_<%=data.get("translation_id")%>"><%=data.get("updated_text") != null ? data.get("updated_text") : ""%></span></td>
+					<td><span id="updated_text_<%=data.get("translation_id")%>"><%=data.get("escaped_updated_text") != null ? data.get("updated_text") : ""%></span></td>
 					<td><button class="view-click" onclick='editModal("<%=data.get("translation_id") %>")'>Edit</button>
-					<button onclick="undoPopup('<%=data.get("translation_id") %>')" class="<%=(data.get("updated_text") != null && !data.get("escaped_published_text").equals(data.get("updated_text"))) ? "" : "disabled"%>">Undo</button>
+					<button onclick="undoPopup('<%=data.get("translation_id") %>')" class="<%=(data.get("escaped_updated_text") != null && !data.get("escaped_published_text").equals(data.get("escaped_updated_text"))) ? "" : "disabled"%>">Undo</button>
 					</td> 
 				</tr>
 				<% } %>
@@ -100,7 +105,7 @@
 		</div>
 		<div id="confirm-popup" class="popup-confirm">
 			<div class="close close-click">x</div>
-			<p>Have you checked your new text/data in this <a href="https://test-visualisation.osha.europa.eu/osh-barometer#!/">URL</a> test environment and it is ok, press the 'Publish' button and the text/data will be updated in the dataset. To be able to see it in production environment, please request the corresponding deployment to the developers.</p>
+			<p>Have you checked your new text/data in this <a href="https://test-visualisation.osha.europa.eu/osh-barometer#!/" target="_blank">URL</a> test environment and it is ok, press the 'Publish' button and the text/data will be updated in the dataset. To be able to see it in production environment, please request the corresponding deployment to the developers.</p>
 			<button class="close-click" id="modalConfirmButton" type="submit" name="formSent" value="confirmUpdate" onclick="publishLiterals()">Confirm</button>
 			<button class="close-click" id="modalConfirmCancelButton">Cancel</button>
 		</div>
