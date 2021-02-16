@@ -469,8 +469,7 @@ $(document).ready(function(){
 					function( data ) {
 						console.log('AJAX POST SUCCESS');
 						window.location.replace('user?page=update_labels');
-					},
-					async:false
+					}
 				});
 				
 				/*$.post(
