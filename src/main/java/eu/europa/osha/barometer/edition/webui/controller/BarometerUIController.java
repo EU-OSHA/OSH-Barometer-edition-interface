@@ -135,18 +135,18 @@ public class BarometerUIController extends HttpServlet{
 				String logout = req.getParameter("logout");
 				if (logout != null) {
 					LOGGER.info("Logging out from OSH Barometer Edition Tool.");
-					//Remove current session
-//					User user = (User) session.getAttribute("user");
-//					CallbackHandler callbackHandler = new PassiveCallbackHandler(user.getUsername(), user.getPassword());
-//					Subject subject = null;
-//					try {
-//						LoginContext lc = new LoginContext(ConfigurationImpl.LDAP_CONFIGURATION_NAME, 
-//								subject, callbackHandler, new ConfigurationImpl());
-//						lc.logout();
-//					} catch(Exception e) {
-//						LOGGER.error("AN ERROR HAS OCCURRED WHILE LOGGING OUT.");
-//						e.printStackTrace();
-//					}
+					//LDAP LOGOUT
+					User user = (User) session.getAttribute("user");
+					CallbackHandler callbackHandler = new PassiveCallbackHandler(user.getUsername(), user.getPassword());
+					Subject subject = null;
+					try {
+						LoginContext lc = new LoginContext(ConfigurationImpl.LDAP_CONFIGURATION_NAME, 
+								subject, callbackHandler, new ConfigurationImpl());
+						lc.logout();
+					} catch(Exception e) {
+						LOGGER.error("AN ERROR HAS OCCURRED WHILE LOGGING OUT.");
+						e.printStackTrace();
+					}
 
 					/* TEMPORAL LOGOUT */
 					session.removeAttribute("user");
@@ -163,69 +163,79 @@ public class BarometerUIController extends HttpServlet{
 				String username = req.getParameter("username");
 				String password = req.getParameter("password");
 				
+				String temporalLogin = req.getParameter("temporalLogin");
+				
 				if(session.getAttribute("user") != null) {
 					loginCorrect = true;
 				} else {
 					/* TEMPORAL LOGIN */
-					if(username != null) {
-						if(password != null) {
-							if(username.equals(USERNAME) && password.equals(PASSWORD)) {
-								LOGGER.info("Username and password correct.");
-								loginCorrect = true;
-								User user = new User(username, password);
-								session.setAttribute("user", user);
-							} else {
-								LOGGER.error("Login failed. Username or password not correct.");
+					if(temporalLogin != null) {
+						LOGGER.info("Username and password correct.");
+						loginCorrect = true;
+						User userTemporal = new User(username, password);
+						session.setAttribute("user", userTemporal);
+					} else {
+						//LDAP LOGIN
+						//Connect to LDAP to check if user/mail and password exist
+						CallbackHandler callbackHandler = new PassiveCallbackHandler(username, password);
+						Subject subject = null;
+
+						String user = null;
+						try {
+							LoginContext lc = new LoginContext(ConfigurationImpl.LDAP_CONFIGURATION_NAME, 
+									subject, callbackHandler, new ConfigurationImpl());
+							lc.login();
+
+							subject = lc.getSubject();
+
+							for(Iterator it = subject.getPrincipals(UserPrincipal.class).iterator(); it.hasNext();) {
+								UserPrincipal userPrincipal = (UserPrincipal) it.next();
+								LOGGER.info("Authenticated: "+userPrincipal.getName());
+								username = userPrincipal.getName();
 							}
-						} else {
-							LOGGER.error("Login failed. Password is empty.");
+
+						}catch(Exception e) {
+							LOGGER.error("ERROR WHILE AUTHENTICATING");
+							e.printStackTrace();
 						}
 					}
+					
+//					if(username != null) {
+//						if(password != null) {
+//							if(username.equals(USERNAME) && password.equals(PASSWORD)) {
+//								LOGGER.info("Username and password correct.");
+//								loginCorrect = true;
+//								User user = new User(username, password);
+//								session.setAttribute("user", user);
+//							} else {
+//								LOGGER.error("Login failed. Username or password not correct.");
+//							}
+//						} else {
+//							LOGGER.error("Login failed. Password is empty.");
+//						}
+//					}
 				}
 
+//				if(loginCorrect) {
+//					LOGGER.info("Login correct. Accessing to OSH Barometer homepage.");
+//					nextURL = "/jsp/home.jsp";
+//				}else {
+//					LOGGER.error("Login failed. Returning to login page.");
+//					errorMessage = "Sorry, unrecognized username or password.";
+//					nextURL = "/jsp/login.jsp";
+//				}
+
+				//boolean loginCorrect = true;
 				if(loginCorrect) {
-					LOGGER.info("Login correct. Accessing to OSH Barometer homepage.");
+					LOGGER.info("Login correct. Redirecting to OSH Barometer homepage.");
+					User user = new User(username, password);
+					session.setAttribute("user", user);
 					nextURL = "/jsp/home.jsp";
-				}else {
+				} else {
 					LOGGER.error("Login failed. Returning to login page.");
-					errorMessage = "Sorry, unrecognized username or password.";
 					nextURL = "/jsp/login.jsp";
+					errorMessage = "Incorrect user/mail or password. Please try again.";
 				}
-
-				//Connect to LDAP to check if user/mail and password exist
-				//				CallbackHandler callbackHandler = new PassiveCallbackHandler(username, password);
-				//				Subject subject = null;
-				//
-				//				String user = null;
-				//				try {
-				//					LoginContext lc = new LoginContext(ConfigurationImpl.LDAP_CONFIGURATION_NAME, 
-				//							subject, callbackHandler, new ConfigurationImpl());
-				//					lc.login();
-				//
-				//					subject = lc.getSubject();
-				//
-				//					for(Iterator it = subject.getPrincipals(UserPrincipal.class).iterator(); it.hasNext();) {
-				//						UserPrincipal userPrincipal = (UserPrincipal) it.next();
-				//						LOGGER.info("Authenticated: "+userPrincipal.getName());
-				//						username = userPrincipal.getName();
-				//					}
-				//
-				//				}catch(Exception e) {
-				//					LOGGER.error("ERROR WHILE AUTHENTICATING");
-				//					e.printStackTrace();
-				//				}
-
-				//				boolean loginCorrect = true;
-				//				if(loginCorrect) {
-				//					LOGGER.info("Login correct. Redirecting to OSH Barometer homepage.");
-				//					User user = new User(username, password);
-				//					session.setAttribute("user", user);
-				//					nextURL = "/jsp/home.jsp";
-				//				} else {
-				//					LOGGER.error("Login failed. Returning to login page.");
-				//					nextURL = "/jsp/login.jsp";
-				//					errorMessage = "Incorrect user/mail or password. Please try again.";
-				//				}
 				session.removeAttribute("section");
 				session.removeAttribute("chart");
 				sendAlertsToUser(req, confirmationMessage, errorMessage);
