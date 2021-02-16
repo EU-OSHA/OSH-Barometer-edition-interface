@@ -91,7 +91,7 @@
 							</execution>
 						</executions>
 					</plugin>
-					<plugin>
+					<!-- <plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-dependency-plugin</artifactId>
 						<executions>
@@ -109,7 +109,7 @@
 								</configuration>
 							</execution>
 						</executions>
-					</plugin>
+					</plugin>-->
 					<plugin>
 						<artifactId>maven-surefire-plugin</artifactId>
 						<configuration>
@@ -125,7 +125,7 @@
 									<goal>war</goal>
 								</goals>
 								<configuration>
-									<outputDirectory>C:/OSHBarometer/packages</outputDirectory>
+									<outputDirectory>${project.basedir}/src/main/resources/packages</outputDirectory>
 									<classifier>${envClassifier}</classifier>
 								</configuration>
 								<!--configuration> <classifier>testnaniero</classifier> </configuration> -->
@@ -172,7 +172,7 @@
 							</execution>
 						</executions>
 					</plugin>
-					<plugin>
+					<!-- <plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-dependency-plugin</artifactId>
 						<executions>
@@ -190,7 +190,7 @@
 								</configuration>
 							</execution>
 						</executions>
-					</plugin>
+					</plugin>-->
 					<plugin>
 						<artifactId>maven-surefire-plugin</artifactId>
 						<configuration>
@@ -206,7 +206,7 @@
 									<goal>war</goal>
 								</goals>
 								<configuration>
-									<outputDirectory>C:/OSHBarometer/packages</outputDirectory>
+									<outputDirectory>${project.basedir}/src/main/resources/packages</outputDirectory>
 									<classifier>${envClassifier}</classifier>
 								</configuration>
 								<!--configuration> <classifier>testnaniero</classifier> </configuration> -->
@@ -248,7 +248,7 @@
 							</execution>
 						</executions>
 					</plugin>
-					<plugin>
+					<!-- <plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-dependency-plugin</artifactId>
 						<executions>
@@ -266,7 +266,7 @@
 								</configuration>
 							</execution>
 						</executions>
-					</plugin>
+					</plugin>-->
 					<plugin>
 						<artifactId>maven-surefire-plugin</artifactId>
 						<configuration>
@@ -282,7 +282,7 @@
 									<goal>war</goal>
 								</goals>
 								<configuration>
-									<outputDirectory>C:/OSHBarometer/packages</outputDirectory>
+									<outputDirectory>${project.basedir}/src/main/resources/packages</outputDirectory>
 									<classifier>${envClassifier}</classifier>
 								</configuration>
 								<!--configuration> <classifier>testnaniero</classifier> </configuration> -->
