@@ -145,6 +145,7 @@ a.href-link{
     transition: all .3s ease 0s;
     padding: 8px 8px 7px 8px;
     text-decoration: none;
+    min-width: 50px;
     &:hover{
     	background: #00696C;
     	color: #C7E2E3; 
@@ -167,7 +168,7 @@ button:hover{
     color: #C7E2E3; 
 }
 
-button.disabled{
+button.disabled, a.disabled{
 	opacity: 0.6;
 	pointer-events: none;
 	&:hover{

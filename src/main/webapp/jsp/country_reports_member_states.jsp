@@ -12,7 +12,7 @@
 			<div class="conten-input">
 				<label>Section</label>
 				<% String section_id = (String) request.getAttribute("section_id"); %>
-				<select id="section" name="section_id" onchange="changeCountryDisplay()">
+				<select id="section" name="section_id" onchange="changeCountryDisplay('false')">
 					<option value="osh_authorities" <%="osh_authorities".equals(section_id) ? "selected": "" %> >OSH Authorities</option>
 					<option value="national_strategies" <%="national_strategies".equals(section_id) ? "selected": "" %> >National strategies</option>
 					<option value="social_dialogue" <%="social_dialogue".equals(section_id) ? "selected": "" %>>Social Dialogue</option>

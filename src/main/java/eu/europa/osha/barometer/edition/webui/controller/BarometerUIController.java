@@ -248,6 +248,8 @@ public class BarometerUIController extends HttpServlet{
 				String scriptDirectory = null;
 				String outputDirectory = null;
 				String inputDirectory = null;
+				String jobDirectory = null;
+				String spoonLogsDirectory = null;
 				String command = null;
 				String logOutputDirectory = null;
 				StringBuilder resultStringBuilder = null;
@@ -267,13 +269,17 @@ public class BarometerUIController extends HttpServlet{
 							OutputStream out = null;
 							
 						    try {
+						    	spoonLogsDirectory = configurationData.getString("directory.etl") + configurationData.getString("directory.etl.logs");
+						    	LOGGER.info("spoonLogsDirectory: "+spoonLogsDirectory);
+						    	jobDirectory = configurationData.getString("directory.etl") + configurationData.getString("directory.etl.job.eurofound");
+						    	LOGGER.info("jobDirectory: "+jobDirectory);
 						    	inputDirectory =  configurationData.getString("directory.etl")+configurationData.getString("directory.quantitative_file.eurofound.input");
 						    	LOGGER.info("inputDirectory: "+inputDirectory);
-						    	outputDirectory = configurationData.getString("directory.etl")+configurationData.getString("directory.etl.quantitative_file.eurofound.output");
+						    	outputDirectory = jobDirectory+configurationData.getString("directory.etl.quantitative_file.eurofound.output");
 						    	LOGGER.info("outputDirectory: "+outputDirectory);
 						    	scriptDirectory = configurationData.getString("directory.etl")+configurationData.getString("directory.script");
 						    	LOGGER.info("scriptDirectory: "+scriptDirectory);
-						    	logOutputDirectory = configurationData.getString("directory.etl")+configurationData.getString("directory.quantitative_file.eurofound.log");
+						    	logOutputDirectory = jobDirectory+configurationData.getString("directory.quantitative_file.eurofound.log");
 						    	LOGGER.info("logOutputDirectory: "+logOutputDirectory);
 						        out = new FileOutputStream(new File(inputDirectory + eurofoundDataFileName + fileExtension));
 						        
@@ -301,7 +307,9 @@ public class BarometerUIController extends HttpServlet{
 								} else {
 									LOGGER.info("LINUX: Running script: "+scriptDirectory+"eurofound_quantitative_script.sh");
 									command = "sh "+scriptDirectory+"eurofound_quantitative_script.sh " 
-											+ eurofoundDataFileName+fileExtension+" "+year+" "+inputDirectory+" "+outputDirectory;
+											+ eurofoundDataFileName+fileExtension+" "+year+" "+inputDirectory+" "+outputDirectory+" "
+											+configurationData.getString("directory.etl.job.eurofound")+" "+configurationData.getString("directory.etl")
+											+" "+spoonLogsDirectory;
 									LOGGER.info("LINUX: command to execute: "+command);
 									Process p = Runtime.getRuntime().exec(command);
 									LOGGER.info("Waiting for script to end...");
@@ -331,8 +339,9 @@ public class BarometerUIController extends HttpServlet{
 							        }else {
 							        	LOGGER.info("Excel file not found");
 							        }
-							        
-							        command = "sh "+scriptDirectory+"literals.sh";
+							        command = "sh "+scriptDirectory+"literals.sh " + jobDirectory + " " + configurationData.getString("directory.etl")
+									+ " " + spoonLogsDirectory;
+							        //command = "sh "+scriptDirectory+"literals.sh";
 									LOGGER.info("LINUX: command to execute: "+command);
 									Process literalCreator = Runtime.getRuntime().exec(command);
 									LOGGER.info("Waiting for script to end...");
@@ -396,6 +405,8 @@ public class BarometerUIController extends HttpServlet{
 				String scriptDirectory = null;
 				String outputDirectory = null;
 				String inputDirectory = null;
+				String jobDirectory = null;
+				String spoonLogsDirectory = null;
 				String logOutputDirectory = null;
 				boolean validation = true;
 				
@@ -492,13 +503,17 @@ public class BarometerUIController extends HttpServlet{
 						OutputStream out = null;
 						
 						try {
+							jobDirectory = configurationData.getString("directory.etl")+configurationData.getString("directory.etl.job.eurostat");
+							LOGGER.info("jobDirectory: "+jobDirectory);
+							spoonLogsDirectory = configurationData.getString("directory.etl")+configurationData.getString("directory.etl.logs");
+							LOGGER.info("spoonLogsDirectory: "+spoonLogsDirectory);
 							inputDirectory = configurationData.getString("directory.etl")+configurationData.getString("directory.quantitative_file.eurostat.input");
 							LOGGER.info("inputDirectory: "+inputDirectory);
-							outputDirectory = configurationData.getString("directory.etl")+configurationData.getString("directory.etl.quantitative_file.eurostat.output");
+							outputDirectory = jobDirectory+configurationData.getString("directory.etl.quantitative_file.eurostat.output");
 							LOGGER.info("outputDirectory: "+outputDirectory);
 					    	scriptDirectory = configurationData.getString("directory.etl")+configurationData.getString("directory.script");
 					    	LOGGER.info("scriptDirectory: "+scriptDirectory);
-					    	logOutputDirectory = configurationData.getString("directory.etl")+configurationData.getString("directory.quantitative_file.eurostat.log");
+					    	logOutputDirectory = jobDirectory+configurationData.getString("directory.quantitative_file.eurostat.log");
 					    	LOGGER.info("logOutputDirectory: "+logOutputDirectory);
 					        out = new FileOutputStream(new File(inputDirectory + eurostatDataFileName + fileExtension));
 					        resultStringBuilder = new StringBuilder();
@@ -536,8 +551,9 @@ public class BarometerUIController extends HttpServlet{
 									LOGGER.info("ONLY YEAR FROM SELECTED");
 					        		command = "sh " + scriptDirectory + "eurostat_quantitative_script.sh "
 											+ eurostatDataFileName + fileExtension + " " + indicatorEurostat 
-											+" "+inputDirectory+" "+outputDirectory + " " + oneYear + " NULL"
-											+ " > " + scriptDirectory + "script_log_eurostat.txt 2>&1";
+											+" "+inputDirectory+" "+outputDirectory + " " + oneYear + " NULL "
+											+ configurationData.getString("directory.etl.job.eurostat")
+											+ " " + configurationData.getString("directory.etl") + " " + spoonLogsDirectory;
 					        		p = Runtime.getRuntime().exec(command);
 					        		LOGGER.info("LINUX: command to execute: "+command);
 					        	}
@@ -547,7 +563,8 @@ public class BarometerUIController extends HttpServlet{
 					        		command = "sh "+scriptDirectory + "eurostat_quantitative_script.sh "
 											+ eurostatDataFileName + fileExtension + " " + indicatorEurostat
 											+" "+inputDirectory+" "+outputDirectory+ " " + yearFrom + " " + yearTo
-											+ " > " + scriptDirectory + "script_log_eurostat.txt 2>&1";
+											+ " " + configurationData.getString("directory.etl.job.eurostat") + " "
+											+ " " + configurationData.getString("directory.etl") + " " + spoonLogsDirectory;
 					        		p = Runtime.getRuntime().exec(command);
 					        		LOGGER.info("LINUX: command to execute: "+command);
 					        	}
@@ -627,11 +644,16 @@ public class BarometerUIController extends HttpServlet{
 				String saveButton = req.getParameter("formSent");
 				String section = req.getParameter("section");
 				String chart = req.getParameter("chart");
+				String totalRows = req.getParameter("literalListSize");
+				String translation_id = null;
+				String updated_text = null;
+				String checked = null;
+				
 				confirmationMessage = null;
 				errorMessage = null;
 				//Save updated text in draft_text column in table translation
 				if (saveButton != null) {
-					String translation_id = req.getParameter("translation_id"); 
+					translation_id = req.getParameter("translation_id"); 
 					String updatedTextEditor = req.getParameter("updatedTextEditor");
 					boolean textUpdated = false;
 					if(saveButton.equals("saveDraft")) {
@@ -646,12 +668,34 @@ public class BarometerUIController extends HttpServlet{
 						if(!textUpdated) {
 							errorMessage = "Updated text could not be deleted";
 						}
+					}else if(saveButton.equals("confirmUpdate")) {
+						int literalListSize = 0;
+						if(totalRows != null) {
+							literalListSize = Integer.parseInt(totalRows);
+						}
+						for(int i=0; i<literalListSize; i++) {
+							checked = req.getParameter("publishCheck_"+i);
+							if(checked != null) {
+								translation_id = req.getParameter("translation_id_"+i);
+								updated_text = req.getParameter("updated_text_"+i);
+								section = req.getParameter("section_"+i);
+								chart = req.getParameter("chart_"+i);
+								
+								boolean updatedLiteral = UpdateLabelsBusiness.publishLiteral(translation_id, updated_text);
+								LOGGER.info("Literal with id: "+translation_id+" updated in database: "+updatedLiteral);
+							}
+						}
 					}
 					
 					try {
+						String jobDirectory = configurationData.getString("directory.etl")+configurationData.getString("directory.etl.job.literals");
+						LOGGER.info("jobDirectory: "+jobDirectory);
+						String spoonLogsDirectory = configurationData.getString("directory.etl")+configurationData.getString("directory.etl.logs");
+						LOGGER.info("spoonLogsDirectory: "+spoonLogsDirectory);
 						String scriptDirectory = configurationData.getString("directory.etl")+configurationData.getString("directory.script");
 						LOGGER.info("scriptDirectory: "+scriptDirectory);
-						String command = "sh "+scriptDirectory+"literals.sh";
+						String command = "sh "+scriptDirectory+"literals.sh " + jobDirectory + " " + configurationData.getString("directory.etl")
+							+ " " + spoonLogsDirectory;
 						LOGGER.info("LINUX: command to execute: "+command);
 						Process p = Runtime.getRuntime().exec(command);
 						LOGGER.info("Waiting for script to end...");
@@ -673,12 +717,12 @@ public class BarometerUIController extends HttpServlet{
 						errorMessage = "An error has occurred while processing literals";
 					}			
 					
-					session.setAttribute("section",section);
-					session.setAttribute("chart",chart);
+//					session.setAttribute("section",section);
+//					session.setAttribute("chart",chart);
 				}
 				
-				section = (String) session.getAttribute("section");
-				chart = (String) session.getAttribute("chart");
+//				section = (String) session.getAttribute("section");
+//				chart = (String) session.getAttribute("chart");
 				
 				if(section == null) {
 					section = DEFAULT_SECTION_UPDATE_LABELS;
@@ -700,8 +744,8 @@ public class BarometerUIController extends HttpServlet{
 				req.setAttribute("chartSelected", chart);
 				req.setAttribute("literalList", literalList);
 				
-				session.removeAttribute("section");
-				session.removeAttribute("chart");
+//				session.removeAttribute("section");
+//				session.removeAttribute("chart");
 			} else if (page.equals("country_reports_member_states")) {
 				LOGGER.info("Arriving to Country Reports for Member States.");
 				nextURL = "/jsp/country_reports_member_states.jsp";
@@ -863,7 +907,8 @@ public class BarometerUIController extends HttpServlet{
 	private void copyFilesToDVT() throws Exception {
 		FileInputStream instream = null;
 		FileOutputStream outstream = null;
-		String jsonDirectory = configurationData.getString("directory.etl")+configurationData.getString("directory.etl.literals.output");
+		String jsonDirectory = configurationData.getString("directory.etl")+configurationData.getString("directory.etl.job.literals")
+			+configurationData.getString("directory.etl.literals.output");
 		LOGGER.info("jsonDirectory: "+jsonDirectory);
 		String literalsDirectory = configurationData.getString("directory.barometer")+configurationData.getString("directory.model.files");
 		LOGGER.info("literalsDirectory: "+literalsDirectory);

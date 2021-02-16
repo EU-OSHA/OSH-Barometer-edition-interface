@@ -192,10 +192,17 @@ $(document).ready(function(){
 		});
 	}
 	
-	changeCountryDisplay = function() {
+	changeCountryDisplay = function(valueDefault) {
 		console.log("Enters changeCountryDisplay function");
 		var sectionSelected = document.getElementById("section");
-		var valueSelected = sectionSelected.value;
+		var valueSelected = null;
+		
+		if(valueDefault == 'true'){
+			valueSelected = 'osh_authorities';
+		}else{
+			valueSelected = sectionSelected.value;
+		}
+		
 		$.get({
 			url: 'countrydisplay',
 			data: {
@@ -272,33 +279,40 @@ $(document).ready(function(){
 			success: function(literalsResponse) {
 		        var literalsList = JSON.parse(literalsResponse);
 		        var new_tbody = "";
+				var index = 0;
+				var literalListSize = literalsList.length;
+				$('input[name="literalListSize"]').val(literalListSize);
 		        $('#literalListBody').empty();
 		        literalsList.forEach(function(literal){
 					new_tbody = new_tbody.concat('<tr>');
 					new_tbody = new_tbody.concat('<td>');
-					new_tbody = new_tbody.concat('<form id="form-'+literal.translation_id+'" action="multipleforms" method="post">');
-					new_tbody = new_tbody.concat('<input id="check-'+literal.translation_id+'" type="checkbox" onchange="checkTextChanges()" name="publishCheck">');
-					new_tbody = new_tbody.concat('<input type="hidden" value="'+literal.translation_id+'" name="translation_id">');
-					new_tbody = new_tbody.concat('<input type="hidden" value="'+literal.updated_text+'" name="updated_text">');
-					new_tbody = new_tbody.concat('<input type="hidden" value="" name="lastForm">');
-					new_tbody = new_tbody.concat('<input type="hidden" value="'+literal.escaped_updated_text+'" name="escaped_updated_text" id="escaped_updated_text-'+literal.translation_id+'">');
-					new_tbody = new_tbody.concat('<input type="hidden" value="'+literal.escaped_published_text+'" name="escaped_published_text" id="escaped_published_text-'+literal.translation_id+'">');
-					new_tbody = new_tbody.concat('</form>');
+					new_tbody = new_tbody.concat('<input id="check-'+index+'" type="checkbox" onchange="checkTextChanges()" name="publishCheck">');
+					new_tbody = new_tbody.concat('<input type="hidden" value="'+literal.translation_id+'" name="translation_id_'+index+'">');
+					new_tbody = new_tbody.concat('<input type="hidden" value="'+literal.updated_text+'" name="updated_text_'+index+'">');
+					new_tbody = new_tbody.concat('<input type="hidden" value="'+literal.escaped_updated_text+'" name="escaped_updated_text_'+index+'" id="escaped_updated_text-'+index+'">');
+					new_tbody = new_tbody.concat('<input type="hidden" value="'+literal.escaped_published_text+'" name="escaped_published_text_'+index+'" id="escaped_published_text-'+index+'">');
 					new_tbody = new_tbody.concat('</td>');
 					new_tbody = new_tbody.concat('<td>');
-					new_tbody = new_tbody.concat(literal.literal_type);
-					new_tbody = new_tbody.concat('</td>');
-					new_tbody = new_tbody.concat('<td><span id="published_text_'+literal.translation_id+'">'+literal.published_text+'</span></td>');
-					if(literal.updated_text != null){
-						new_tbody = new_tbody.concat('<td><span id="updated_text_'+literal.translation_id+'">'+literal.updated_text+'</span></td>');
-					}else{
-						new_tbody = new_tbody.concat('<td><span id="updated_text_'+literal.translation_id+'"></span></td>');	
+					if(literal.literal_type != null && literal.literal_type != ""){
+						new_tbody = new_tbody.concat(literal.literal_type.replace('_', ' '));
 					}
-					new_tbody = new_tbody.concat('<td><button class="view-click" onclick="editModal('+literal.translation_id+')">Edit</button>');
-					if(literal.updated_text != null && literal.updated_text != literal.escaped_published_text){
-						new_tbody = new_tbody.concat('<button onclick="undoPopup('+literal.translation_id+')" class="">Undo</button>');
+					
+					new_tbody = new_tbody.concat('</td>');
+					new_tbody = new_tbody.concat('<td><span id="span_published_text_'+index+'">'+literal.published_text+'</span></td>');
+					if(literal.updated_text != null){
+						new_tbody = new_tbody.concat('<td><span id="span_updated_text_'+index+'">'+literal.updated_text+'</span></td>');
 					}else{
-						new_tbody = new_tbody.concat('<button onclick="undoPopup('+literal.translation_id+')" class="disabled">Undo</button>');
+						new_tbody = new_tbody.concat('<td><span id="span_updated_text_'+index+'"></span></td>');	
+					}
+					//new_tbody = new_tbody.concat('<td><button class="view-click" onclick="editModal('+index+')">Edit</button>');
+					new_tbody = new_tbody.concat('<td><a class="href-link" href="#" onclick="editModal(\''+index+'\')">Edit</a> ');
+					
+					if(literal.updated_text != null && literal.updated_text != literal.escaped_published_text){
+						//new_tbody = new_tbody.concat('<button onclick="undoPopup('+index+')" class="">Undo</button>');
+						new_tbody = new_tbody.concat('<a class="href-link" href="#" onclick="undoPopup(\''+index+'\')">Undo</a>');
+					}else{
+						//new_tbody = new_tbody.concat('<button onclick="undoPopup('+index+')" class="disabled">Undo</button>');
+						new_tbody = new_tbody.concat('<a class="href-link disabled" href="#" onclick="undoPopup(\''+index+'\')">Undo</a>');
 					}
 					new_tbody = new_tbody.concat('</td>');
 					new_tbody = new_tbody.concat('</tr>');
@@ -317,6 +331,7 @@ $(document).ready(function(){
 					new_tbody = new_tbody.concat('Edit</button>');
 					new_tbody = new_tbody.concat('<button class="disabled">Undo</button></td>');
 					new_tbody = new_tbody.concat('</tr>');*/
+					index++;
 		        });
 		        $('#literalListBody').html(new_tbody);
 			},
@@ -346,7 +361,7 @@ $(document).ready(function(){
 		$('div#wait-message-space').css("display","none");
 	}
 	
-	editModal = function(translation_id/*, published_text, updated_text*/){
+	editModal = function(index/*, published_text, updated_text*/){
 		console.log("Arrives to editModal");
 		
 		var section = document.getElementById("sectionSelect");
@@ -355,10 +370,12 @@ $(document).ready(function(){
 		var chart = document.getElementById("chartSelect");
 		var chartSelected = chart.value;
 		
-		var published_text = $("#published_text_"+translation_id)[0].innerHTML;
-		var updated_text = $("#updated_text_"+translation_id)[0].textContent;
-		var escaped_published_text = $("#escaped_published_text-"+translation_id).val();
-		var escaped_updated_text = $("#escaped_updated_text-"+translation_id).val();
+		var translation_id = $("#translation_id_"+index).val();
+		
+		var published_text = $("#span_published_text_"+index)[0].innerHTML;
+		var updated_text = $("#span_updated_text_"+index)[0].textContent;
+		var escaped_published_text = $("#escaped_published_text-"+index).val();
+		var escaped_updated_text = $("#escaped_updated_text-"+index).val();
 		
 		if(updated_text != null && updated_text != ""){
 			if(published_text != updated_text){
@@ -389,7 +406,7 @@ $(document).ready(function(){
 		}
 	};
 	
-	undoPopup = function(translation_id/*, published_text, updated_text*/){
+	undoPopup = function(index/*, published_text, updated_text*/){
 		console.log("Arrives to undoPopup");
 		var section = document.getElementById("sectionSelect");
 		var sectionSelected = section.value;
@@ -397,8 +414,10 @@ $(document).ready(function(){
 		var chart = document.getElementById("chartSelect");
 		var chartSelected = chart.value;
 		
-		var published_text = $("#published_text_"+translation_id)[0].textContent;
-		var updated_text = $("#updated_text_"+translation_id)[0].textContent;
+		var translation_id = $("#translation_id_"+index).val();
+		
+		var published_text = $("#span_published_text_"+index)[0].textContent;
+		var updated_text = $("#span_updated_text_"+index)[0].textContent;
 		
 		if(updated_text != "null"){
             if(updated_text != published_text){
@@ -428,8 +447,8 @@ $(document).ready(function(){
 		while (i < checks.length && !valid) {
 			if(checks[i].checked == true){
 				var checkId = checks[i].id.substring(checks[i].id.indexOf('-')+1);
-				update_text_i = $("#updated_text_"+checkId)[0].textContent;
-				published_text_i = $("#published_text_"+checkId)[0].textContent;
+				update_text_i = $("#span_updated_text_"+checkId)[0].textContent;
+				published_text_i = $("#span_published_text_"+checkId)[0].textContent;
 				if(update_text_i != "null" && update_text_i != "" && update_text_i != published_text_i){
 					valid = true;
 				}
@@ -498,7 +517,7 @@ $(document).ready(function(){
 	resetFields = function(){
 		console.log('Enters resetFields');
 		$('#section').val('osh_authorities');
-		$('#country').val('Austria');
+		changeCountryDisplay('true');
 	}
 });
 
