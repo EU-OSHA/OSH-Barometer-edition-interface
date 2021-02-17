@@ -139,28 +139,6 @@
         <case_sensitive>no</case_sensitive>
       </field>
       <field>
-        <in_stream_name>ReferenceYear</in_stream_name>
-        <out_stream_name>referenceEscaped</out_stream_name>
-        <use_regex>no</use_regex>
-        <replace_string>&#x22;</replace_string>
-        <replace_by_string>&#x5c;&#x5c;&#x22;</replace_by_string>
-        <set_empty_string>N</set_empty_string>
-        <replace_field_by_string/>
-        <whole_word>no</whole_word>
-        <case_sensitive>no</case_sensitive>
-      </field>
-      <field>
-        <in_stream_name>lastUpdate</in_stream_name>
-        <out_stream_name>lastUpdateEscaped</out_stream_name>
-        <use_regex>no</use_regex>
-        <replace_string>&#x22;</replace_string>
-        <replace_by_string>&#x5c;&#x5c;&#x22;</replace_by_string>
-        <set_empty_string>N</set_empty_string>
-        <replace_field_by_string/>
-        <whole_word>no</whole_word>
-        <case_sensitive>no</case_sensitive>
-      </field>
-      <field>
         <in_stream_name>Coverage</in_stream_name>
         <out_stream_name>coverageEscaped</out_stream_name>
         <use_regex>no</use_regex>
@@ -251,7 +229,7 @@
       </field>
       <field>
         <name>ReferenceYear</name>
-        <type>String</type>
+        <type>Integer</type>
         <length>-1</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
@@ -263,7 +241,7 @@
       </field>
       <field>
         <name>lastUpdate</name>
-        <type>String</type>
+        <type>Integer</type>
         <length>-1</length>
         <precision>-1</precision>
         <trim_type>none</trim_type>
@@ -683,21 +661,9 @@
     <optimizationLevel>9</optimizationLevel>
     <jsScripts>      <jsScript>        <jsScript_type>0</jsScript_type>
         <jsScript_name>Script 1</jsScript_name>
-        <jsScript_script>var filteringOptionsText &#x3d; filteringEscaped&#x3b;&#xd;&#xa;if &#x28;filteringOptionsText &#x3d;&#x3d; null &#x7c;&#x7c; filteringOptionsText &#x3d;&#x3d; undefined&#x29;&#xd;&#xa;&#x7b;&#xd;&#xa;	filteringOptionsText &#x3d; &#x22;&#x22;&#x3b;&#xd;&#xa;&#x7d;&#xd;&#xa;&#xd;&#xa;var referenceText &#x3d; referenceEscaped&#x3b;&#xd;&#xa;if &#x28;referenceText &#x3d;&#x3d; null &#x7c;&#x7c; referenceText &#x3d;&#x3d; undefined&#x29;&#xd;&#xa;&#x7b;&#xd;&#xa;	referenceText &#x3d; &#x22;&#x22;&#x3b;&#xd;&#xa;&#x7d;&#xd;&#xa;&#xd;&#xa;var lastUpdateText &#x3d; lastUpdateEscaped&#x3b;&#xd;&#xa;if &#x28;lastUpdateText &#x3d;&#x3d; null &#x7c;&#x7c; lastUpdateText &#x3d;&#x3d; undefined&#x29;&#xd;&#xa;&#x7b;&#xd;&#xa;	lastUpdateText &#x3d; &#x22;&#x22;&#x3b;&#xd;&#xa;&#x7d;&#xd;&#xa;&#xd;&#xa;var coverageText &#x3d; coverageEscaped&#x3b;&#xd;&#xa;if &#x28;coverageText &#x3d;&#x3d; null &#x7c;&#x7c; coverageText &#x3d;&#x3d; undefined&#x29;&#xd;&#xa;&#x7b;&#xd;&#xa;	coverageText &#x3d; &#x22;&#x22;&#x3b;&#xd;&#xa;&#x7d;&#xd;&#xa;&#xd;&#xa;var visualisationText &#x3d; visualisationEscaped&#x3b;&#xd;&#xa;if &#x28;visualisationText &#x3d;&#x3d; null &#x7c;&#x7c; visualisationText &#x3d;&#x3d; undefined&#x29;&#xd;&#xa;&#x7b;&#xd;&#xa;	visualisationText &#x3d; &#x22;&#x22;&#x3b;&#xd;&#xa;&#x7d;&#xd;&#xa;&#xd;&#xa;</jsScript_script>
+        <jsScript_script>var filteringOptionsText &#x3d; filteringEscaped&#x3b;&#xd;&#xa;if &#x28;filteringOptionsText &#x3d;&#x3d; null &#x7c;&#x7c; filteringOptionsText &#x3d;&#x3d; undefined&#x29;&#xd;&#xa;&#x7b;&#xd;&#xa;	filteringOptionsText &#x3d; &#x22;&#x22;&#x3b;&#xd;&#xa;&#x7d;&#xd;&#xa;&#xd;&#xa;var coverageText &#x3d; coverageEscaped&#x3b;&#xd;&#xa;if &#x28;coverageText &#x3d;&#x3d; null &#x7c;&#x7c; coverageText &#x3d;&#x3d; undefined&#x29;&#xd;&#xa;&#x7b;&#xd;&#xa;	coverageText &#x3d; &#x22;&#x22;&#x3b;&#xd;&#xa;&#x7d;&#xd;&#xa;&#xd;&#xa;var visualisationText &#x3d; visualisationEscaped&#x3b;&#xd;&#xa;if &#x28;visualisationText &#x3d;&#x3d; null &#x7c;&#x7c; visualisationText &#x3d;&#x3d; undefined&#x29;&#xd;&#xa;&#x7b;&#xd;&#xa;	visualisationText &#x3d; &#x22;&#x22;&#x3b;&#xd;&#xa;&#x7d;&#xd;&#xa;&#xd;&#xa;</jsScript_script>
       </jsScript>    </jsScripts>    <fields>      <field>        <name>filteringOptionsText</name>
         <rename>filteringOptionsText</rename>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>      <field>        <name>referenceText</name>
-        <rename>referenceText</rename>
-        <type>String</type>
-        <length>-1</length>
-        <precision>-1</precision>
-        <replace>N</replace>
-      </field>      <field>        <name>lastUpdateText</name>
-        <rename>lastUpdateText</rename>
         <type>String</type>
         <length>-1</length>
         <precision>-1</precision>
@@ -747,8 +713,8 @@
     <arguments>
        <argument><name>sectionName</name></argument>
        <argument><name>indicatorName</name></argument>
-       <argument><name>referenceText</name></argument>
-       <argument><name>lastUpdateText</name></argument>
+       <argument><name>ReferenceYear</name></argument>
+       <argument><name>lastUpdate</name></argument>
        <argument><name>coverageText</name></argument>
        <argument><name>filteringOptionsText</name></argument>
        <argument><name>visualisationText</name></argument>
