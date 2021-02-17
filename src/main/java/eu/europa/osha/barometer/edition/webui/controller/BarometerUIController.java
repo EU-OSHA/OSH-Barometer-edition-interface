@@ -136,16 +136,19 @@ public class BarometerUIController extends HttpServlet{
 				if (logout != null) {
 					LOGGER.info("Logging out from OSH Barometer Edition Tool.");
 					//LDAP LOGOUT
-					User user = (User) session.getAttribute("user");
-					CallbackHandler callbackHandler = new PassiveCallbackHandler(user.getUsername(), user.getPassword());
-					Subject subject = null;
 					try {
+						User user = (User) session.getAttribute("user");
+						CallbackHandler callbackHandler = new PassiveCallbackHandler(user.getUsername(), user.getPassword());
+						Subject subject = null;
+					
 						LoginContext lc = new LoginContext(ConfigurationImpl.LDAP_CONFIGURATION_NAME, 
 								subject, callbackHandler, new ConfigurationImpl());
 						lc.logout();
 					} catch(Exception e) {
 						LOGGER.error("AN ERROR HAS OCCURRED WHILE LOGGING OUT.");
 						e.printStackTrace();
+					} finally {
+						nextURL = "/jsp/login.jsp";
 					}
 
 					/* TEMPORAL LOGOUT */
@@ -177,11 +180,12 @@ public class BarometerUIController extends HttpServlet{
 					} else {
 						//LDAP LOGIN
 						//Connect to LDAP to check if user/mail and password exist
-						CallbackHandler callbackHandler = new PassiveCallbackHandler(username, password);
-						Subject subject = null;
-
-						String user = null;
 						try {
+							CallbackHandler callbackHandler = new PassiveCallbackHandler(username, password);
+							Subject subject = null;
+	
+							String user = null;
+						
 							LoginContext lc = new LoginContext(ConfigurationImpl.LDAP_CONFIGURATION_NAME, 
 									subject, callbackHandler, new ConfigurationImpl());
 							lc.login();
@@ -197,6 +201,8 @@ public class BarometerUIController extends HttpServlet{
 						}catch(Exception e) {
 							LOGGER.error("ERROR WHILE AUTHENTICATING");
 							e.printStackTrace();
+						} finally{
+							nextURL = "/jsp/login.jsp";
 						}
 					}
 					

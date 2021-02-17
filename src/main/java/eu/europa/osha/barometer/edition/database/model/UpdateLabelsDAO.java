@@ -55,6 +55,10 @@ public class UpdateLabelsDAO {
     		}
     		query.append(" AND t.language = 'EN' ");
     		query.append("AND t.literal_id = l.id ");
+    		query.append("AND l.type NOT IN('REG_SECONDARY', 'REG_DEROGATIONS', 'REG_TRANSITIONAL', 'REG_RA', 'REG_EXEMPTIONS', 'REG_SMES', ");
+    		query.append("'STRATEGY_BASIC INFO', 'STRATEGY_BACKGROUND', 'STRATEGY_CHARACTERISTICS', 'STRATEGY_DETAILS', ");
+    		query.append("'STRATEGY_ACTORS', 'STRATEGY_RESOURCES', 'STRATEGY_EVALUATION', 'STRATEGY_EU', 'MATRIX_OB', 'MATRIX_DET', ");
+    		query.append("'STRATEGY_RESOURCES & STRATEGY_EVALUATION') ");
     		String[] queryParams = {};
     		ArrayList<HashMap<String, String>> result = JDBCDataSourceOperations.launchPreparedQuery(query.toString());
     		//ArrayList<HashMap<String, String>> result = JDBCDataSourceOperations.launchSelect(query, queryParams, url);
