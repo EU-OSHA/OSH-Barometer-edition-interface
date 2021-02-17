@@ -5,9 +5,12 @@
 		<Console name="console" target="SYSTEM_OUT">
 			<PatternLayout pattern="%d{HH:mm:ss} [%t] %-5p %c{1}:%L - %m%n" />
 		</Console>
-		<RollingFile name="file"
+		<!--<RollingFile name="file"
 					 fileName="C:/OSHBarometer/log/OSHBarometerInterface.log"
 					 append="true" filePattern="C:/OSHBarometer/log/OSHBarometerInterface-%d{yyyy-MM-dd}-%i.log">
+			<PatternLayout pattern="%d{[yyyy-MM-dd HH:mm:ss]} - [%t] %-5p %c{1}:%L - %m%n" />-->
+		 <RollingFile name="file" fileName="OSHBarometerInterface.log" append="true"
+		 			filePattern="OSHBarometerInterface-%d{yyyy-MM-dd}-%i.log">
 			<PatternLayout pattern="%d{[yyyy-MM-dd HH:mm:ss]} - [%t] %-5p %c{1}:%L - %m%n" />
 			<Policies>
 				<TimeBasedTriggeringPolicy />

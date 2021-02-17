@@ -6,8 +6,8 @@
 			<PatternLayout pattern="%d{HH:mm:ss} [%t] %-5p %c{1}:%L - %m%n" />
 		</Console>
 		<RollingFile name="file"
-					 fileName="${catalina.home}/logs/OSHBarometerInterface.log"
-					 append="true" filePattern="${catalina.home}/logs/OSHBarometerInterface-%d{yyyy-MM-dd}-%i.log">
+					 fileName="OSHBarometerInterface.log"
+					 append="true" filePattern="OSHBarometerInterface-%d{yyyy-MM-dd}-%i.log">
 			<PatternLayout pattern="%d{[yyyy-MM-dd HH:mm:ss]} - [%t] %-5p %c{1}:%L - %m%n" />
 			<Policies>
 				<TimeBasedTriggeringPolicy />
