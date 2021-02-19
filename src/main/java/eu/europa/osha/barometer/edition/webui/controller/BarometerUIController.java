@@ -345,6 +345,7 @@ public class BarometerUIController extends HttpServlet{
 							        }else {
 							        	LOGGER.info("Excel file not found");
 							        }
+							        jobDirectory = configurationData.getString("directory.etl")+configurationData.getString("directory.etl.job.literals");
 							        command = "sh "+scriptDirectory+"literals.sh " + jobDirectory + " " + configurationData.getString("directory.etl")
 									+ " " + spoonLogsDirectory;
 							        //command = "sh "+scriptDirectory+"literals.sh";
@@ -925,7 +926,7 @@ public class BarometerUIController extends HttpServlet{
 		File draftLiteralsFileInput = new File(jsonDirectory+"Draft_Literals.json");
 		LOGGER.info("draftLiteralsFileInput: "+draftLiteralsFileInput);
 		File draftLiteralsFileOutput = new File(literalsDirectory+"Literals.json");
-		LOGGER.info("draftLiteralsFileInput: "+draftLiteralsFileInput);
+		LOGGER.info("draftLiteralsFileOutput: "+draftLiteralsFileOutput);
 //		File publishedLiteralsFileInput = new File(jsonDirectory+"Published_Literals.json");
 //		LOGGER.info("publishedLiteralsFileInput: "+publishedLiteralsFileInput);
 //		File publishedLiteralsFileOutput = new File(literalsDirectory+"Published_Literals.json");
