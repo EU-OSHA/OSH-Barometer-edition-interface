@@ -59,7 +59,8 @@
 				<tbody id="literalListBody">	
 					<% int index = 0;
 					boolean updated = false;%>			
-					<% for (HashMap<String,String> data : literalList) { %>
+					<% for (HashMap<String,String> data : literalList) { 
+						updated = false; %>
 					<% if(data.get("escaped_updated_text") != null){
 						if(!data.get("escaped_updated_text").equals(data.get("escaped_published_text"))){
 							updated = true;
