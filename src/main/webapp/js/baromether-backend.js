@@ -72,7 +72,7 @@ $(document).ready(function(){
 	
 	if($('#container-eurostat-quantitative').length > 0){
 		changeYearCombos();
-	}
+	};
 	
 	
 	enableDatasetTableSaveButton = function(event, currentDatasetId, indicatorId) {
@@ -258,23 +258,44 @@ $(document).ready(function(){
 			},
 			async: true
 		});
-		loadLiteralsTable();
+		loadLiteralsTable('literals');
 	}
 	
-	loadLiteralsTable = function() {
+	loadLiteralsTable = function(page) {
 		console.log("Enters loadLiteralsTable function");
 		var section = document.getElementById("sectionSelect");
 		var sectionSelected = section.value;
 		
 		var chart = document.getElementById("chartSelect");
-		var chartSelected = chart.value;
+		var chartSelected = 0;
+		
+		if(chart != null){
+			chartSelected = chart.value;
+		}
+		
+		var country = document.getElementById("countrySelect");
+		var countrySelected = 0;
+		
+		if(country != null){
+			countrySelected = country.value;
+		}
+		
+		var institution = document.getElementById("institutionSelect");
+		var institutionSelected = 0;
+		
+		if(institution != null){
+			institutionSelected = institution.value;
+		}
 		
 		$.get({
 			url: 'tableload',
 			data: {
 				section: sectionSelected,
 				chart: chartSelected,
-				get: 'literals'
+				country : countrySelected,
+				institution: institutionSelected,
+				//get: 'literals'
+				get: page
 			},
 			success: function(literalsResponse) {
 		        var literalsList = JSON.parse(literalsResponse);
@@ -300,12 +321,14 @@ $(document).ready(function(){
 					new_tbody = new_tbody.concat('<input type="hidden" value="'+literal.escaped_updated_text+'" name="escaped_updated_text_'+index+'" id="escaped_updated_text-'+index+'">');
 					new_tbody = new_tbody.concat('<input type="hidden" value="'+literal.escaped_published_text+'" name="escaped_published_text_'+index+'" id="escaped_published_text-'+index+'">');
 					new_tbody = new_tbody.concat('</td>');
-					new_tbody = new_tbody.concat('<td>');
-					if(literal.literal_type != null && literal.literal_type != ""){
-						new_tbody = new_tbody.concat(literal.literal_type.replace('_', ' '));
+					if(page != 'qualitativeMS'){
+						new_tbody = new_tbody.concat('<td>');
+						if(literal.literal_type != null && literal.literal_type != ""){
+							new_tbody = new_tbody.concat(literal.literal_type.replace('_', ' '));
+						}
+						new_tbody = new_tbody.concat('</td>');
 					}
 					
-					new_tbody = new_tbody.concat('</td>');
 					new_tbody = new_tbody.concat('<td><span id="span_published_text_'+index+'">'+literal.published_text+'</span></td>');
 					if(literal.updated_text != null || literal.updated_text != undefined){
 						new_tbody = new_tbody.concat('<td><span id="span_updated_text_'+index+'">'+literal.updated_text+'</span></td>');
@@ -324,21 +347,6 @@ $(document).ready(function(){
 					}
 					new_tbody = new_tbody.concat('</td>');
 					new_tbody = new_tbody.concat('</tr>');
-					
-					
-					/*new_tbody = new_tbody.concat('<tr>');
-					new_tbody = new_tbody.concat('<td><input type="checkbox" name="publishCheck"></td>');
-					new_tbody = new_tbody.concat('<td>'+ literal.published_text +'</td>');
-					if(literal.updated_text == null){
-						new_tbody = new_tbody.concat('<td> </td>');
-					}else{
-						new_tbody = new_tbody.concat('<td>'+literal.updated_text+'</td>');
-					}
-					new_tbody = new_tbody.concat('<td><button class="view-click" onclick="editModal(\''+literal.translation_id);
-					new_tbody = new_tbody.concat('\', \''+literal.published_text+'\', \''+literal.updated_text+'\')">');
-					new_tbody = new_tbody.concat('Edit</button>');
-					new_tbody = new_tbody.concat('<button class="disabled">Undo</button></td>');
-					new_tbody = new_tbody.concat('</tr>');*/
 					index++;
 		        });
 		        $('#literalListBody').html(new_tbody);
@@ -347,7 +355,7 @@ $(document).ready(function(){
 		});
 	}
 	
-	if($('div#update-labels').length > 0){
+	if($('div#update-labels').length > 0 || $('div#qualitative-member-states').length > 0){
 		CKEDITOR.instances.updatedTextEditor.on('change', function() {
 			var text = CKEDITOR.instances.updatedTextEditor.getData()
 			if(text != null && text != "" && text !=$('#publishedText')[0].textContent){
@@ -368,7 +376,7 @@ $(document).ready(function(){
 		$('div#wait-message').css("display","none");
 		$('div#wait-message-space').css("display","none");
 	}
-	
+		
 	editModal = function(index/*, published_text, updated_text*/){
 		console.log("Arrives to editModal");
 		
@@ -376,7 +384,25 @@ $(document).ready(function(){
 		var sectionSelected = section.value;
 		
 		var chart = document.getElementById("chartSelect");
-		var chartSelected = chart.value;
+		var chartSelected = 0;
+		
+		if(chart != null){
+			chartSelected = chart.value;
+		}
+		
+		var country = document.getElementById("countrySelect");
+		var countrySelected = 0;
+		
+		if(country != null){
+			countrySelected = country.value;
+		}
+		
+		var institution = document.getElementById("institutionSelect");
+		var institutionSelected = 0;
+		
+		if(institution != null){
+			institutionSelected = institution.value;
+		}
 		
 		var translation_id = $("#translation_id_"+index).val();
 		
@@ -401,7 +427,15 @@ $(document).ready(function(){
 		//$(".popup input#literal_id").val(literal_id);
 		$("#edit-popup input#translation_id").val(translation_id);
 		$("#edit-popup input#popUpSection").val(sectionSelected);
-		$("#edit-popup input#popUpChart").val(chartSelected);
+		if(chart != null){
+			$("#edit-popup input#popUpChart").val(chartSelected);
+		}
+		if(country != null){
+			$("#edit-popup input#popUpCountry").val(countrySelected);
+		}
+		if(institution != null){
+			$("#edit-popup input#popUpInstitution").val(institutionSelected);
+		}
 		$("#edit-popup p#publishedText").html(published_text);
 		
 		$("#edit-popup").css("display","block");
@@ -420,7 +454,25 @@ $(document).ready(function(){
 		var sectionSelected = section.value;
 		
 		var chart = document.getElementById("chartSelect");
-		var chartSelected = chart.value;
+		var chartSelected = 0;
+		
+		var country = document.getElementById("countrySelect");
+		var countrySelected = 0;
+		
+		if(country != null){
+			countrySelected = country.value;
+		}
+		
+		var institution = document.getElementById("institutionSelect");
+		var institutionSelected = 0;
+		
+		if(institution != null){
+			institutionSelected = institution.value;
+		}
+		
+		if(chart != null){
+			chartSelected = chart.value;
+		}
 		
 		var translation_id = $("#translation_id_"+index).val();
 		
@@ -439,7 +491,15 @@ $(document).ready(function(){
 		
 		$("#undo-popup input#undo_translation_id").val(translation_id);
 		$("#undo-popup input#popUpUndoSection").val(sectionSelected);
-		$("#undo-popup input#popUpUndoChart").val(chartSelected);
+		if(chart != null){
+			$("#undo-popup input#popUpUndoChart").val(chartSelected);
+		}
+		if(country != null){
+			$("#undo-popup input#popUpUndoCountry").val(countrySelected);
+		}
+		if(institution != null){
+			$("#undo-popup input#popUpUndoInstitution").val(institutionSelected);
+		}
 		
 		$("#undo-popup").css("display","block");
 	};
@@ -471,44 +531,10 @@ $(document).ready(function(){
 				$('#publishButton').addClass('disabled');
 			}
 		}
-	}
+	};
 	
 	openConfirmationModal = function() {
 		$("#confirm-popup").css("display","block");
-	}
-	
-	publishLiterals = function() {
-		console.log("Arrives publishLiterals function");
-		$('div#wait-message').css("display","block");
-		$('div#wait-message-space').css("display","block");
-		var checks = $('input[type=checkbox]:checked');
-		for (var i = 0; i < checks.length; i++) {
-			if(checks[i].checked == true){
-				var form = $(checks[i].parentElement);
-				if(i == length-1){
-					form.children('input[name="lastForm"]').val('true');
-				}
-				
-				$.ajax({
-					type:"POST",
-					url: form.attr('action'),
-					data: form.serialize(), 
-					function( data ) {
-						console.log('AJAX POST SUCCESS');
-						window.location.replace('user?page=update_labels');
-					}
-				});
-				
-				/*$.post(
-					form.attr('action'), 
-					form.serialize(), 
-					function( data ) {
-						console.log('AJAX POST SUCCESS');
-						window.location.replace('user?page=update_labels');
-					});*/
-				checks[i].checked = false;
-			}
-        }
 	}
 	
 	showWaitAlert = function(){
@@ -526,6 +552,70 @@ $(document).ready(function(){
 		console.log('Enters resetFields');
 		$('#section').val('osh_authorities');
 		changeCountryDisplay('true');
+	}
+	
+	loadCountriesQualitativeMS = function(){
+		console.log("Enters loadCountriesAndInstitution function");
+		var sectionSelected = document.getElementById("sectionSelect");
+		var valueSelected = sectionSelected.value;
+		
+		$.get({
+			url: 'countrydisplay',
+			data: {
+				section: valueSelected
+			},
+			success: function(countryResponse) {
+		        var countryList = JSON.parse(countryResponse);
+		        var new_tbody = "";
+		        $('#countrySelect').empty();
+		        countryList.forEach(function(country){
+					if(country.country_code == 'AT'){
+						new_tbody = new_tbody.concat('<option value="'+country.country_code+'" selected>');
+					}else{
+						new_tbody = new_tbody.concat('<option value="'+country.country_code+'" >');
+					}
+					
+					if(country.country_code == 'EU28'){
+						new_tbody = new_tbody.concat(country.country_code);
+					}else{
+						new_tbody = new_tbody.concat('('+country.country_code+') '+country.country_name);
+					}
+					new_tbody = new_tbody.concat('</option>');
+		        });
+		        $('#countrySelect').html(new_tbody);
+			},
+			async: true
+		});
+		
+		loadInstitutionsMS(valueSelected);
+	}
+	
+	loadInstitutionsMS = function(sectionSelected){
+		var new_tbody = "";
+		$('#institutionSelect').empty();
+		$('#institutionSelect').css('display', 'block');
+		$('#institution_type_label').css('display', 'block');
+		if(sectionSelected == 'MATRIX_AUTHORITY') {
+			new_tbody = new_tbody.concat('<option selected value="osh_authority">OSH authority</option>');
+			new_tbody = new_tbody.concat('<option value="compensation_insurance">Compensation and insurance body</option>');
+			new_tbody = new_tbody.concat('<option value="prevention_institute">Prevention institute</option>');
+			new_tbody = new_tbody.concat('<option value="standardisation_body">Standardisation body</option>');
+		}else if(sectionSelected == 'MATRIX_STRATEGY') {
+			new_tbody = new_tbody.concat('<option selected value="implementation_record">Implementation record</option>');
+			new_tbody = new_tbody.concat('<option value="prevention_diseases">Prevention of work-related diseases</option>');
+			new_tbody = new_tbody.concat('<option value="tackling_demographic">Tackling demographic change</option>');
+		}else if(sectionSelected == 'MATRIX_STATISTICS') {
+			new_tbody = new_tbody.concat('<option selected value="osh_statistics">OSH statistics</option>');
+			new_tbody = new_tbody.concat('<option value="surveys">Surveys</option>');
+			new_tbody = new_tbody.concat('<option value="research_institutes">Research Institutes</option>');
+		} else {
+			$('#institution_type_label').css('display', 'none');
+			$('#institutionSelect').css('display', 'none');
+		}
+		
+		$('#institutionSelect').html(new_tbody);
+		
+		loadLiteralsTable('qualitativeMS');
 	}
 });
 
