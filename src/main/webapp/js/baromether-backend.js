@@ -232,6 +232,7 @@ $(document).ready(function(){
 		console.log("Enters disableChartSelect function");
 		var sectionSelected = document.getElementById("sectionSelect");
 		var valueSelected = sectionSelected.value;
+		
 		$.get({
 			url: 'chartload',
 			data: {
@@ -241,7 +242,7 @@ $(document).ready(function(){
 		        var chartList = JSON.parse(chartResponse);
 		        var new_tbody = "";
 		        $('#chartSelect').empty();
-					new_tbody = new_tbody.concat('<option "selected" value="0" >');
+					new_tbody = new_tbody.concat('<option selected value="0" >');
 					new_tbody = new_tbody.concat('No chart selected');
 					new_tbody = new_tbody.concat('</option>');
 		        chartList.forEach(function(chart){
@@ -258,6 +259,8 @@ $(document).ready(function(){
 			},
 			async: true
 		});
+		
+		$("#chartSelect").val("0");
 		loadLiteralsTable();
 	}
 	
