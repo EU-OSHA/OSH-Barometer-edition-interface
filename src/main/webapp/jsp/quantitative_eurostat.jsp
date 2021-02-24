@@ -34,7 +34,8 @@
 				<% String yearFromSelected = (String) request.getAttribute("yearFrom");
 				String yearToSelected = (String) request.getAttribute("yearTo");
 				String oneYearSelected = (String) request.getAttribute("oneYear");
-				yearFromSelected = yearFromSelected+"-01-01";
+				//yearFromSelected = yearFromSelected+"-01-01";
+				System.out.println("YEAR FROM: "+yearFromSelected);
 				if(yearToSelected == null){
 					yearToSelected = year+"-12-31";
 				}

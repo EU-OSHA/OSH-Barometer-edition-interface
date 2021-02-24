@@ -92,7 +92,7 @@ public class BarometerUIController extends HttpServlet{
 	private static String FATAL_WORK_ACCIDENTS_TEMPLATE = "EU-OSHA_OIE_Eurostat_Fatal_Work_accidents";
 	private static String GENERAL_TEMPLATE = "EU-OSHA_OIE_Eurostat_Direct_value_indicators";
 	
-	private static String QUANTITATIVE_EUROSTAT_DEFAULT_YEAR_FROM = "2010";
+	private static String QUANTITATIVE_EUROSTAT_DEFAULT_YEAR_FROM = "2010-01-01";
 	
 	private static String DEFAULT_SECTION_UPDATE_LABELS = "37";
 	private static String DEFAULT_CHART_UPDATE_LABELS = "0";
@@ -409,6 +409,8 @@ public class BarometerUIController extends HttpServlet{
 				errorMessage = null;
 				confirmationMessage = null;
 				String yearFrom = null;
+				String yearTo = null;
+				String oneYear = null;
 				String scriptDirectory = null;
 				String outputDirectory = null;
 				String inputDirectory = null;
@@ -424,8 +426,6 @@ public class BarometerUIController extends HttpServlet{
 				if(submit != null) {
 					String indicatorEurostat = req.getParameter("indicatorEurostat");
 					
-					String yearTo = null;
-					String oneYear = null;
 					Part file = req.getPart("quantitativeEurostatFile");
 					String fileName = Paths.get(file.getSubmittedFileName()).getFileName().toString();
 					String eurostatDataFileName = configurationData.getString("file.eurostat.name");
@@ -779,9 +779,9 @@ public class BarometerUIController extends HttpServlet{
 								filename.append("OSH authorities - ");
 								if(country.equals("European Union")) {
 									filename.append("EU28");
-								} else if(country.equals("Czechia")) {
+								} /*else if(country.equals("Czechia")) {
 									filename.append("Czech Republic");
-								} else {
+								}*/ else {
 									filename.append(country);
 								}
 							} else if(section.equals("national_strategies")) {
@@ -792,9 +792,9 @@ public class BarometerUIController extends HttpServlet{
 								filename.append("National-Strategies-Mapping_");
 								if(country.equals("Germany")) {
 									filename.append("2017_Germany");
-								} else if(country.equals("Czechia")) {
+								} /*else if(country.equals("Czechia")) {
 									filename.append("Czech Republic");
-								} else {
+								} */else {
 									filename.append(country);
 								}
 							} else if(section.equals("social_dialogue")) {
