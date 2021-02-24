@@ -478,131 +478,131 @@
     <fields>
       <field>
         <source_value>1. Satisfaction with working conditions</source_value>
-        <target_value>HEALTH_PERCEPTION</target_value>
+        <target_value>Health perception of the workers</target_value>
       </field>
       <field>
         <source_value>2. Health affected by work</source_value>
-        <target_value>HEALTH_PERCEPTION</target_value>
+        <target_value>Health perception of the workers</target_value>
       </field>
       <field>
         <source_value>3. More than 15 days of absence</source_value>
-        <target_value>HEALTH_PERCEPTION</target_value>
+        <target_value>Health perception of the workers</target_value>
       </field>
       <field>
         <source_value>4. Sick but at work</source_value>
-        <target_value>HEALTH_PERCEPTION</target_value>
+        <target_value>Health perception of the workers</target_value>
       </field>
       <field>
         <source_value>5. Likelihood of staying in current job until 60 years old</source_value>
-        <target_value>HEALTH_PERCEPTION</target_value>
+        <target_value>Health perception of the workers</target_value>
       </field>
       <field>
         <source_value>6. Use of personal protective equipment</source_value>
-        <target_value>OSH_CULTURE_HEALTH_AWARENESS</target_value>
+        <target_value>OSH culture and health awareness</target_value>
       </field>
       <field>
         <source_value>7. Information about risks</source_value>
-        <target_value>OSH_CULTURE_HEALTH_AWARENESS</target_value>
+        <target_value>OSH culture and health awareness</target_value>
       </field>
       <field>
         <source_value>8. Job satisfaction</source_value>
-        <target_value>OVERALL_OPINION</target_value>
+        <target_value>Working conditions - Overall opinion</target_value>
       </field>
       <field>
         <source_value>9. Health at risk</source_value>
-        <target_value>OVERALL_OPINION</target_value>
+        <target_value>Working conditions - Overall opinion</target_value>
       </field>
       <field>
         <source_value>10. Time pressure</source_value>
-        <target_value>MENTAL_RISKS</target_value>
+        <target_value>Working conditions - Mental risk</target_value>
       </field>
       <field>
         <source_value>11. Poor communication</source_value>
-        <target_value>MENTAL_RISKS</target_value>
+        <target_value>Working conditions - Mental risk</target_value>
       </field>
       <field>
         <source_value>12. Influence</source_value>
-        <target_value>MENTAL_RISKS</target_value>
+        <target_value>Working conditions - Mental risk</target_value>
       </field>
       <field>
         <source_value>13. Fear of job loss</source_value>
-        <target_value>MENTAL_RISKS</target_value>
+        <target_value>Working conditions - Mental risk</target_value>
       </field>
       <field>
         <source_value>14. Difficult clients</source_value>
-        <target_value>MENTAL_RISKS</target_value>
+        <target_value>Working conditions - Mental risk</target_value>
       </field>
       <field>
         <source_value>15. Working hours</source_value>
-        <target_value>MENTAL_RISKS</target_value>
+        <target_value>Working conditions - Mental risk</target_value>
       </field>
       <field>
         <source_value>16. Discrimination</source_value>
-        <target_value>MENTAL_RISKS</target_value>
+        <target_value>Working conditions - Mental risk</target_value>
       </field>
       <field>
         <source_value>17. a&#x29; Vibrations</source_value>
-        <target_value>PHYSICAL_RISKS</target_value>
+        <target_value>Working conditions - Physical risk</target_value>
       </field>
       <field>
         <source_value>17. b&#x29; Loud noise</source_value>
-        <target_value>PHYSICAL_RISKS</target_value>
+        <target_value>Working conditions - Physical risk</target_value>
       </field>
       <field>
         <source_value>17. c&#x29; High temperatures</source_value>
-        <target_value>PHYSICAL_RISKS</target_value>
+        <target_value>Working conditions - Physical risk</target_value>
       </field>
       <field>
         <source_value>17. d&#x29; Low temperatures</source_value>
-        <target_value>PHYSICAL_RISKS</target_value>
+        <target_value>Working conditions - Physical risk</target_value>
       </field>
       <field>
         <source_value>18. a&#x29; Smoke, powder or dust</source_value>
-        <target_value>PHYSICAL_RISKS</target_value>
+        <target_value>Working conditions - Physical risk</target_value>
       </field>
       <field>
         <source_value>18. b&#x29; Vapours</source_value>
-        <target_value>PHYSICAL_RISKS</target_value>
+        <target_value>Working conditions - Physical risk</target_value>
       </field>
       <field>
         <source_value>18. c&#x29; Chemical products</source_value>
-        <target_value>PHYSICAL_RISKS</target_value>
+        <target_value>Working conditions - Physical risk</target_value>
       </field>
       <field>
         <source_value>18. d&#x29; Infectious materials</source_value>
-        <target_value>PHYSICAL_RISKS</target_value>
+        <target_value>Working conditions - Physical risk</target_value>
       </field>
       <field>
         <source_value>19. a&#x29; Tiring or painful positions</source_value>
-        <target_value>PHYSICAL_RISKS</target_value>
+        <target_value>Working conditions - Physical risk</target_value>
       </field>
       <field>
         <source_value>19. b&#x29; Lifting or moving people</source_value>
-        <target_value>PHYSICAL_RISKS</target_value>
+        <target_value>Working conditions - Physical risk</target_value>
       </field>
       <field>
         <source_value>19. c&#x29; Carrying ot moving heavy loads</source_value>
-        <target_value>PHYSICAL_RISKS</target_value>
+        <target_value>Working conditions - Physical risk</target_value>
       </field>
       <field>
         <source_value>19. d&#x29; Prolonged sitting</source_value>
-        <target_value>PHYSICAL_RISKS</target_value>
+        <target_value>Working conditions - Physical risk</target_value>
       </field>
       <field>
         <source_value>19. e&#x29; Repetitive hand or arm movements</source_value>
-        <target_value>PHYSICAL_RISKS</target_value>
+        <target_value>Working conditions - Physical risk</target_value>
       </field>
       <field>
         <source_value>20. a&#x29; Trade union</source_value>
-        <target_value>WORKER_INVOLVEMENT</target_value>
+        <target_value>Worker involvement</target_value>
       </field>
       <field>
         <source_value>20. b&#x29; Health and safety committee</source_value>
-        <target_value>WORKER_INVOLVEMENT</target_value>
+        <target_value>Worker involvement</target_value>
       </field>
       <field>
         <source_value>20. c&#x29; Health and safety discussed</source_value>
-        <target_value>WORKER_INVOLVEMENT</target_value>
+        <target_value>Worker involvement</target_value>
       </field>
     </fields>
      <cluster_schema/>

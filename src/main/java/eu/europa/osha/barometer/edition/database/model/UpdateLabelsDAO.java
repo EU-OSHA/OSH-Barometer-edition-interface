@@ -36,7 +36,7 @@ public class UpdateLabelsDAO {
     	return list;
     }
     
-    public ArrayList<HashMap<String,String>> getLiteralsBySectionAndChart(String section_id, String chart_id){
+    public ArrayList<HashMap<String,String>> getLiteralsBySectionAndChart(String section_id, String chart_id) {
     	ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
     	try {
     		//String query = "database.select.getSectionList";
@@ -55,6 +55,10 @@ public class UpdateLabelsDAO {
     		}
     		query.append(" AND t.language = 'EN' ");
     		query.append("AND t.literal_id = l.id ");
+    		query.append("AND l.type NOT IN('REG_SECONDARY', 'REG_DEROGATIONS', 'REG_TRANSITIONAL', 'REG_RA', 'REG_EXEMPTIONS', 'REG_SMES', ");
+    		query.append("'STRATEGY_BASIC INFO', 'STRATEGY_BACKGROUND', 'STRATEGY_CHARACTERISTICS', 'STRATEGY_DETAILS', ");
+    		query.append("'STRATEGY_ACTORS', 'STRATEGY_RESOURCES', 'STRATEGY_EVALUATION', 'STRATEGY_EU', 'MATRIX_OB', 'MATRIX_DET', ");
+    		query.append("'STRATEGY_RESOURCES & STRATEGY_EVALUATION', 'METHODOLOGY_TEXT') ");
     		String[] queryParams = {};
     		ArrayList<HashMap<String, String>> result = JDBCDataSourceOperations.launchPreparedQuery(query.toString());
     		//ArrayList<HashMap<String, String>> result = JDBCDataSourceOperations.launchSelect(query, queryParams, url);
@@ -63,7 +67,7 @@ public class UpdateLabelsDAO {
                 list = (ArrayList<HashMap<String, String>>) result.clone();
             }
 
-    	}catch(Exception e) {
+    	} catch(Exception e) {
     		e.printStackTrace();
     	}
     	return list;

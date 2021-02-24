@@ -92,7 +92,7 @@ public class BarometerUIController extends HttpServlet{
 	private static String FATAL_WORK_ACCIDENTS_TEMPLATE = "EU-OSHA_OIE_Eurostat_Fatal_Work_accidents";
 	private static String GENERAL_TEMPLATE = "EU-OSHA_OIE_Eurostat_Direct_value_indicators";
 	
-	private static String QUANTITATIVE_EUROSTAT_DEFAULT_YEAR_FROM = "2010";
+	private static String QUANTITATIVE_EUROSTAT_DEFAULT_YEAR_FROM = "2010-01-01";
 	
 	private static String DEFAULT_SECTION_UPDATE_LABELS = "37";
 	private static String DEFAULT_CHART_UPDATE_LABELS = "0";
@@ -136,16 +136,19 @@ public class BarometerUIController extends HttpServlet{
 				if (logout != null) {
 					LOGGER.info("Logging out from OSH Barometer Edition Tool.");
 					//LDAP LOGOUT
-					User user = (User) session.getAttribute("user");
-					CallbackHandler callbackHandler = new PassiveCallbackHandler(user.getUsername(), user.getPassword());
-					Subject subject = null;
 					try {
+						User user = (User) session.getAttribute("user");
+						CallbackHandler callbackHandler = new PassiveCallbackHandler(user.getUsername(), user.getPassword());
+						Subject subject = null;
+					
 						LoginContext lc = new LoginContext(ConfigurationImpl.LDAP_CONFIGURATION_NAME, 
 								subject, callbackHandler, new ConfigurationImpl());
 						lc.logout();
 					} catch(Exception e) {
 						LOGGER.error("AN ERROR HAS OCCURRED WHILE LOGGING OUT.");
 						e.printStackTrace();
+					} finally {
+						nextURL = "/jsp/login.jsp";
 					}
 
 					/* TEMPORAL LOGOUT */
@@ -177,11 +180,12 @@ public class BarometerUIController extends HttpServlet{
 					} else {
 						//LDAP LOGIN
 						//Connect to LDAP to check if user/mail and password exist
-						CallbackHandler callbackHandler = new PassiveCallbackHandler(username, password);
-						Subject subject = null;
-
-						String user = null;
 						try {
+							CallbackHandler callbackHandler = new PassiveCallbackHandler(username, password);
+							Subject subject = null;
+	
+							String user = null;
+						
 							LoginContext lc = new LoginContext(ConfigurationImpl.LDAP_CONFIGURATION_NAME, 
 									subject, callbackHandler, new ConfigurationImpl());
 							lc.login();
@@ -197,6 +201,8 @@ public class BarometerUIController extends HttpServlet{
 						}catch(Exception e) {
 							LOGGER.error("ERROR WHILE AUTHENTICATING");
 							e.printStackTrace();
+						} finally{
+							nextURL = "/jsp/login.jsp";
 						}
 					}
 					
@@ -339,6 +345,7 @@ public class BarometerUIController extends HttpServlet{
 							        }else {
 							        	LOGGER.info("Excel file not found");
 							        }
+							        jobDirectory = configurationData.getString("directory.etl")+configurationData.getString("directory.etl.job.literals");
 							        command = "sh "+scriptDirectory+"literals.sh " + jobDirectory + " " + configurationData.getString("directory.etl")
 									+ " " + spoonLogsDirectory;
 							        //command = "sh "+scriptDirectory+"literals.sh";
@@ -402,6 +409,8 @@ public class BarometerUIController extends HttpServlet{
 				errorMessage = null;
 				confirmationMessage = null;
 				String yearFrom = null;
+				String yearTo = null;
+				String oneYear = null;
 				String scriptDirectory = null;
 				String outputDirectory = null;
 				String inputDirectory = null;
@@ -417,8 +426,6 @@ public class BarometerUIController extends HttpServlet{
 				if(submit != null) {
 					String indicatorEurostat = req.getParameter("indicatorEurostat");
 					
-					String yearTo = null;
-					String oneYear = null;
 					Part file = req.getPart("quantitativeEurostatFile");
 					String fileName = Paths.get(file.getSubmittedFileName()).getFileName().toString();
 					String eurostatDataFileName = configurationData.getString("file.eurostat.name");
@@ -772,9 +779,9 @@ public class BarometerUIController extends HttpServlet{
 								filename.append("OSH authorities - ");
 								if(country.equals("European Union")) {
 									filename.append("EU28");
-								} else if(country.equals("Czechia")) {
+								} /*else if(country.equals("Czechia")) {
 									filename.append("Czech Republic");
-								} else {
+								}*/ else {
 									filename.append(country);
 								}
 							} else if(section.equals("national_strategies")) {
@@ -785,9 +792,9 @@ public class BarometerUIController extends HttpServlet{
 								filename.append("National-Strategies-Mapping_");
 								if(country.equals("Germany")) {
 									filename.append("2017_Germany");
-								} else if(country.equals("Czechia")) {
+								} /*else if(country.equals("Czechia")) {
 									filename.append("Czech Republic");
-								} else {
+								} */else {
 									filename.append(country);
 								}
 							} else if(section.equals("social_dialogue")) {
@@ -919,7 +926,7 @@ public class BarometerUIController extends HttpServlet{
 		File draftLiteralsFileInput = new File(jsonDirectory+"Draft_Literals.json");
 		LOGGER.info("draftLiteralsFileInput: "+draftLiteralsFileInput);
 		File draftLiteralsFileOutput = new File(literalsDirectory+"Literals.json");
-		LOGGER.info("draftLiteralsFileInput: "+draftLiteralsFileInput);
+		LOGGER.info("draftLiteralsFileOutput: "+draftLiteralsFileOutput);
 //		File publishedLiteralsFileInput = new File(jsonDirectory+"Published_Literals.json");
 //		LOGGER.info("publishedLiteralsFileInput: "+publishedLiteralsFileInput);
 //		File publishedLiteralsFileOutput = new File(literalsDirectory+"Published_Literals.json");

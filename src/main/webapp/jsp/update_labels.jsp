@@ -57,11 +57,18 @@
 					</tr>
 				</thead>
 				<tbody id="literalListBody">	
-					<% int index = 0; %>			
-					<% for (HashMap<String,String> data : literalList) { %>
+					<% int index = 0;
+					boolean updated = false;%>			
+					<% for (HashMap<String,String> data : literalList) { 
+						updated = false; %>
+					<% if(data.get("escaped_updated_text") != null){
+						if(!data.get("escaped_updated_text").equals(data.get("escaped_published_text"))){
+							updated = true;
+						}
+					}%>
 					<tr>
 						<td>
-							<input id="check-<%=index%>" type="checkbox" onchange="checkTextChanges()" name="publishCheck_<%=index%>" >
+							<input <%=updated ? "" : "disabled" %> id="check-<%=index%>" type="checkbox" onchange="checkTextChanges()" name="publishCheck_<%=index%>" >
 							<input type="hidden" value="<%=data.get("translation_id")%>" name="translation_id_<%=index %>" id="translation_id_<%=index %>">
 							<input type="hidden" value="<%=data.get("updated_text")%>" name="updated_text_<%=index %>">
 							<input type="hidden" value="<%=sectionSelected%>" name="section_<%=index %>">

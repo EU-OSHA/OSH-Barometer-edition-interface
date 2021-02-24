@@ -127,6 +127,7 @@
 								<configuration>
 									<outputDirectory>${project.basedir}/src/main/resources/packages</outputDirectory>
 									<classifier>${envClassifier}</classifier>
+									<packagingExcludes>WEB-INF/classes/packages/*</packagingExcludes>
 								</configuration>
 								<!--configuration> <classifier>testnaniero</classifier> </configuration> -->
 							</execution>
@@ -209,6 +210,8 @@
 								<configuration>
 									<outputDirectory>${project.basedir}/src/main/resources/packages</outputDirectory>
 									<classifier>${envClassifier}</classifier>
+									<!-- <warSourceExcludes>src/main/resources/packages/*</warSourceExcludes>-->
+									<packagingExcludes>WEB-INF/classes/packages/*</packagingExcludes>
 								</configuration>
 								<!--configuration> <classifier>testnaniero</classifier> </configuration> -->
 							</execution>
@@ -290,6 +293,7 @@
 								<configuration>
 									<outputDirectory>${project.basedir}/src/main/resources/packages</outputDirectory>
 									<classifier>${envClassifier}</classifier>
+									<packagingExcludes>WEB-INF/classes/packages/*</packagingExcludes>
 								</configuration>
 								<!--configuration> <classifier>testnaniero</classifier> </configuration> -->
 							</execution>

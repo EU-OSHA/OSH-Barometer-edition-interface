@@ -37,7 +37,7 @@
 			<!-- <button class="upload">Upload</button> -->
 			<!-- <button>Download Excel template</button> -->
 			<!-- <a class="href-link" href="files/EU-OSHA_OSH BAROMETER_EUROFOUND Indicator List_YYYYMMDD.xlsx">Download Excel templates</a> -->
-			<span class="with-tooltip"><a class="href-link" href="files/EU-OSHA_OSH BAROMETER_EUROFOUND Indicator List_YYYYMMDD.xlsx">Download Excel templates</a><span class="tootip-box">Download the Eurofound Excel template</span></span>
+			<span class="with-tooltip"><a class="href-link" href="files/EU-OSHA_OSH BAROMETER_EUROFOUND Indicator List_YYYYMMDD.xlsx">Download Excel template</a><span class="tootip-box">Download the Eurofound Excel template</span></span>
 			<div class="clear-content"></div>
 			<div class="conten-button">
 				<button name="clearButton" value="Clear" >Clear</button>
