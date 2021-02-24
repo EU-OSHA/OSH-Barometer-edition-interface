@@ -432,7 +432,7 @@
       <filename>&#x24;&#x7b;Internal.Job.Filename.Directory&#x7d;&#x2f;resources&#x2f;output&#x2f;log.txt</filename>
       <createParentFolder>N</createParentFolder>
       <appendFile>Y</appendFile>
-      <content>SUCCESS - The data load finiched successfully</content>
+      <content>SUCCESS - The data load finished successfully</content>
       <encoding/>
       <parallel>N</parallel>
       <draw>Y</draw>
