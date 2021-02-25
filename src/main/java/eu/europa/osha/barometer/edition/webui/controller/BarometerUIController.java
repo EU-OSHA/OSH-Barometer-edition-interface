@@ -40,6 +40,7 @@ import com.sun.security.auth.UserPrincipal;
 
 import eu.europa.osha.barometer.edition.webui.bean.User;
 import eu.europa.osha.barometer.edition.webui.business.CountryReportBusiness;
+import eu.europa.osha.barometer.edition.webui.business.MethodologyBusiness;
 import eu.europa.osha.barometer.edition.webui.business.QualitativeDataBusiness;
 import eu.europa.osha.barometer.edition.webui.business.QualitativeMSDataBusiness;
 import eu.europa.osha.barometer.edition.webui.business.QuantitativeDataBusiness;
@@ -97,6 +98,9 @@ public class BarometerUIController extends HttpServlet{
 	private static String QUALITATIVE_MS_DEFAULT_COUNTRIES = "AT";
 	private static String QUALITATIVE_MS_DEFAULT_INSTITUTION_TYPE = "osh_authority";
 	private static String QUALITATIVE_MS_DEFAULT_PAGE = "MATRIX";
+	
+	private static String METHODOLOGY_DEFAULT_SECTION = "38";
+	private static String METHODOLOGY_DEFAULT_INDICATOR = "27";
 
 	/**
 	 * The main method of the controller in charge of the redirections. Use a "service" method, so it can handle both
@@ -853,7 +857,6 @@ public class BarometerUIController extends HttpServlet{
 			} else if(page.equals("qualitative_data_member_states")) {
 				LOGGER.info("Arriving to Qualitative Form for Member States.");
 				nextURL = "/jsp/qualitative_data_member_states.jsp";
-				//TODO functionality of qualitative for member states
 				section = req.getParameter("section") != null ? req.getParameter("section") : QUALITATIVE_MS_DEFAULT_SECTION;
 				country = req.getParameter("country") != null ? req.getParameter("country") : QUALITATIVE_MS_DEFAULT_COUNTRIES;
 				String institution = req.getParameter("institution") != null ? req.getParameter("institution") : QUALITATIVE_MS_DEFAULT_INSTITUTION_TYPE;
@@ -872,12 +875,11 @@ public class BarometerUIController extends HttpServlet{
 							errorMessage = "Updated text could not be saved";
 						}
 					}else if(submit.equals("undoUpdate")) {
-						textUpdate = QualitativeMSDataBusiness.updateDraftText(updatedTextEditor, translation_id);						
+						textUpdate = QualitativeMSDataBusiness.undoDraftText(translation_id);						
 						if(!textUpdate) {
 							errorMessage = "Updated text could not be deleted";
 						}
 					}else if(submit.equals("confirmUpdate")) {
-						textUpdate = QualitativeMSDataBusiness.updateDraftText(updatedTextEditor, translation_id);
 						int literalListSize = 0;
 						if(totalRows != null) {
 							literalListSize = Integer.parseInt(totalRows);
@@ -891,7 +893,7 @@ public class BarometerUIController extends HttpServlet{
 								country = req.getParameter("country_"+i);
 								institution = req.getParameter("institution_"+i);
 								
-								boolean updatedLiteral = UpdateLabelsBusiness.publishLiteral(translation_id, updated_text);
+								boolean updatedLiteral = QualitativeMSDataBusiness.publishLiteral(translation_id, updated_text);
 								LOGGER.info("Literal with id: "+translation_id+" updated in database: "+updatedLiteral);
 							}
 						}
@@ -943,9 +945,93 @@ public class BarometerUIController extends HttpServlet{
 				req.setAttribute("sectionSelected", section);
 				req.setAttribute("countrySelected", country);
 				req.setAttribute("institutionSelected", institution);
-			} else if (page.equals("methodology_data")) {
+			} else if (page.equals("methodology")) {
 				LOGGER.info("Arriving to Methodology Data Page.");
 				//TODO functionality for page methodology_data
+				nextURL = "/jsp/methodology.jsp";
+				section = req.getParameter("section") != null ? req.getParameter("section") : METHODOLOGY_DEFAULT_SECTION;
+				indicator = req.getParameter("indicator") != null ? req.getParameter("indicator") : METHODOLOGY_DEFAULT_INDICATOR;
+				translation_id = req.getParameter("translation_id");
+				submit = req.getParameter("formSent");
+				totalRows = req.getParameter("literalListSize");
+				String updatedTextEditor = req.getParameter("updatedTextEditor");
+				
+				ArrayList<HashMap<String,String>> sectionList = null;
+				ArrayList<HashMap<String,String>> indicatorList = null;
+				ArrayList<HashMap<String,String>> literalList = null;
+				
+				if(submit != null) {
+					if(submit.equals("saveDraft")) {
+						textUpdate = MethodologyBusiness.updateDraftText(updatedTextEditor, translation_id);
+						if(!textUpdate) {
+							errorMessage = "Updated text could not be saved";
+						}
+					}else if(submit.equals("undoUpdate")) {
+						textUpdate = MethodologyBusiness.undoDraftText(translation_id);						
+						if(!textUpdate) {
+							errorMessage = "Updated text could not be deleted";
+						}
+					}else if(submit.equals("confirmUpdate")) {
+						int literalListSize = 0;
+						if(totalRows != null) {
+							literalListSize = Integer.parseInt(totalRows);
+						}
+						for(int i=0; i<literalListSize; i++) {
+							checked = req.getParameter("publishCheck_"+i);
+							if(checked != null) {
+								translation_id = req.getParameter("translation_id_"+i);
+								updated_text = req.getParameter("updated_text_"+i);
+								section = req.getParameter("section_"+i);
+								indicator = req.getParameter("indicator_"+i);
+								
+								boolean updatedLiteral = MethodologyBusiness.publishLiteral(translation_id, updated_text);
+								LOGGER.info("Literal with id: "+translation_id+" updated in database: "+updatedLiteral);
+							}
+						}
+					}
+					
+					try {
+						String jobDirectory = configurationData.getString("directory.etl")+configurationData.getString("directory.etl.job.literals");
+						LOGGER.info("jobDirectory: "+jobDirectory);
+						String spoonLogsDirectory = configurationData.getString("directory.etl")+configurationData.getString("directory.etl.logs");
+						LOGGER.info("spoonLogsDirectory: "+spoonLogsDirectory);
+						String scriptDirectory = configurationData.getString("directory.etl")+configurationData.getString("directory.script");
+						LOGGER.info("scriptDirectory: "+scriptDirectory);
+						String command = "sh "+scriptDirectory+"literals.sh " + jobDirectory + " " + configurationData.getString("directory.etl")
+							+ " " + spoonLogsDirectory;
+						LOGGER.info("LINUX: command to execute: "+command);
+						Process p = Runtime.getRuntime().exec(command);
+						LOGGER.info("Waiting for script to end...");
+						p.waitFor();
+						LOGGER.info("Script process ended.");
+						
+						try {
+							copyFilesToDVT();
+						} catch (Exception e) {
+							LOGGER.error("ERROR WHILE MOVING FILES TO DVT. "+e.getMessage());
+							e.printStackTrace();
+							errorMessage = "An error has occurred while processing literals";
+						}
+							
+					} catch (Exception e) {
+						LOGGER.error("An error has occurred while creating json file for literals.");
+						LOGGER.error("Error: "+e.getMessage());
+						e.printStackTrace();
+						errorMessage = "An error has occurred while processing literals";
+					}
+				}
+				
+				sendAlertsToUser(req, confirmationMessage, errorMessage);
+				
+				sectionList = MethodologyBusiness.getSectionsMethodology();
+				indicatorList = MethodologyBusiness.getIndicatorsBySection(section);
+				literalList = MethodologyBusiness.getLiteralsMethodology(section, indicator);
+				
+				req.setAttribute("sectionList", sectionList);
+				req.setAttribute("sectionSelected", section);
+				req.setAttribute("indicatorList", indicatorList);
+				req.setAttribute("indicatorSelected", indicator);
+				req.setAttribute("literalList", literalList);
 			} else if (page.equals("update_datasets")) {
 				LOGGER.info("Arriving to Update year / period of the DVT's data Form.");
 				nextURL = "/jsp/update_datasets.jsp";
@@ -1050,12 +1136,10 @@ public class BarometerUIController extends HttpServlet{
 //	    LOGGER.info("Published Literals File ended reading. Closing streams");
 	}
 	
-	private void editLiterals() {
-		
-	}
-	
 	private void sendAlertsToUser(HttpServletRequest req, String confirmation, String error) {
+		
 		if(error != null) {
+			confirmation = null;
 			req.setAttribute("errorMessage", error);
 		}					
 		if(confirmation != null) {

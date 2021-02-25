@@ -287,6 +287,13 @@ $(document).ready(function(){
 			institutionSelected = institution.value;
 		}
 		
+		var indicator = document.getElementById("indicatorSelect");
+		var indicatorSelected = 0;
+		
+		if(indicator != null){
+			indicatorSelected = indicator.value;
+		}
+		
 		$.get({
 			url: 'tableload',
 			data: {
@@ -294,6 +301,7 @@ $(document).ready(function(){
 				chart: chartSelected,
 				country : countrySelected,
 				institution: institutionSelected,
+				indicator: indicatorSelected,
 				//get: 'literals'
 				get: page
 			},
@@ -315,9 +323,19 @@ $(document).ready(function(){
 					}else{
 						new_tbody = new_tbody.concat('disabled');
 					}
-					new_tbody = new_tbody.concat(' id="check-'+index+'" type="checkbox" onchange="checkTextChanges()" name="publishCheck">');
+					new_tbody = new_tbody.concat(' id="check-'+index+'" type="checkbox" onchange="checkTextChanges()" name="publishCheck_'+index+'">');
 					new_tbody = new_tbody.concat('<input type="hidden" value="'+literal.translation_id+'" name="translation_id_'+index+'" id="translation_id_'+index+'">');
 					new_tbody = new_tbody.concat('<input type="hidden" value="'+literal.updated_text+'" name="updated_text_'+index+'">');
+					new_tbody = new_tbody.concat('<input type="hidden" value="'+sectionSelected+'" name="section_'+index+'">');
+					if(page == 'literals'){
+						new_tbody = new_tbody.concat('<input type="hidden" value="'+chartSelected+'" name="chart_'+index+'">');
+					}else if(page == 'qualitativeMS'){
+						new_tbody = new_tbody.concat('<input type="hidden" value="'+countrySelected+'" name="country_'+index+'">');
+						new_tbody = new_tbody.concat('<input type="hidden" value="'+institutionSelected+'" name="institution_'+index+'">');
+					}else{
+						new_tbody = new_tbody.concat('<input type="hidden" value="'+indicatorSelected+'" name="indicator_'+index+'">');
+					}
+					
 					new_tbody = new_tbody.concat('<input type="hidden" value="'+literal.escaped_updated_text+'" name="escaped_updated_text_'+index+'" id="escaped_updated_text-'+index+'">');
 					new_tbody = new_tbody.concat('<input type="hidden" value="'+literal.escaped_published_text+'" name="escaped_published_text_'+index+'" id="escaped_published_text-'+index+'">');
 					new_tbody = new_tbody.concat('</td>');
@@ -355,7 +373,7 @@ $(document).ready(function(){
 		});
 	}
 	
-	if($('div#update-labels').length > 0 || $('div#qualitative-member-states').length > 0){
+	if($('div#update-labels').length > 0 || $('div#qualitative-member-states').length > 0 || $('div#methodology').length > 0){
 		CKEDITOR.instances.updatedTextEditor.on('change', function() {
 			var text = CKEDITOR.instances.updatedTextEditor.getData()
 			if(text != null && text != "" && text !=$('#publishedText')[0].textContent){
@@ -404,6 +422,14 @@ $(document).ready(function(){
 			institutionSelected = institution.value;
 		}
 		
+		var indicator = document.getElementById("indicatorSelect");
+		var indicatorSelected = 0;
+		
+		if(indicator != null){
+			indicatorSelected = indicator.value;
+		}
+		
+		
 		var translation_id = $("#translation_id_"+index).val();
 		
 		var published_text = $("#span_published_text_"+index)[0].innerHTML;
@@ -436,6 +462,9 @@ $(document).ready(function(){
 		if(institution != null){
 			$("#edit-popup input#popUpInstitution").val(institutionSelected);
 		}
+		if(indicator != null){
+			$("#edit-popup input#popUpIndicator").val(indicatorSelected);
+		}
 		$("#edit-popup p#publishedText").html(published_text);
 		
 		$("#edit-popup").css("display","block");
@@ -456,6 +485,10 @@ $(document).ready(function(){
 		var chart = document.getElementById("chartSelect");
 		var chartSelected = 0;
 		
+		if(chart != null){
+			chartSelected = chart.value;
+		}
+		
 		var country = document.getElementById("countrySelect");
 		var countrySelected = 0;
 		
@@ -470,8 +503,11 @@ $(document).ready(function(){
 			institutionSelected = institution.value;
 		}
 		
-		if(chart != null){
-			chartSelected = chart.value;
+		var indicator = document.getElementById("indicatorSelect");
+		var indicatorSelected = 0;
+		
+		if(indicator != null){
+			indicatorSelected = indicator.value;
 		}
 		
 		var translation_id = $("#translation_id_"+index).val();
@@ -499,6 +535,9 @@ $(document).ready(function(){
 		}
 		if(institution != null){
 			$("#undo-popup input#popUpUndoInstitution").val(institutionSelected);
+		}
+		if(indicator != null){
+			$("#undo-popup input#popUpUndoIndicator").val(indicatorSelected);
 		}
 		
 		$("#undo-popup").css("display","block");
@@ -617,6 +656,39 @@ $(document).ready(function(){
 		
 		loadLiteralsTable('qualitativeMS');
 	}
+	
+	loadIndicatorsBySection = function() {
+		console.log("Enters in loadIndicatorsBySection");
+		var sectionSelected = document.getElementById("sectionSelect");
+		var valueSelected = sectionSelected.value;
+		
+		$.get({
+			url: 'indicatorload',
+			data: {
+				section: valueSelected
+			},
+			success: function(indicatorResponse) {
+		        var indicatorList = JSON.parse(indicatorResponse);
+		        var new_tbody = "";
+		        $('#indicatorSelect').empty();
+				var index = 0;
+		        indicatorList.forEach(function(indicator){
+					new_tbody = new_tbody.concat('<option value="'+indicator.indicator_id+'" ');
+					if(index == 0){
+						new_tbody = new_tbody.concat(' selected');
+					}
+					new_tbody = new_tbody.concat(' >');
+					new_tbody = new_tbody.concat(indicator.indicator_name);
+					new_tbody = new_tbody.concat('</option>');
+					index++;
+		        });
+		        $('#indicatorSelect').html(new_tbody);
+			},
+			async: false
+		});
+		
+		loadLiteralsTable('methodology');
+	};
 });
 
 })(jQuery);

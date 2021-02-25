@@ -26,12 +26,12 @@ import eu.europa.osha.barometer.edition.webui.business.QualitativeDataBusiness;
 )
 public class ChartLoad extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-private static final Logger LOGGER = LogManager.getLogger(ChartLoad.class);
+	private static final Logger LOGGER = LogManager.getLogger(ChartLoad.class);
 	
 	public void service(HttpServletRequest req, HttpServletResponse res)
             throws ServletException, IOException
     {
-		LOGGER.info("App flow arrives to CountryDisplay Ajax service");
+		LOGGER.info("App flow arrives to ChartLoad Ajax service");
 		Gson g = new Gson();
         String returningData = "";
         String section = req.getParameter("section");

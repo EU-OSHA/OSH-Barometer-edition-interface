@@ -16,6 +16,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 
+import eu.europa.osha.barometer.edition.webui.business.MethodologyBusiness;
 import eu.europa.osha.barometer.edition.webui.business.QualitativeDataBusiness;
 import eu.europa.osha.barometer.edition.webui.business.QualitativeMSDataBusiness;
 import eu.europa.osha.barometer.edition.webui.business.UpdateLabelsBusiness;
@@ -38,10 +39,13 @@ public class TableLoad extends HttpServlet {
         String returningData = "";
 		String section = req.getParameter("section");
 		String chart = req.getParameter("chart");
-		String get = req.getParameter("get");
 		
 		String country = req.getParameter("country");
 		String institution = req.getParameter("institution");
+		
+		String indicator = req.getParameter("indicator");
+		
+		String get = req.getParameter("get");
 		
 		if(get.equals("charts")) {
 			ArrayList<HashMap<String,String>> chartsBySectionList = QualitativeDataBusiness.getChartsBySection(section);
@@ -69,6 +73,10 @@ public class TableLoad extends HttpServlet {
 				literalsList = QualitativeMSDataBusiness.getStrategiesPageDataByCountryAndInstitution(section, country);
 				LOGGER.info("literalsList for Strategies length: "+literalsList.size());
 			}
+			returningData = g.toJson(literalsList);
+		} else if(get.equals("methodology")) {
+			ArrayList<HashMap<String,String>> literalsList = MethodologyBusiness.getLiteralsMethodology(section, indicator);
+			LOGGER.info("literalsList for Methodology length: "+literalsList.size());
 			returningData = g.toJson(literalsList);
 		}
 		

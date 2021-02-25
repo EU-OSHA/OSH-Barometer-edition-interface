@@ -60,7 +60,7 @@
 			</select>
 		</div>
 		<div class="clear-content"></div>
-		<form action="user?page=qualitative_data_member_states" method="post">
+		<form id="labels-form" action="user?page=qualitative_data_member_states" method="post">
 			<% ArrayList<HashMap<String,String>> literalList = (ArrayList<HashMap<String,String>>) request.getAttribute("literalsList");%>
 			<input type="hidden" value="<%=literalList.size() %>" name="literalListSize">
 			<table class="literals columns-4">
@@ -90,7 +90,6 @@
 							<input type="hidden" value="<%=sectionSelected%>" name="section_<%=index %>">
 	                        <input type="hidden" value="<%=countrySelected%>" name="country_<%=index %>">
 	                        <input type="hidden" value="<%=institutionSelected%>" name="institution_<%=index %>">
-	                        <!-- <input type="hidden" value="" name="lastForm">-->
 	                        <input type="hidden" value="<%=data.get("escaped_updated_text")%>" name="escaped_updated_text_<%=index %>" id="escaped_updated_text-<%=index%>">
 	                        <input type="hidden" value="<%=data.get("escaped_published_text")%>" name="escaped_published_text_<%=index %>" id="escaped_published_text-<%=index%>">
 						</td>
