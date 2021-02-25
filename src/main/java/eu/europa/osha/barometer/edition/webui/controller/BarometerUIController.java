@@ -743,6 +743,7 @@ public class BarometerUIController extends HttpServlet{
 				
 				ArrayList<HashMap<String,String>> sectionList = UpdateLabelsBusiness.getSectionList();
 				ArrayList<HashMap<String,String>> chartList = QualitativeDataBusiness.getChartsBySection(section);
+				//ArrayList<HashMap<String,String>> chartList = UpdateLabelsBusiness.getChartsBySectionUpdateLabels(section);
 				ArrayList<HashMap<String,String>> literalList = UpdateLabelsBusiness.getLiteralsBySectionAndChart(section, chart);				
 				
 				req.setAttribute("sectionList", sectionList);
@@ -971,6 +972,7 @@ public class BarometerUIController extends HttpServlet{
 	
 	private void sendAlertsToUser(HttpServletRequest req, String confirmation, String error) {
 		if(error != null) {
+			confirmation = null;
 			req.setAttribute("errorMessage", error);
 		}					
 		if(confirmation != null) {

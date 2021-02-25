@@ -36,6 +36,23 @@ public class UpdateLabelsDAO {
     	return list;
     }
     
+    public ArrayList<HashMap<String,String>> getChartsBySectionUpdateLabels(String section){
+    	ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
+    	try {
+    		String query = "database.select.getChartsBySectionUpdateLabels";
+    		String[] queryParams = {section};
+    		ArrayList<HashMap<String, String>> result = JDBCDataSourceOperations.launchSelect(query, queryParams, url);
+    		if (result.size() > 0)
+            {
+                list = (ArrayList<HashMap<String, String>>) result.clone();
+            }
+
+    	}catch(Exception e) {
+    		e.printStackTrace();
+    	}
+    	return list;
+    }
+    
     public ArrayList<HashMap<String,String>> getLiteralsBySectionAndChart(String section_id, String chart_id) {
     	ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
     	try {
@@ -48,7 +65,7 @@ public class UpdateLabelsDAO {
     		query.append("WHERE l.section_id = ");
     		query.append(section_id);
     		if(chart_id.equals("0")) {
-    			query.append(" AND l.chart_id IS NULL ");
+    			//query.append(" AND l.chart_id IS NULL ");
     		} else {
     			query.append(" AND l.chart_id = ");
     			query.append(chart_id);

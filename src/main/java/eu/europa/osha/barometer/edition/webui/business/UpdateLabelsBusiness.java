@@ -20,6 +20,14 @@ public class UpdateLabelsBusiness {
 		return dataList;
 	}
 	
+	public static ArrayList<HashMap<String,String>> getChartsBySectionUpdateLabels(String section){
+		LOGGER.info("Accessing data DAO in order to get available sections for update labels");
+		UpdateLabelsDAO dataDAO = UpdateLabelsDAO.getInstance();
+		ArrayList<HashMap<String,String>> dataList = dataDAO.getChartsBySectionUpdateLabels(section);
+		LOGGER.info("Retrieved data from database. Data list length: "+dataList.size());
+		return dataList;
+	}
+	
 	public static ArrayList<HashMap<String,String>> getLiteralsBySectionAndChart(String section_id, String chart_id) {
 		LOGGER.info("Accessing data DAO in order to get available literals of the sections and charts");
 		UpdateLabelsDAO dataDAO = UpdateLabelsDAO.getInstance();

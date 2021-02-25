@@ -17,6 +17,7 @@ import org.apache.logging.log4j.Logger;
 import com.google.gson.Gson;
 
 import eu.europa.osha.barometer.edition.webui.business.QualitativeDataBusiness;
+import eu.europa.osha.barometer.edition.webui.business.UpdateLabelsBusiness;
 
 @WebServlet
 (
@@ -38,6 +39,7 @@ private static final Logger LOGGER = LogManager.getLogger(ChartLoad.class);
         ArrayList<HashMap<String,String>> chartList = null;
 
         chartList = QualitativeDataBusiness.getChartsBySection(section);
+        //chartList = UpdateLabelsBusiness.getChartsBySectionUpdateLabels(section);
         LOGGER.info("chartList length: "+chartList.size());
         
         req.setAttribute("sectionSelected", section);
