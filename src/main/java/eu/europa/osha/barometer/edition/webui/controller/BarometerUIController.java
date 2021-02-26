@@ -684,7 +684,8 @@ public class BarometerUIController extends HttpServlet{
 							checked = req.getParameter("publishCheck_"+i);
 							if(checked != null) {
 								translation_id = req.getParameter("translation_id_"+i);
-								updated_text = req.getParameter("updated_text_"+i);
+								//updated_text = req.getParameter("updated_text_"+i);
+								updated_text = req.getParameter("escaped_updated_text_"+i);
 								section = req.getParameter("section_"+i);
 								chart = req.getParameter("chart_"+i);
 								
@@ -742,8 +743,8 @@ public class BarometerUIController extends HttpServlet{
 				sendAlertsToUser(req, confirmationMessage, errorMessage);
 				
 				ArrayList<HashMap<String,String>> sectionList = UpdateLabelsBusiness.getSectionList();
-				ArrayList<HashMap<String,String>> chartList = QualitativeDataBusiness.getChartsBySection(section);
-				//ArrayList<HashMap<String,String>> chartList = UpdateLabelsBusiness.getChartsBySectionUpdateLabels(section);
+				//ArrayList<HashMap<String,String>> chartList = QualitativeDataBusiness.getChartsBySection(section);
+				ArrayList<HashMap<String,String>> chartList = UpdateLabelsBusiness.getChartsBySectionUpdateLabels(section);
 				ArrayList<HashMap<String,String>> literalList = UpdateLabelsBusiness.getLiteralsBySectionAndChart(section, chart);				
 				
 				req.setAttribute("sectionList", sectionList);

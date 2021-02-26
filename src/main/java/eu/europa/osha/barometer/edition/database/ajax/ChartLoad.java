@@ -38,8 +38,8 @@ private static final Logger LOGGER = LogManager.getLogger(ChartLoad.class);
         String section = req.getParameter("section");
         ArrayList<HashMap<String,String>> chartList = null;
 
-        chartList = QualitativeDataBusiness.getChartsBySection(section);
-        //chartList = UpdateLabelsBusiness.getChartsBySectionUpdateLabels(section);
+        //chartList = QualitativeDataBusiness.getChartsBySection(section);
+        chartList = UpdateLabelsBusiness.getChartsBySectionUpdateLabels(section);
         LOGGER.info("chartList length: "+chartList.size());
         
         req.setAttribute("sectionSelected", section);

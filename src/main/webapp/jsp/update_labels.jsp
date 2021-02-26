@@ -70,7 +70,7 @@
 						<td>
 							<input <%=updated ? "" : "disabled" %> id="check-<%=index%>" type="checkbox" onchange="checkTextChanges()" name="publishCheck_<%=index%>" >
 							<input type="hidden" value="<%=data.get("translation_id")%>" name="translation_id_<%=index %>" id="translation_id_<%=index %>">
-							<input type="hidden" value="<%=data.get("updated_text")%>" name="updated_text_<%=index %>">
+							<!-- <input type="hidden" value="<%=data.get("updated_text")%>" name="updated_text_<%=index %>">-->
 							<input type="hidden" value="<%=sectionSelected%>" name="section_<%=index %>">
 	                        <input type="hidden" value="<%=chartSelected%>" name="chart_<%=index %>">
 	                        <!-- <input type="hidden" value="" name="lastForm">-->
