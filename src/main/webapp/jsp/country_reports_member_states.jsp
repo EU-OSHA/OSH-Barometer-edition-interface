@@ -22,8 +22,7 @@
 			<div class="conten-input">
 				<label>Country</label>
 				<% ArrayList<HashMap<String,String>> countryList = (ArrayList<HashMap<String,String>>) request.getAttribute("countryList");
-				String countrySelected = (String) request.getAttribute("countrySelected");
-				%>
+				String countrySelected = (String) request.getAttribute("countrySelected"); %>
 				<select id="country" name="country">
 					<% for (HashMap<String,String> data : countryList) { %>
 					<option value="<%=data.get("real_name")%>" <%= data.get("real_name").equals(countrySelected) ? "selected": "" %> >

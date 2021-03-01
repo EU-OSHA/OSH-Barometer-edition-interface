@@ -19,6 +19,10 @@ public class UpdateLabelsDAO {
         return INSTANCE;
     }
 
+    /**
+     * Function that calls DB to retrieve all the sections for BAROMETER DVT
+     * @return ArrayList<HashMap<String,String>> list containing the sections data
+     */
     public ArrayList<HashMap<String,String>> getSectionList(){
     	ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
     	try {
@@ -36,6 +40,11 @@ public class UpdateLabelsDAO {
     	return list;
     }
     
+    /**
+     * Function that retrieves from DB all the charts contained in an specific BAROMETER section
+     * @param section String ID of the section
+     * @return ArrayList<HashMap<String,String>> list with the relative charts of that section
+     */
     public ArrayList<HashMap<String,String>> getChartsBySectionUpdateLabels(String section){
     	ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
     	try {
@@ -53,6 +62,13 @@ public class UpdateLabelsDAO {
     	return list;
     }
     
+    /**
+     * Function that retrieves from DB the literals from the selected section and chart. If no chart is selected,
+     * it retrieves all the literals of the section selected
+     * @param section_id String ID of the section
+     * @param chart_id String ID of the chart
+     * @return ArrayList<HashMap<String,String>> list with all the literals contained in selected section and chart
+     */
     public ArrayList<HashMap<String,String>> getLiteralsBySectionAndChart(String section_id, String chart_id) {
     	ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
     	try {
@@ -90,6 +106,12 @@ public class UpdateLabelsDAO {
     	return list;
     }
     
+    /**
+     * Function that updates a literals draft_text 
+     * @param updated_text String new text for draft_text field in DB
+     * @param translation_id String ID of the literal to update
+     * @return boolean true if the literal has been updated in DB, false in case it failed
+     */
     public boolean updateDraftText(String updated_text, String translation_id) {
     	boolean updatedCorrectly = false;
     	try {
@@ -104,6 +126,11 @@ public class UpdateLabelsDAO {
     	return updatedCorrectly;
     }
     
+    /**
+     * Function that deletes the draft text of a literal
+     * @param translation_id String ID of the literal to update
+     * @return boolean true if the operation has been undone in DB, false in case it failed
+     */
     public boolean undoDraftText(String translation_id) {
     	boolean updatedCorrectly = false;
     	try {
@@ -118,6 +145,12 @@ public class UpdateLabelsDAO {
     	return updatedCorrectly;
     }
     
+    /**
+     * Function that updates the publish text field of a literal and deletes its draft text field
+     * @param translation_id String ID of the literal to update
+     * @param updated_text String text that will replace the published text in DB
+     * @return boolean true if the literal has been updated in DB, false in case it failed
+     */
     public boolean publishLiteral(String translation_id, String updated_text) {
     	boolean updatedCorrectly = false;
     	try {

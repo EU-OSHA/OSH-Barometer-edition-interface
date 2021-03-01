@@ -9,7 +9,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,6 +28,10 @@ public class TableLoad extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final Logger LOGGER = LogManager.getLogger(TableLoad.class);
  
+	/**
+	 * Ajax service. This service is called for literal update pages retrieving new
+	 * literals with their data when the parameters are changed
+	 */
 	public void service(HttpServletRequest req, HttpServletResponse res)
             throws ServletException, IOException
     {
@@ -56,10 +59,6 @@ public class TableLoad extends HttpServlet {
 			LOGGER.info("literalsList length: "+literalsList.size());
 			returningData = g.toJson(literalsList);
 		}
-		
-//        HttpSession session = req.getSession();
-//        session.setAttribute("section", section);
-//        session.setAttribute("chart", chart);
 		
 		res.setContentType("text/plain");
         res.setCharacterEncoding("UTF-8");

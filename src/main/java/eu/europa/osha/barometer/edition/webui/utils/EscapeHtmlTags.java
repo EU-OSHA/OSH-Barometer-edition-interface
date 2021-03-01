@@ -1,6 +1,13 @@
 package eu.europa.osha.barometer.edition.webui.utils;
 
 public class EscapeHtmlTags {
+	
+	/**
+	 * Function that modifies a String to have special characters escaped
+	 * to avoid errors in the HTML
+	 * @param s String text received that needs to be escaped
+	 * @return String text already transformed
+	 */
 	public static final String escapeHTML(String s){
 		if(s != null) {
 			StringBuffer sb = new StringBuffer();

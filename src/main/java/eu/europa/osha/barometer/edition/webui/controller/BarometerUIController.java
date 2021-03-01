@@ -9,14 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardWatchEventKinds;
-import java.nio.file.WatchEvent;
-import java.nio.file.WatchKey;
-import java.nio.file.WatchService;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -75,14 +68,13 @@ public class BarometerUIController extends HttpServlet{
 	
 	private static ResourceBundle configurationData = ResourceBundle.getBundle("eu.europa.osha.barometer.edition.webui.conf.configuration");
 
-	private static final String USERNAME = "admin";
-	private static final String PASSWORD = "admin";
+	/** Constants for temporal login */
+	//private static final String USERNAME = "admin";
+	//private static final String PASSWORD = "admin";
 	
+	/** Constants for Update datasets page */
 	private static String UPDATE_DATASETS_DEFAULT_SECTION_ID = "17";
-	private static String COUNTRY_REPORTS_DEFAULT_SECTION_ID = "osh_authorities";
-	private static String COUNTRY_REPORTS_DEFAULT_COUNTRY = "Austria";
-	private static String FILE_EXTENSION_QUANTITATIVE_DATA = ".xlsx";
-	
+	/** Constants for each type of excel in quantitative data for Eurofound and Eurostat page */
 	private static String COMPANY_SIZE_TEMPLATE = "EU-OSHA_OIE_Eurostat_indicator_Company_size";
 	private static String EMPLOYMENT_PER_SECTOR_TEMPLATE = "EU-OSHA_OIE_Eurostat_indicator_Employment_per_sector";
 	private static String EMPLOYMENT_RATE_TEMPLATE = "EU-OSHA_OIE_Eurostat_indicator_Employment_rate_T_M_F";
@@ -91,12 +83,15 @@ public class BarometerUIController extends HttpServlet{
 	private static String NON_FATAL_WORK_ACCIDENTS_TEMPLATE = "EU-OSHA_OIE_Eurostat_NonFatal_Work_accidents";
 	private static String FATAL_WORK_ACCIDENTS_TEMPLATE = "EU-OSHA_OIE_Eurostat_Fatal_Work_accidents";
 	private static String GENERAL_TEMPLATE = "EU-OSHA_OIE_Eurostat_Direct_value_indicators";
-	
+	/** General constants for quantitative data pages*/
 	private static String QUANTITATIVE_EUROSTAT_DEFAULT_YEAR_FROM = "2010-01-01";
-	
+	private static String FILE_EXTENSION_QUANTITATIVE_DATA = ".xlsx";
+	/** Constants for Update labels page */
 	private static String DEFAULT_SECTION_UPDATE_LABELS = "37";
 	private static String DEFAULT_CHART_UPDATE_LABELS = "0";
-	
+	/** Constants for Country reports page */
+	private static String COUNTRY_REPORTS_DEFAULT_SECTION_ID = "osh_authorities";
+	private static String COUNTRY_REPORTS_DEFAULT_COUNTRY = "Austria";
 	private static String FILE_EXTENSION_COUNTRY_REPORT = ".pdf";
 
 	/**
@@ -113,12 +108,14 @@ public class BarometerUIController extends HttpServlet{
 		//The context of the servlet (a servlet context is basically its environment: its main route, the environment
 		// variables, status of the system it runs on, etc).
 		ServletContext application = getServletContext();
+		
 		//This will hold the path to the JSP we are going to.
 		String nextURL = "";
-		//In this block of if/elses, the application will get the "page" parameter. According to its value, the
-		// controller will send the user to the correct page (please remember to keep necessary attributes and
-		// parameters, the application will not do it on its own) or to an error page, if something is wrong.
-		//Getting the parameter that tell us the page.
+		
+		/* In this block of if/elses, the application will get the "page" parameter. According to its value, the
+		 controller will send the user to the correct page (please remember to keep necessary attributes and
+		 parameters, the application will not do it on its own) or to an error page, if something is wrong.
+		 Getting the parameter that tell us the page. */
 		String page = req.getParameter("page");
 		//Getting the current session
 		HttpSession session = req.getSession();
@@ -913,6 +910,10 @@ public class BarometerUIController extends HttpServlet{
 		dispatcher.forward(req, res);
 	}
 	
+	/**
+	 * Method that reads the new updated literals file and copies it to the corresponding DVT path
+	 * @throws Exception IOException, FileNotFoundException while trying to read literals file
+	 */
 	private void copyFilesToDVT() throws Exception {
 		FileInputStream instream = null;
 		FileOutputStream outstream = null;
@@ -971,6 +972,12 @@ public class BarometerUIController extends HttpServlet{
 //	    LOGGER.info("Published Literals File ended reading. Closing streams");
 	}
 	
+	/**
+	 * Method to send in request a message for the user
+	 * @param req HttpServletRequest the current request 
+	 * @param confirmation String the possible confirmation message to send to the client
+	 * @param error String the possible error message to send to the client
+	 */
 	private void sendAlertsToUser(HttpServletRequest req, String confirmation, String error) {
 		if(error != null) {
 			confirmation = null;

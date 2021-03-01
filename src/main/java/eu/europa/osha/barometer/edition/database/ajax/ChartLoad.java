@@ -9,14 +9,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 
-import eu.europa.osha.barometer.edition.webui.business.QualitativeDataBusiness;
 import eu.europa.osha.barometer.edition.webui.business.UpdateLabelsBusiness;
 
 @WebServlet
@@ -27,8 +25,14 @@ import eu.europa.osha.barometer.edition.webui.business.UpdateLabelsBusiness;
 )
 public class ChartLoad extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-private static final Logger LOGGER = LogManager.getLogger(ChartLoad.class);
+	private static final Logger LOGGER = LogManager.getLogger(ChartLoad.class);
 	
+	/**
+	 * Service for ajax. This service will retrieve in the servlet response a list of
+	 * charts for Update Labels page
+     * @param req HttpServletRequest request 
+     * @param res HttpServletResponse response
+	 */
 	public void service(HttpServletRequest req, HttpServletResponse res)
             throws ServletException, IOException
     {
@@ -51,8 +55,5 @@ private static final Logger LOGGER = LogManager.getLogger(ChartLoad.class);
         res.getWriter().write(returningData);
         LOGGER.info("Wrote Json in http response");
         res.getWriter().flush();
-        
-//        HttpSession session = req.getSession();
-//        session.setAttribute("section", section);
     }
 }

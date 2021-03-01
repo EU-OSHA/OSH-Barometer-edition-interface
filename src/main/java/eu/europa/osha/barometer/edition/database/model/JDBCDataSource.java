@@ -19,6 +19,13 @@ public class JDBCDataSource extends HttpServlet {
     
     private static final Logger LOGGER = LogManager.getLogger(JDBCDataSource.class);
 
+    /**
+     * Function to create a connection to a specified database
+     * @return Connection the connection to the database 
+     * @throws SQLException 
+     * @throws ClassNotFoundException 
+     * @throws NamingException
+     */
     public static Connection getConnection() throws SQLException, ClassNotFoundException, NamingException
     {
 
@@ -29,6 +36,10 @@ public class JDBCDataSource extends HttpServlet {
         return con;
     }
 
+    /**
+     * Function to close the connection to the database
+     * @param pCon Connection the connection to the database
+     */
     public static void closeConnection(Connection pCon)
     {
         try

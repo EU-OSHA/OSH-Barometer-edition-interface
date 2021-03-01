@@ -18,6 +18,10 @@ public class CountryReportDAO {
         return INSTANCE;
     }
     
+    /**
+     * Function that calls DB to retrieve the existing countries for osh authorities
+     * @return ArrayList<HashMap<String,String>> list containing data for the osh authorities countries
+     */
     public ArrayList<HashMap<String,String>> getOshAuthoritiesCountries(){
     	ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
     	try {
@@ -35,6 +39,11 @@ public class CountryReportDAO {
     	return list;
     }
     
+    
+    /**
+     * Function that calls DB to retrieve the existing countries for national strategies
+     * @return ArrayList<HashMap<String,String>> list containing data for the national strategies countries
+     */
     public ArrayList<HashMap<String,String>> getNationalStrategiesCountries(){
     	ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
     	try {
@@ -52,6 +61,10 @@ public class CountryReportDAO {
     	return list;
     }
     
+    /**
+     * Function that calls DB to retrieve the existing countries for social dialogue
+     * @return ArrayList<HashMap<String,String>> list containing data for social dialogue countries
+     */
     public ArrayList<HashMap<String,String>> getSocialDialogueCountries(){
     	ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
     	try {
