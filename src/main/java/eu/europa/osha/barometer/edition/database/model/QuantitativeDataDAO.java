@@ -18,7 +18,10 @@ public class QuantitativeDataDAO {
         return INSTANCE;
     }
     
-    
+    /**
+     * Function that calls DB to get the Eurostat Indicators for Quantitative data for Eurostat page
+     * @return ArrayList<HashMap<String,String>> list of Eurostat indicators
+     */
     public ArrayList<HashMap<String,String>> getIndicatorsForEurostat(){
     	ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
     	try {

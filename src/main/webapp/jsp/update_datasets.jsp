@@ -29,7 +29,6 @@
 		
 		<div id="tablesContainer">
 		
-		<!-- TODO DIVIDE CHARTS IN TABLES, NOT ALL INDICATORS IN ONE TABLE -->
 		<% ArrayList<HashMap<String,String>> chartsBySectionList = (ArrayList<HashMap<String,String>>) request.getAttribute("chartsBySectionList");%>
 		<% int chartIndex = 1; %>
 		<% for (HashMap<String,String> data : chartsBySectionList) { %>

@@ -11,6 +11,10 @@ import eu.europa.osha.barometer.edition.database.model.QuantitativeDataDAO;
 public class QuantitativeDataBusiness {
 	private static final Logger LOGGER = LogManager.getLogger(QuantitativeDataBusiness.class);
 	
+	/**
+	 * Function that calls DAO to get a list of the Eurostat Indicators
+	 * @return ArrayList<HashMap<String,String>> list with the Eurostat indicators
+	 */
 	public static ArrayList<HashMap<String,String>> getIndicatorsForEurostat(){
 		LOGGER.info("Accessing data DAO in order to get Eurostat Indicators");
 		QuantitativeDataDAO dataDAO = QuantitativeDataDAO.getInstance();

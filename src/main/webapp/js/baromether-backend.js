@@ -21,21 +21,8 @@ $(document).ready(function(){
 	$( "#yearToContainer" ).css("display","none");
 	$( "#oneYearContainer" ).css("display","block");
 	$("#templateUsage").text('The template should be "EU-OSHA_OIE_Eurostat indicator_Company size_YYYY-MM-DD.xlsx"');
-  
-    //var scroll = window.innerHeight;
-	//var height = $("div.container")[1].scrollHeight;
-	/*var height = $(window).height();
 
-    if (height > 700) {
-        $("footer").addClass("clear-fixed");
-    } else {
-        $("footer").removeClass("clear-fixed");
-    }*/
-
-	//$("#page").outerWidth($("window").width(),true); 
-	// $("#page").outerHeight($("window").height(),true); 
-	//alert($(window).height() + " " + $(document).height() + " " + $(window).width());
-	    
+	/** Function called in Quantitative Eurostat page to change the year dropdowns depending on the selected indicator */
     changeYearCombos =  function(){
 		//console.log("Entra en changeYearCombos");
 		var optionSelected = document.getElementById("indicatorEurostat");
@@ -74,7 +61,12 @@ $(document).ready(function(){
 		changeYearCombos();
 	}
 	
-	
+	/** Function called in Update datasets page. If the dataset selected has been changed by the user,
+	* it enables Save button for the current row 
+	* @event event where is triggered the current function
+	* @currentDatasetId var current dataset id 
+	* @indicatorId var current indicator id 
+	* */
 	enableDatasetTableSaveButton = function(event, currentDatasetId, indicatorId) {
 		console.log('Enters in enableDatasetTableSaveButton');
 		var selectedDatasetId = parseInt(event.currentTarget.options[event.currentTarget.selectedIndex].value);
@@ -87,13 +79,17 @@ $(document).ready(function(){
 		}
 	};
 	
+	/** Function called in Update datasets page. If the selected section from the dropdown is changed,
+	* multiple ajax calls are triggered in order to change charts, indicators and datasets 
+	*/
 	changeChartsInTable = function () {
 		console.log("Enters changeChartsInTable function");
 		
 		var optionSelected = document.getElementById("sectionId");
 		var valueSelected = optionSelected.value;
 		var chartIndex = 1;
-				
+		
+		/* CHARTS */
 		$.get({
 			url: 'tableload',
 			data: {
@@ -192,6 +188,10 @@ $(document).ready(function(){
 		});
 	}
 	
+	/** Function called in Country reports for MS page. If selected section from the section dropdown is changed
+	* the country dropdown changes with the countries related to that new section.
+	* @valueDefault var boolean for the current selected section if it is the default one or not
+	*/
 	changeCountryDisplay = function(valueDefault) {
 		console.log("Enters changeCountryDisplay function");
 		var sectionSelected = document.getElementById("section");
@@ -228,6 +228,10 @@ $(document).ready(function(){
 		});
 	}
 	
+	/** Function called in Update labels page when the current section changes.
+	* Reloads the chart dropdown with the charts of the new selected section
+	* If the new section has not any related chart, the chart dropdown is disabled.
+	*/
 	disableChartSelect = function() {
 		console.log("Enters disableChartSelect function");
 		var sectionSelected = document.getElementById("sectionSelect");
@@ -264,6 +268,11 @@ $(document).ready(function(){
 		loadLiteralsTable();
 	}
 	
+	/** Function called in Update labels, Qualitative data for MS and Methodology pages.
+	* This function retrieves with an ajax call a list with the literals depending on the
+	* parameters selected in the corresponding dropdowns of each page. The new list is
+	* painted in the JSP.
+	*/
 	loadLiteralsTable = function() {
 		console.log("Enters loadLiteralsTable function");
 		var section = document.getElementById("sectionSelect");
@@ -297,9 +306,11 @@ $(document).ready(function(){
 					}else{
 						new_tbody = new_tbody.concat('disabled');
 					}
-					new_tbody = new_tbody.concat(' id="check-'+index+'" type="checkbox" onchange="checkTextChanges()" name="publishCheck">');
+					new_tbody = new_tbody.concat(' id="check-'+index+'" type="checkbox" onchange="checkTextChanges()" name="publishCheck_'+index+'">');
 					new_tbody = new_tbody.concat('<input type="hidden" value="'+literal.translation_id+'" name="translation_id_'+index+'" id="translation_id_'+index+'">');
-					new_tbody = new_tbody.concat('<input type="hidden" value="'+literal.updated_text+'" name="updated_text_'+index+'">');
+					//new_tbody = new_tbody.concat('<input type="hidden" value="'+literal.updated_text+'" name="updated_text_'+index+'">');
+					new_tbody = new_tbody.concat('<input type="hidden" value="'+sectionSelected+'" name="section_'+index+'">');
+                    new_tbody = new_tbody.concat('<input type="hidden" value="'+chartSelected+'" name="chart_'+index+'">');
 					new_tbody = new_tbody.concat('<input type="hidden" value="'+literal.escaped_updated_text+'" name="escaped_updated_text_'+index+'" id="escaped_updated_text-'+index+'">');
 					new_tbody = new_tbody.concat('<input type="hidden" value="'+literal.escaped_published_text+'" name="escaped_published_text_'+index+'" id="escaped_published_text-'+index+'">');
 					new_tbody = new_tbody.concat('</td>');
@@ -327,21 +338,6 @@ $(document).ready(function(){
 					}
 					new_tbody = new_tbody.concat('</td>');
 					new_tbody = new_tbody.concat('</tr>');
-					
-					
-					/*new_tbody = new_tbody.concat('<tr>');
-					new_tbody = new_tbody.concat('<td><input type="checkbox" name="publishCheck"></td>');
-					new_tbody = new_tbody.concat('<td>'+ literal.published_text +'</td>');
-					if(literal.updated_text == null){
-						new_tbody = new_tbody.concat('<td> </td>');
-					}else{
-						new_tbody = new_tbody.concat('<td>'+literal.updated_text+'</td>');
-					}
-					new_tbody = new_tbody.concat('<td><button class="view-click" onclick="editModal(\''+literal.translation_id);
-					new_tbody = new_tbody.concat('\', \''+literal.published_text+'\', \''+literal.updated_text+'\')">');
-					new_tbody = new_tbody.concat('Edit</button>');
-					new_tbody = new_tbody.concat('<button class="disabled">Undo</button></td>');
-					new_tbody = new_tbody.concat('</tr>');*/
 					index++;
 		        });
 		        $('#literalListBody').html(new_tbody);
@@ -372,6 +368,10 @@ $(document).ready(function(){
 		$('div#wait-message-space').css("display","none");
 	}
 	
+	/** Function called in Update labels, Qualitative data for MS and Methodology pages.
+	* It prepares the modal window to edit an specific literal.
+	* @index var index of the current literal on the table
+	*/
 	editModal = function(index/*, published_text, updated_text*/){
 		console.log("Arrives to editModal");
 		
@@ -410,6 +410,9 @@ $(document).ready(function(){
 		$("#edit-popup").css("display","block");
 	};
 	
+	/** Function called to after exiting the edit modal when closing it or
+	* saving a literal.
+	*/
 	disableSaveButton = function(){
 		CKEDITOR.instances.updatedTextEditor.setData("");
 		if(!$('#modalSaveButton').hasClass('disabled')){
@@ -417,6 +420,10 @@ $(document).ready(function(){
 		}
 	};
 	
+	/** Function called in Update labels, Qualitative data for MS and Methodology pages.
+	* It prepares the modal window to undo a literal draft change
+	* @index var index of the current literal on the table
+	*/
 	undoPopup = function(index/*, published_text, updated_text*/){
 		console.log("Arrives to undoPopup");
 		var section = document.getElementById("sectionSelect");
@@ -447,6 +454,10 @@ $(document).ready(function(){
 		$("#undo-popup").css("display","block");
 	};
 	
+	/** Function called in Update labels, Qualitative data for MS and Methodology pages.
+	* It controls the functionality of the chekboxes and the publish button in order to
+	* enable or disable them depending on the literal updates
+	*/
 	checkTextChanges = function(/*translation_id, published_text, updated_text*/) { 
 		console.log("Arrives checkTextChanges");
 		var checks = $('input[type=checkbox]');
@@ -476,10 +487,15 @@ $(document).ready(function(){
 		}
 	}
 	
+	/** Function that displays the confirmation modal after clicking on publish button
+	*/
 	openConfirmationModal = function() {
 		$("#confirm-popup").css("display","block");
 	}
 	
+	/**
+	*
+	*/
 	publishLiterals = function() {
 		console.log("Arrives publishLiterals function");
 		$('div#wait-message').css("display","block");
@@ -514,17 +530,23 @@ $(document).ready(function(){
         }
 	}
 	
+	/** Function that shows a message when an ETL process is executed
+	*/
 	showWaitAlert = function(){
 		console.log('Enters showWaitAlert function');
 		$('div#wait-message').css("display","block");
 		$('div#wait-message-space').css("display","block");
 	}
 	
+	/**
+	*/
 	loadingScreen = function(){
 		console.log('Enters loadingScreen function');
 		//$('div.loading-screen').css('display', 'block');
 	}
 	
+	/** Function to reset to default fields in Country reports for MS page
+	*/
 	resetFields = function(){
 		console.log('Enters resetFields');
 		$('#section').val('osh_authorities');

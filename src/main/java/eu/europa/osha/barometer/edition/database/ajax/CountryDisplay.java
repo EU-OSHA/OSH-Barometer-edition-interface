@@ -24,8 +24,13 @@ import eu.europa.osha.barometer.edition.webui.business.CountryReportBusiness;
     urlPatterns = {"/countrydisplay"}
 )
 public class CountryDisplay extends HttpServlet {
+	private static final long serialVersionUID = 1L;
 	private static final Logger LOGGER = LogManager.getLogger(CountryDisplay.class);
 	
+	/**
+	 * Service for ajax. This service is called to retrieve in the http response
+	 * the country list for Country reports for MS depending on the selected section
+	 */
 	public void service(HttpServletRequest req, HttpServletResponse res)
             throws ServletException, IOException
     {
