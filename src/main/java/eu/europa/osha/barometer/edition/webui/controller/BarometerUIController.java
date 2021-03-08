@@ -868,6 +868,15 @@ public class BarometerUIController extends HttpServlet{
 				String updatedTextEditor = req.getParameter("updatedTextEditor");
 				textUpdate = false;
 				
+				String jobDirectory = configurationData.getString("directory.etl")+configurationData.getString("directory.etl.job.literals");
+				LOGGER.info("jobDirectory: "+jobDirectory);
+				String spoonLogsDirectory = configurationData.getString("directory.etl")+configurationData.getString("directory.etl.logs");
+				LOGGER.info("spoonLogsDirectory: "+spoonLogsDirectory);
+				String scriptDirectory = configurationData.getString("directory.etl")+configurationData.getString("directory.script");
+				LOGGER.info("scriptDirectory: "+scriptDirectory);
+				String command = "sh "+scriptDirectory+"literals.sh " + jobDirectory + " " + configurationData.getString("directory.etl")
+					+ " " + spoonLogsDirectory;
+				
 				if(submit != null) {
 					if(submit.equals("saveDraft")) {
 						textUpdate = QualitativeMSDataBusiness.updateDraftText(updatedTextEditor, translation_id);
@@ -888,7 +897,8 @@ public class BarometerUIController extends HttpServlet{
 							checked = req.getParameter("publishCheck_"+i);
 							if(checked != null) {
 								translation_id = req.getParameter("translation_id_"+i);
-								updated_text = req.getParameter("updated_text_"+i);
+//								updated_text = req.getParameter("updated_text_"+i);
+                                updated_text = req.getParameter("escaped_updated_text_"+i);
 								section = req.getParameter("section_"+i);
 								country = req.getParameter("country_"+i);
 								institution = req.getParameter("institution_"+i);
@@ -897,37 +907,41 @@ public class BarometerUIController extends HttpServlet{
 								LOGGER.info("Literal with id: "+translation_id+" updated in database: "+updatedLiteral);
 							}
 						}
-					}
-					
-					try {
-						String jobDirectory = configurationData.getString("directory.etl")+configurationData.getString("directory.etl.job.literals");
-						LOGGER.info("jobDirectory: "+jobDirectory);
-						String spoonLogsDirectory = configurationData.getString("directory.etl")+configurationData.getString("directory.etl.logs");
-						LOGGER.info("spoonLogsDirectory: "+spoonLogsDirectory);
-						String scriptDirectory = configurationData.getString("directory.etl")+configurationData.getString("directory.script");
-						LOGGER.info("scriptDirectory: "+scriptDirectory);
-						String command = "sh "+scriptDirectory+"literals.sh " + jobDirectory + " " + configurationData.getString("directory.etl")
-							+ " " + spoonLogsDirectory;
-						LOGGER.info("LINUX: command to execute: "+command);
-						Process p = Runtime.getRuntime().exec(command);
-						LOGGER.info("Waiting for script to end...");
-						p.waitFor();
-						LOGGER.info("Script process ended.");
 						
-						try {
-							copyFilesToDVT();
-						} catch (Exception e) {
-							LOGGER.error("ERROR WHILE MOVING FILES TO DVT. "+e.getMessage());
-							e.printStackTrace();
-							errorMessage = "An error has occurred while processing literals";
-						}
-							
-					} catch (Exception e) {
-						LOGGER.error("An error has occurred while creating json file for literals.");
-						LOGGER.error("Error: "+e.getMessage());
-						e.printStackTrace();
-						errorMessage = "An error has occurred while processing literals";
-					}
+						errorMessage = executeLiteralsETL(command);
+                        
+                        if(errorMessage == null) {
+                            confirmationMessage = "Literals updated successfully.";
+                        }
+                    } else if(submit.equals("updateAll")) {
+                        errorMessage = executeLiteralsETL(command);
+                        
+                        if(errorMessage == null) {
+                            confirmationMessage = "Literals updated successfully.";
+                        }
+                    }
+					
+//					try {
+//						LOGGER.info("LINUX: command to execute: "+command);
+//						Process p = Runtime.getRuntime().exec(command);
+//						LOGGER.info("Waiting for script to end...");
+//						p.waitFor();
+//						LOGGER.info("Script process ended.");
+//						
+//						try {
+//							copyFilesToDVT();
+//						} catch (Exception e) {
+//							LOGGER.error("ERROR WHILE MOVING FILES TO DVT. "+e.getMessage());
+//							e.printStackTrace();
+//							errorMessage = "An error has occurred while processing literals";
+//						}
+//							
+//					} catch (Exception e) {
+//						LOGGER.error("An error has occurred while creating json file for literals.");
+//						LOGGER.error("Error: "+e.getMessage());
+//						e.printStackTrace();
+//						errorMessage = "An error has occurred while processing literals";
+//					}
 				}
 				
 				sendAlertsToUser(req, confirmationMessage, errorMessage);
@@ -980,7 +994,8 @@ public class BarometerUIController extends HttpServlet{
 							checked = req.getParameter("publishCheck_"+i);
 							if(checked != null) {
 								translation_id = req.getParameter("translation_id_"+i);
-								updated_text = req.getParameter("updated_text_"+i);
+//								updated_text = req.getParameter("updated_text_"+i);
+                                updated_text = req.getParameter("escaped_updated_text_"+i);
 								section = req.getParameter("section_"+i);
 								indicator = req.getParameter("indicator_"+i);
 								
@@ -1149,6 +1164,32 @@ public class BarometerUIController extends HttpServlet{
 		req.setAttribute("errorMessage", error);
 		req.setAttribute("confirmationMessage", confirmation);
 	}
+
+    private String executeLiteralsETL(String command) {
+        String errorMessage = null;
+        try {
+            LOGGER.info("LINUX: command to execute: "+command);
+            Process p = Runtime.getRuntime().exec(command);
+            LOGGER.info("Waiting for script to end...");
+            p.waitFor();
+            LOGGER.info("Script process ended.");
+            
+            try {
+                copyFilesToDVT();
+            } catch (Exception e) {
+                LOGGER.error("ERROR WHILE MOVING FILES TO DVT. "+e.getMessage());
+                e.printStackTrace();
+                errorMessage = "An error has occurred while processing literals";
+            }
+                
+        } catch (Exception e) {
+            LOGGER.error("An error has occurred while creating json file for literals.");
+            LOGGER.error("Error: "+e.getMessage());
+            e.printStackTrace();
+            errorMessage = "An error has occurred while processing literals";
+        }
+        return errorMessage;
+    }
 
 	/**
 	 * This method destroys the servlet. It can be empty. ALWAYS destroy everything (in the end, at least).

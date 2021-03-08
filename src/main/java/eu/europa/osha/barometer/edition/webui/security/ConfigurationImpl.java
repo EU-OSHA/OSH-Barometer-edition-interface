@@ -40,7 +40,7 @@ public final class ConfigurationImpl extends Configuration {
             //options.put(Context.SECURITY_PRINCIPAL, configurationData.getString("ldap.principal"));
             //options.put(Context.SECURITY_CREDENTIALS, configurationData.getString("ldap.password"));
 
-            AppConfigurationEntry ldapEntry = new AppConfigurationEntry("eu.europa.osha.barometer.edition.security.LDAPLoginModule",
+            AppConfigurationEntry ldapEntry = new AppConfigurationEntry("eu.europa.osha.barometer.edition.webui.security.LDAPLoginModule",
                     LoginModuleControlFlag.REQUIRED, options);
             AppConfigurationEntry[] entries = new AppConfigurationEntry[]{ldapEntry};
             return entries;

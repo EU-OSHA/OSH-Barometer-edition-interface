@@ -325,7 +325,7 @@ $(document).ready(function(){
 					}
 					new_tbody = new_tbody.concat(' id="check-'+index+'" type="checkbox" onchange="checkTextChanges()" name="publishCheck_'+index+'">');
 					new_tbody = new_tbody.concat('<input type="hidden" value="'+literal.translation_id+'" name="translation_id_'+index+'" id="translation_id_'+index+'">');
-					new_tbody = new_tbody.concat('<input type="hidden" value="'+literal.updated_text+'" name="updated_text_'+index+'">');
+					//new_tbody = new_tbody.concat('<input type="hidden" value="'+literal.updated_text+'" name="updated_text_'+index+'">');
 					new_tbody = new_tbody.concat('<input type="hidden" value="'+sectionSelected+'" name="section_'+index+'">');
 					if(page == 'literals'){
 						new_tbody = new_tbody.concat('<input type="hidden" value="'+chartSelected+'" name="chart_'+index+'">');
@@ -393,6 +393,16 @@ $(document).ready(function(){
 		
 		$('div#wait-message').css("display","none");
 		$('div#wait-message-space').css("display","none");
+		
+		var text_updates = $('.span_updated_text');
+        for (var i = 0; i < text_updates.length; i++) {
+            if(text_updates[i].textContent != ""){
+                if($('#updateAllButton').hasClass('disabled')){
+                    $('#updateAllButton').removeClass('disabled');
+                }
+                break;
+            }
+        }
 	}
 		
 	editModal = function(index/*, published_text, updated_text*/){
@@ -678,7 +688,7 @@ $(document).ready(function(){
 						new_tbody = new_tbody.concat(' selected');
 					}
 					new_tbody = new_tbody.concat(' >');
-					new_tbody = new_tbody.concat(indicator.indicator_name);
+					new_tbody = new_tbody.concat(indicator.indicator_name_2);
 					new_tbody = new_tbody.concat('</option>');
 					index++;
 		        });
