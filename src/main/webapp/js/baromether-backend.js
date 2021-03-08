@@ -309,62 +309,81 @@ $(document).ready(function(){
 		        var literalsList = JSON.parse(literalsResponse);
 		        var new_tbody = "";
 				var index = 0;
+				var draw = true;
 				var literalListSize = literalsList.length;
 				$('input[name="literalListSize"]').val(literalListSize);
 		        $('#literalListBody').empty();
 		        literalsList.forEach(function(literal){
-					new_tbody = new_tbody.concat('<tr>');
-					new_tbody = new_tbody.concat('<td>');
-					new_tbody = new_tbody.concat('<input ');
-					if(literal.updated_text != null || literal.updated_text != undefined){
-						if(literal.escaped_updated_text == literal.escaped_published_text){
+					draw = true;
+					if(page == 'methodology'){
+						if(literal.literal_type != "Additional comments"){
+							if(literal.published_text == "null"){
+								draw = false;
+							}
+						}
+					}
+					
+					if(draw){
+						new_tbody = new_tbody.concat('<tr>');
+						new_tbody = new_tbody.concat('<td>');
+						new_tbody = new_tbody.concat('<input ');
+						if(literal.updated_text != null || literal.updated_text != undefined){
+							if(literal.escaped_updated_text == literal.escaped_published_text){
+								new_tbody = new_tbody.concat('disabled');
+							}
+						}else{
 							new_tbody = new_tbody.concat('disabled');
 						}
-					}else{
-						new_tbody = new_tbody.concat('disabled');
-					}
-					new_tbody = new_tbody.concat(' id="check-'+index+'" type="checkbox" onchange="checkTextChanges()" name="publishCheck_'+index+'">');
-					new_tbody = new_tbody.concat('<input type="hidden" value="'+literal.translation_id+'" name="translation_id_'+index+'" id="translation_id_'+index+'">');
-					//new_tbody = new_tbody.concat('<input type="hidden" value="'+literal.updated_text+'" name="updated_text_'+index+'">');
-					new_tbody = new_tbody.concat('<input type="hidden" value="'+sectionSelected+'" name="section_'+index+'">');
-					if(page == 'literals'){
-						new_tbody = new_tbody.concat('<input type="hidden" value="'+chartSelected+'" name="chart_'+index+'">');
-					}else if(page == 'qualitativeMS'){
-						new_tbody = new_tbody.concat('<input type="hidden" value="'+countrySelected+'" name="country_'+index+'">');
-						new_tbody = new_tbody.concat('<input type="hidden" value="'+institutionSelected+'" name="institution_'+index+'">');
-					}else{
-						new_tbody = new_tbody.concat('<input type="hidden" value="'+indicatorSelected+'" name="indicator_'+index+'">');
-					}
-					
-					new_tbody = new_tbody.concat('<input type="hidden" value="'+literal.escaped_updated_text+'" name="escaped_updated_text_'+index+'" id="escaped_updated_text-'+index+'">');
-					new_tbody = new_tbody.concat('<input type="hidden" value="'+literal.escaped_published_text+'" name="escaped_published_text_'+index+'" id="escaped_published_text-'+index+'">');
-					new_tbody = new_tbody.concat('</td>');
-					if(page != 'qualitativeMS'){
-						new_tbody = new_tbody.concat('<td>');
-						if(literal.literal_type != null && literal.literal_type != ""){
-							new_tbody = new_tbody.concat(literal.literal_type.replace('_', ' '));
+						new_tbody = new_tbody.concat(' id="check-'+index+'" type="checkbox" onchange="checkTextChanges()" name="publishCheck_'+index+'">');
+						new_tbody = new_tbody.concat('<input type="hidden" value="'+literal.translation_id+'" name="translation_id_'+index+'" id="translation_id_'+index+'">');
+						//new_tbody = new_tbody.concat('<input type="hidden" value="'+literal.updated_text+'" name="updated_text_'+index+'">');
+						new_tbody = new_tbody.concat('<input type="hidden" value="'+sectionSelected+'" name="section_'+index+'">');
+						if(page == 'literals'){
+							new_tbody = new_tbody.concat('<input type="hidden" value="'+chartSelected+'" name="chart_'+index+'">');
+						}else if(page == 'qualitativeMS'){
+							new_tbody = new_tbody.concat('<input type="hidden" value="'+countrySelected+'" name="country_'+index+'">');
+							new_tbody = new_tbody.concat('<input type="hidden" value="'+institutionSelected+'" name="institution_'+index+'">');
+						}else{
+							new_tbody = new_tbody.concat('<input type="hidden" value="'+indicatorSelected+'" name="indicator_'+index+'">');
+						}
+						
+						new_tbody = new_tbody.concat('<input type="hidden" value="'+literal.escaped_updated_text+'" name="escaped_updated_text_'+index+'" id="escaped_updated_text-'+index+'">');
+						new_tbody = new_tbody.concat('<input type="hidden" value="'+literal.escaped_published_text+'" name="escaped_published_text_'+index+'" id="escaped_published_text-'+index+'">');
+						new_tbody = new_tbody.concat('</td>');
+						if(page != 'qualitativeMS'){
+							new_tbody = new_tbody.concat('<td>');
+							if(literal.literal_type != null && literal.literal_type != ""){
+								new_tbody = new_tbody.concat(literal.literal_type.replace('_', ' '));
+							}
+							new_tbody = new_tbody.concat('</td>');
+						}
+						
+						if(literal.published_text != "null"){
+							new_tbody = new_tbody.concat('<td><span id="span_published_text_'+index+'">'+literal.published_text+'</span></td>');
+						}else{
+							new_tbody = new_tbody.concat('<td><span id="span_published_text_'+index+'"></span></td>');
+						}
+						
+						//new_tbody = new_tbody.concat('<td><span id="span_published_text_'+index+'">'+literal.published_text+'</span></td>');
+						if(literal.updated_text != null || literal.updated_text != undefined){
+							new_tbody = new_tbody.concat('<td><span id="span_updated_text_'+index+'">'+literal.updated_text+'</span></td>');
+						}else{
+							new_tbody = new_tbody.concat('<td><span id="span_updated_text_'+index+'"></span></td>');	
+						}
+						//new_tbody = new_tbody.concat('<td><button class="view-click" onclick="editModal('+index+')">Edit</button>');
+						new_tbody = new_tbody.concat('<td><a class="href-link" href="#" onclick="editModal(\''+index+'\')">Edit</a> ');
+						
+						if(literal.updated_text != null && literal.updated_text != literal.escaped_published_text){
+							//new_tbody = new_tbody.concat('<button onclick="undoPopup('+index+')" class="">Undo</button>');
+							new_tbody = new_tbody.concat('<a class="href-link" href="#" onclick="undoPopup(\''+index+'\')">Undo</a>');
+						}else{
+							//new_tbody = new_tbody.concat('<button onclick="undoPopup('+index+')" class="disabled">Undo</button>');
+							new_tbody = new_tbody.concat('<a class="href-link disabled" href="#" onclick="undoPopup(\''+index+'\')">Undo</a>');
 						}
 						new_tbody = new_tbody.concat('</td>');
+						new_tbody = new_tbody.concat('</tr>');
 					}
 					
-					new_tbody = new_tbody.concat('<td><span id="span_published_text_'+index+'">'+literal.published_text+'</span></td>');
-					if(literal.updated_text != null || literal.updated_text != undefined){
-						new_tbody = new_tbody.concat('<td><span id="span_updated_text_'+index+'">'+literal.updated_text+'</span></td>');
-					}else{
-						new_tbody = new_tbody.concat('<td><span id="span_updated_text_'+index+'"></span></td>');	
-					}
-					//new_tbody = new_tbody.concat('<td><button class="view-click" onclick="editModal('+index+')">Edit</button>');
-					new_tbody = new_tbody.concat('<td><a class="href-link" href="#" onclick="editModal(\''+index+'\')">Edit</a> ');
-					
-					if(literal.updated_text != null && literal.updated_text != literal.escaped_published_text){
-						//new_tbody = new_tbody.concat('<button onclick="undoPopup('+index+')" class="">Undo</button>');
-						new_tbody = new_tbody.concat('<a class="href-link" href="#" onclick="undoPopup(\''+index+'\')">Undo</a>');
-					}else{
-						//new_tbody = new_tbody.concat('<button onclick="undoPopup('+index+')" class="disabled">Undo</button>');
-						new_tbody = new_tbody.concat('<a class="href-link disabled" href="#" onclick="undoPopup(\''+index+'\')">Undo</a>');
-					}
-					new_tbody = new_tbody.concat('</td>');
-					new_tbody = new_tbody.concat('</tr>');
 					index++;
 		        });
 		        $('#literalListBody').html(new_tbody);
