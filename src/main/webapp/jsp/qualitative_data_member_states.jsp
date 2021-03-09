@@ -39,11 +39,14 @@
 			</select>
 		</div>
 		
+		<% String institutionSelected = (String) request.getAttribute("institutionSelected");
+		 if(sectionSelected.equals("MATRIX_AUTHORITY") || sectionSelected.equals("MATRIX_STRATEGY")
+				|| sectionSelected.equals("MATRIX_STATISTICS")) { %>
+		
 		<div class="conten-input">
 			<label id="institution_type_label">Institution type</label>
 			<select id="institutionSelect" name="institution" onchange="loadLiteralsTable('qualitativeMS')">
-				<% String institutionSelected = (String) request.getAttribute("institutionSelected");
-				if(sectionSelected.equals("MATRIX_AUTHORITY")) { %>
+				<% if(sectionSelected.equals("MATRIX_AUTHORITY")) { %>
 					<option <%="osh_authority".equals(institutionSelected) ? "selected" : "" %> value="osh_authority">OSH authority</option>
 					<option <%="compensation_insurance".equals(institutionSelected) ? "selected" : "" %> value="compensation_insurance">Compensation and insurance body</option>
 					<option <%="prevention_institute".equals(institutionSelected) ? "selected" : "" %> value="prevention_institute">Prevention institute</option>
@@ -60,6 +63,8 @@
 			</select>
 		</div>
 		
+		<% } %>
+		
 		<div class="conten-input">
             <button id="updateAllButton" class="disabled" type="submit" name="formSent" value="updateAll" form="labels-form"
                 title="Click here to launch the ETL process and update all the saved changes displayed in the 'Updated text' column" onsubmit="showWaitAlert()"
@@ -73,6 +78,7 @@
 				<thead>
 					<tr>
 					  	<th>Publish</th>
+					  	<th>Literal type</th>
 					    <th>Published text</th>
 						<th>Updated text</th>
 						<th>Actions</th>
@@ -99,6 +105,7 @@
 	                        <input type="hidden" value="<%=data.get("escaped_updated_text")%>" name="escaped_updated_text_<%=index %>" id="escaped_updated_text-<%=index%>">
 	                        <input type="hidden" value="<%=data.get("escaped_published_text")%>" name="escaped_published_text_<%=index %>" id="escaped_published_text-<%=index%>">
 						</td>
+						<td><%=data.get("literal_type") != null ? data.get("literal_type").replace("_", " ") : ""%></td>
 						<td><span id="span_published_text_<%=index%>"><%=data.get("published_text")%></span></td>
 						<td><span class="span_updated_text" id="span_updated_text_<%=index%>"><%=data.get("escaped_updated_text") != null ? data.get("updated_text") : ""%></span></td>
 						<td>

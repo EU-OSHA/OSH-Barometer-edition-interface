@@ -339,7 +339,7 @@ $(document).ready(function(){
 					new_tbody = new_tbody.concat('<input type="hidden" value="'+literal.escaped_updated_text+'" name="escaped_updated_text_'+index+'" id="escaped_updated_text-'+index+'">');
 					new_tbody = new_tbody.concat('<input type="hidden" value="'+literal.escaped_published_text+'" name="escaped_published_text_'+index+'" id="escaped_published_text-'+index+'">');
 					new_tbody = new_tbody.concat('</td>');
-					if(page != 'qualitativeMS'){
+					if(page != 'qualitativeMS' || (literal.page == "STRATEGY" || literal.page == "STRATEGY_ENFOR_CAPACITY")){
 						new_tbody = new_tbody.concat('<td>');
 						if(literal.literal_type != null && literal.literal_type != ""){
 							new_tbody = new_tbody.concat(literal.literal_type.replace('_', ' '));

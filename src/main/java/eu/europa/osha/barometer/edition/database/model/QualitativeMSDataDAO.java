@@ -191,11 +191,20 @@ public class QualitativeMSDataDAO {
     	ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
     	try {
     		StringBuilder query =  new StringBuilder();
+    		String [] strategy_titles  = {"Basic information", "Background", "Characteristics and objectives", "Details and activity", 
+    				"Actors and stakeholders", "Resources and timeframe", "Evaluation", "Relationship to EU Strategic Framework"};
+    		String [] enforcement_titles  = {"Authority", "Scope of the Labour Inspection", "Inspector powers", "Strategy/Plan"};
     		
     		query.append("(");
     		for(int i=1;i<=4;i++) {
     			query.append("SELECT sp.id as data_id, sp.page as page, n.country_code as country_code, t.text as published_text, ");
-    			query.append("t.draft_text as updated_text, t.id as translation_id ");
+    			query.append("t.draft_text as updated_text, t.id as translation_id, \"");
+    			if(page.equals("STRATEGY")) {
+    				query.append(strategy_titles[i-1]);
+    			}else {
+    				query.append(enforcement_titles[i-1]);
+    			}
+    			query.append("\" as literal_type ");
         		query.append("FROM strategies_page sp, nuts n, translation t ");
         		query.append("WHERE sp.page='");
         		query.append(page);
@@ -213,10 +222,12 @@ public class QualitativeMSDataDAO {
     			for(int i=5;i<=8;i++) {
     				query.append("UNION(");
             		query.append("SELECT sp.id as data_id, sp.page as page, n.country_code as country_code, t.text as published_text, ");
-            		query.append("t.draft_text as updated_text, t.id as translation_id ");
+            		query.append("t.draft_text as updated_text, t.id as translation_id, \"");
+            		query.append(strategy_titles[i-1]);
+            		query.append("\" as literal_type ");
             		query.append("FROM strategies_page sp, nuts n, translation t ");
             		query.append("WHERE sp.page='");
-            		query.append("page");
+            		query.append(page);
             		query.append("' AND sp.nuts_id=n.id AND n.country_code = '");
             		query.append(country);
             		query.append("' AND sp.text_"+i+"_literal_id = t.literal_id AND t.language='EN'");
