@@ -655,6 +655,16 @@ public class BarometerUIController extends HttpServlet{
 				
 				confirmationMessage = null;
 				errorMessage = null;
+				
+				String jobDirectory = configurationData.getString("directory.etl")+configurationData.getString("directory.etl.job.literals");
+				LOGGER.info("jobDirectory: "+jobDirectory);
+				String spoonLogsDirectory = configurationData.getString("directory.etl")+configurationData.getString("directory.etl.logs");
+				LOGGER.info("spoonLogsDirectory: "+spoonLogsDirectory);
+				String scriptDirectory = configurationData.getString("directory.etl")+configurationData.getString("directory.script");
+				LOGGER.info("scriptDirectory: "+scriptDirectory);
+				String command = "sh "+scriptDirectory+"literals.sh " + jobDirectory + " " + configurationData.getString("directory.etl")
+					+ " " + spoonLogsDirectory;
+				
 				//Save updated text in draft_text column in table translation
 				if (saveButton != null) {
 					translation_id = req.getParameter("translation_id"); 
@@ -690,44 +700,41 @@ public class BarometerUIController extends HttpServlet{
 								LOGGER.info("Literal with id: "+translation_id+" updated in database: "+updatedLiteral);
 							}
 						}
+						errorMessage = executeLiteralsETL(command);
+						
+						if(errorMessage == null) {
+							confirmationMessage = "Literals published successfully.";
+						}
+					} else if(saveButton.equals("updateAll")) {
+						errorMessage = executeLiteralsETL(command);
+						
+						if(errorMessage == null) {
+							confirmationMessage = "Literals updated successfully.";
+						}
 					}
 					
-					try {
-						String jobDirectory = configurationData.getString("directory.etl")+configurationData.getString("directory.etl.job.literals");
-						LOGGER.info("jobDirectory: "+jobDirectory);
-						String spoonLogsDirectory = configurationData.getString("directory.etl")+configurationData.getString("directory.etl.logs");
-						LOGGER.info("spoonLogsDirectory: "+spoonLogsDirectory);
-						String scriptDirectory = configurationData.getString("directory.etl")+configurationData.getString("directory.script");
-						LOGGER.info("scriptDirectory: "+scriptDirectory);
-						String command = "sh "+scriptDirectory+"literals.sh " + jobDirectory + " " + configurationData.getString("directory.etl")
-							+ " " + spoonLogsDirectory;
-						LOGGER.info("LINUX: command to execute: "+command);
-						Process p = Runtime.getRuntime().exec(command);
-						LOGGER.info("Waiting for script to end...");
-						p.waitFor();
-						LOGGER.info("Script process ended.");
-						
-						try {
-							copyFilesToDVT();
-						} catch (Exception e) {
-							LOGGER.error("ERROR WHILE MOVING FILES TO DVT. "+e.getMessage());
-							e.printStackTrace();
-							errorMessage = "An error has occurred while processing literals";
-						}
-							
-					} catch (Exception e) {
-						LOGGER.error("An error has occurred while creating json file for literals.");
-						LOGGER.error("Error: "+e.getMessage());
-						e.printStackTrace();
-						errorMessage = "An error has occurred while processing literals";
-					}			
-					
-//					session.setAttribute("section",section);
-//					session.setAttribute("chart",chart);
+//					try {
+//						LOGGER.info("LINUX: command to execute: "+command);
+//						Process p = Runtime.getRuntime().exec(command);
+//						LOGGER.info("Waiting for script to end...");
+//						p.waitFor();
+//						LOGGER.info("Script process ended.");
+//						
+//						try {
+//							copyFilesToDVT();
+//						} catch (Exception e) {
+//							LOGGER.error("ERROR WHILE MOVING FILES TO DVT. "+e.getMessage());
+//							e.printStackTrace();
+//							errorMessage = "An error has occurred while processing literals";
+//						}
+//							
+//					} catch (Exception e) {
+//						LOGGER.error("An error has occurred while creating json file for literals.");
+//						LOGGER.error("Error: "+e.getMessage());
+//						e.printStackTrace();
+//						errorMessage = "An error has occurred while processing literals";
+//					}	
 				}
-				
-//				section = (String) session.getAttribute("section");
-//				chart = (String) session.getAttribute("chart");
 				
 				if(section == null) {
 					section = DEFAULT_SECTION_UPDATE_LABELS;
@@ -970,6 +977,32 @@ public class BarometerUIController extends HttpServlet{
 //	    instream.close();
 //	    outstream.close();
 //	    LOGGER.info("Published Literals File ended reading. Closing streams");
+	}
+	
+	private String executeLiteralsETL(String command) {
+		String errorMessage = null;
+		try {
+			LOGGER.info("LINUX: command to execute: "+command);
+			Process p = Runtime.getRuntime().exec(command);
+			LOGGER.info("Waiting for script to end...");
+			p.waitFor();
+			LOGGER.info("Script process ended.");
+			
+			try {
+				copyFilesToDVT();
+			} catch (Exception e) {
+				LOGGER.error("ERROR WHILE MOVING FILES TO DVT. "+e.getMessage());
+				e.printStackTrace();
+				errorMessage = "An error has occurred while processing literals";
+			}
+				
+		} catch (Exception e) {
+			LOGGER.error("An error has occurred while creating json file for literals.");
+			LOGGER.error("Error: "+e.getMessage());
+			e.printStackTrace();
+			errorMessage = "An error has occurred while processing literals";
+		}
+		return errorMessage;
 	}
 	
 	/**

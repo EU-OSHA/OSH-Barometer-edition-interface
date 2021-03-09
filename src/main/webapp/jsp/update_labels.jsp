@@ -10,7 +10,7 @@
 		<h1>Explanations related to the quantitative data</h1>
 		<%@include file="includes/alerts.jsp"%>
 		<div id="wait-message" class="alert-success">
-		    <p>Literal changes have been saved. Before changing another literal, please wait a couple of minutes for the system to process last changes.</p>
+		    <p>Literal changes are updating. Before changing another literal, please wait a couple of minutes for the system to process last changes.</p>
 		</div>
 		<div id="wait-message-space" class="clear-content"></div>
 		<div class="conten-input">
@@ -40,6 +40,11 @@
 				</option>
 			<% } %>
 			</select>
+		</div>
+		<div class="conten-input">
+			<button id="updateAllButton" class="disabled" type="submit" name="formSent" value="updateAll" form="labels-form"
+				title="Click here to launch the ETL process and update all the saved changes displayed in the 'Updated text' column" onsubmit="showWaitAlert()"
+			>Update all</button>
 		</div>
 		<div class="clear-content"></div>
 		<form id="labels-form" action="user?page=update_labels" method="post">
@@ -79,7 +84,7 @@
 						</td>
 						<td><%=data.get("literal_type") != null ? data.get("literal_type").replace("_", " ") : ""%></td>
 						<td><span id="span_published_text_<%=index%>"><%=data.get("published_text")%></span></td>
-						<td><span id="span_updated_text_<%=index%>"><%=data.get("escaped_updated_text") != null ? data.get("updated_text") : ""%></span></td>
+						<td><span class="span_updated_text" id="span_updated_text_<%=index%>"><%=data.get("escaped_updated_text") != null ? data.get("updated_text") : ""%></span></td>
 						<td>
 						<a class="href-link" href="#" onclick='editModal("<%=index%>")'>Edit</a> <a class="href-link <%=(data.get("escaped_updated_text") != null && !data.get("escaped_published_text").equals(data.get("escaped_updated_text"))) ? "" : "disabled"%>" href="#" onclick='undoPopup("<%=index%>")'>Undo</a>
 						<!-- <button class="view-click" onclick='editModal("<%=index%>")'>Edit</button>
@@ -99,7 +104,7 @@
 			<div class="close close-click" onclick="disableSaveButton()">x</div>
 			<label>Published text:</label>
 			<div id="publishedContainer" readonly class="textarea disabled"><p id="publishedText"></p></div>
-			<form id="formPopUp" action="user?page=update_labels" method="post" onsubmit="showWaitAlert()">
+			<form id="formPopUp" action="user?page=update_labels" method="post">
 				<input type="hidden" value="" name="translation_id" id="translation_id">
 				<input type="hidden" value="" name="section" id="popUpSection">
 				<input type="hidden" value="" name="chart" id="popUpChart">
@@ -112,7 +117,7 @@
 		</div>
 		<div id="undo-popup" class="popup-warning">
 			<div class="close close-click">x</div>
-			<form id="formUndoPopUp" action="user?page=update_labels" method="post" onsubmit="showWaitAlert()">
+			<form id="formUndoPopUp" action="user?page=update_labels" method="post">
 				<input type="hidden" value="" name="translation_id" id="undo_translation_id">
 				<input type="hidden" value="" name="section" id="popUpUndoSection">
 				<input type="hidden" value="" name="chart" id="popUpUndoChart">
@@ -124,7 +129,7 @@
 		<div id="confirm-popup" class="popup-confirm">
 			<div class="close close-click">x</div>
 			<p>Have you checked your new text/data in this <a href="https://test-visualisation.osha.europa.eu/osh-barometer#!/" target="_blank">URL</a> test environment and it is ok, press the 'Publish' button and the text/data will be updated in the dataset. To be able to see it in production environment, please request the corresponding deployment to the developers.</p>
-			<button class="close-click" id="modalConfirmButton" type="submit" name="formSent" value="confirmUpdate" form="labels-form">Confirm</button>
+			<button class="close-click" id="modalConfirmButton" type="submit" name="formSent" value="confirmUpdate" form="labels-form" onsubmit="showWaitAlert()">Confirm</button>
 			<button class="close-click" id="modalConfirmCancelButton">Cancel</button>
 		</div>
 	</div>

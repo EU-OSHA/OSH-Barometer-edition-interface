@@ -366,6 +366,16 @@ $(document).ready(function(){
 		
 		$('div#wait-message').css("display","none");
 		$('div#wait-message-space').css("display","none");
+		
+		var text_updates = $('.span_updated_text');
+		for (var i = 0; i < text_updates.length; i++) {
+			if(text_updates[i].textContent != ""){
+				if($('#updateAllButton').hasClass('disabled')){
+					$('#updateAllButton').removeClass('disabled');
+				}
+				break;
+			}
+		}
 	}
 	
 	/** Function called in Update labels, Qualitative data for MS and Methodology pages.
