@@ -73,8 +73,6 @@
 							updated = true;
 						}
 					}%>
-					
-					<% if(data.get("literal_type").equals("Additional comments") || !"null".equals(data.get("published_text"))){ %>
 					<tr>
 						<td>
 							<input <%=updated ? "" : "disabled" %> id="check-<%=index%>" type="checkbox" onchange="checkTextChanges()" name="publishCheck_<%=index%>" >
@@ -92,7 +90,6 @@
 							<a class="href-link" href="#" onclick='editModal("<%=index%>")'>Edit</a> <a class="href-link <%=(data.get("escaped_updated_text") != null && !data.get("escaped_published_text").equals(data.get("escaped_updated_text"))) ? "" : "disabled"%>" href="#" onclick='undoPopup("<%=index%>")'>Undo</a>
 						</td>
 					</tr>
-					<% } %>
 				<% index++;
 					} %>
 				</tbody>
