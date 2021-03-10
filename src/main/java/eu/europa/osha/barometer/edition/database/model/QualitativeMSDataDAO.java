@@ -53,6 +53,135 @@ public class QualitativeMSDataDAO {
     	return list;
     }
     
+    public ArrayList<HashMap<String,String>> getMatrixPageDataCount(String page, String country, String institution) {
+    	ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
+    	try {
+    		int check1 = 0;
+    		int check2 = 0;
+    		int check3 = 0;
+    		int check4 = 0;
+    		
+    		if(page.equals("MATRIX_AUTHORITY")) {
+    			if(institution.equals("osh_authority")) {
+    				check1 = 1;
+    	    		check2 = 0;
+    	    		check3 = 0;
+    	    		check4 = 0;
+    			} else if(institution.equals("compensation_insurance")) {
+    				check1 = 0;
+    	    		check2 = 1;
+    	    		check3 = 0;
+    	    		check4 = 0;
+    			} else if(institution.equals("prevention_institute")) {
+    				check1 = 0;
+    	    		check2 = 0;
+    	    		check3 = 1;
+    	    		check4 = 0;
+    			} else if(institution.equals("standardisation_body")) {
+    				check1 = 0;
+    	    		check2 = 0;
+    	    		check3 = 0;
+    	    		check4 = 1;
+    			}
+    		} else if(page.equals("MATRIX_STRATEGY")) {
+    			if(institution.equals("implementation_record")) {
+    				check1 = 1;
+    	    		check2 = 0;
+    	    		check3 = 0;
+    	    		check4 = 0;
+    			} else if(institution.equals("prevention_diseases")) {
+    				check1 = 0;
+    	    		check2 = 1;
+    	    		check3 = 0;
+    	    		check4 = 0;
+    			} else if(institution.equals("tackling_demographic")) {
+    				check1 = 0;
+    	    		check2 = 0;
+    	    		check3 = 1;
+    	    		check4 = 0;
+    			}
+    		} else if(page.equals("MATRIX_STATISTICS")) {
+    			if(institution.equals("osh_statistics")) {
+    				check1 = 1;
+    	    		check2 = 0;
+    	    		check3 = 0;
+    	    		check4 = 0;
+    			} else if(institution.equals("surveys")) {
+    				check1 = 0;
+    	    		check2 = 1;
+    	    		check3 = 0;
+    	    		check4 = 0;
+    			} else if(institution.equals("research_institutes")) {
+    				check1 = 0;
+    	    		check2 = 0;
+    	    		check3 = 1;
+    	    		check4 = 0;
+    			}
+    		}
+    		
+    		StringBuilder query =  new StringBuilder();
+    		
+    		query.append("(SELECT mp.id as data_id ");
+    		query.append("FROM matrix_page mp, nuts n, translation t ");
+    		query.append("WHERE mp.page='");
+    		query.append(page);
+    		query.append("' AND mp.nuts_id=n.id AND n.country_code = '");
+    		query.append(country);
+    		query.append("' AND mp.check_1=");
+    		query.append(check1);
+    		query.append(" AND mp.check_2=");
+    		query.append(check2);
+    		query.append(" AND mp.check_3=");
+    		query.append(check3);
+    		query.append(" AND mp.check_4=");
+    		query.append(check4);
+    		query.append(" AND mp.text_1_literal_id = t.literal_id AND t.language='EN'");
+    		query.append(")UNION(");
+    		query.append("SELECT mp.id as data_id ");
+    		query.append("FROM matrix_page mp, nuts n, translation t2 ");
+    		query.append("WHERE mp.page='");
+    		query.append(page);
+    		query.append("' AND mp.nuts_id=n.id AND n.country_code = '");
+    		query.append(country);
+    		query.append("' AND mp.check_1=");
+    		query.append(check1);
+    		query.append(" AND mp.check_2=");
+    		query.append(check2);
+    		query.append(" AND mp.check_3=");
+    		query.append(check3);
+    		query.append(" AND mp.check_4=");
+    		query.append(check4);
+    		query.append(" AND mp.text_2_literal_id = t2.literal_id AND t2.language='EN') ");
+    		if(page.equals("MATRIX_AUTHORITY")) {
+    			query.append("UNION(");
+        		query.append("SELECT mp.id as data_id ");
+        		query.append("FROM matrix_page mp, nuts n, translation t3 ");
+        		query.append("WHERE mp.page='");
+        		query.append(page);
+        		query.append("' AND mp.nuts_id=n.id AND n.country_code = '");
+        		query.append(country);
+        		query.append("' AND mp.check_1=");
+        		query.append(check1);
+        		query.append(" AND mp.check_2=");
+        		query.append(check2);
+        		query.append(" AND mp.check_3=");
+        		query.append(check3);
+        		query.append(" AND mp.check_4=");
+        		query.append(check4);
+        		query.append(" AND mp.text_3_literal_id = t3.literal_id AND t3.language='EN' )");
+    		}
+    		
+    		ArrayList<HashMap<String, String>> result = JDBCDataSourceOperations.launchPreparedQuery(query.toString());
+    		if (result.size() > 0)
+            {
+                list = (ArrayList<HashMap<String, String>>) result.clone();
+            }
+    	}catch(Exception e) {
+    		e.printStackTrace();
+    	}
+		return list;
+    }
+    
     public ArrayList<HashMap<String,String>> getMatrixPageDataByCountryAndInstitution(String page, String country, String institution){
     	ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
     	try {
@@ -173,6 +302,7 @@ public class QualitativeMSDataDAO {
         		query.append(check4);
         		query.append(" AND mp.text_3_literal_id = t3.literal_id AND t3.language='EN' )");
     		}
+    		query.append("ORDER BY data_id");
     		
     		String[] queryParams = {};
     		ArrayList<HashMap<String, String>> result = JDBCDataSourceOperations.launchPreparedQuery(query.toString());

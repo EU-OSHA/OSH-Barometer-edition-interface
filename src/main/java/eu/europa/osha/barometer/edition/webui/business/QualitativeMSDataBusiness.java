@@ -81,4 +81,10 @@ public class QualitativeMSDataBusiness {
 		updatedCorrectly = dataDAO.publishLiteral(translation_id, updated_text);
 		return updatedCorrectly;
 	}
+	
+	public static ArrayList<HashMap<String,String>> getMatrixPageDataCount(String page, String country, String institution) {
+		QualitativeMSDataDAO dataDAO = QualitativeMSDataDAO.getInstance();
+		ArrayList<HashMap<String,String>> count = dataDAO.getMatrixPageDataCount(page, country, institution);
+		return count;
+	}
 }

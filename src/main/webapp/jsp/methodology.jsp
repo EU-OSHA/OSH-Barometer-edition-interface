@@ -10,7 +10,7 @@
 		<h1>Methodology data</h1>
 		<%@include file="includes/alerts.jsp"%>
 		<div id="wait-message" class="alert-success">
-		    <p>Literal changes have been saved. Before changing another literal, please wait a couple of minutes for the system to process last changes.</p>
+		    <p>The update of your data is now being processed, it can take a few minutes.</p>
 		</div>
 		<div id="wait-message-space" class="clear-content"></div>
 		
@@ -40,12 +40,6 @@
 				<% } %>
 			</select>
 		</div>
-		
-		<div class="conten-input">
-            <button id="updateAllButton" class="disabled" type="submit" name="formSent" value="updateAll" form="labels-form"
-                title="Click here to launch the ETL process and update all the saved changes displayed in the 'Updated text' column" onsubmit="showWaitAlert()"
-            >Update all</button>
-        </div>
 		
 		<div class="clear-content"></div>
 		
@@ -96,6 +90,9 @@
 			</table>
 		</form>
 		<button id="publishButton" class="disabled" onclick="openConfirmationModal()">Publish</button>
+        <button id="updateAllButton" class="disabled" type="submit" name="formSent" value="updateAll" form="labels-form"
+            title="Click here to launch the ETL process and update all the saved changes displayed in the 'Updated text' column" onsubmit="showWaitAlert()"
+        >Update all</button>
 		<div class="clear-content"></div>
 		
 		<!-- MODALS -->

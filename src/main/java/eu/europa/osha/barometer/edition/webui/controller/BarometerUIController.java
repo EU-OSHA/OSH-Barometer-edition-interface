@@ -867,6 +867,7 @@ public class BarometerUIController extends HttpServlet{
 				totalRows = req.getParameter("literalListSize");
 				String updatedTextEditor = req.getParameter("updatedTextEditor");
 				textUpdate = false;
+				ArrayList<HashMap<String,String>> matrixPageCount = null;
 				
 				String jobDirectory = configurationData.getString("directory.etl")+configurationData.getString("directory.etl.job.literals");
 				LOGGER.info("jobDirectory: "+jobDirectory);
@@ -949,13 +950,22 @@ public class BarometerUIController extends HttpServlet{
 				if(section.contains(QUALITATIVE_MS_DEFAULT_PAGE)) {
 					countryList = QualitativeMSDataBusiness.getCountriesByMatrixPageSection(section);
 					literalsList = QualitativeMSDataBusiness.getMatrixPageDataByCountryAndInstitution(section, country, institution);
+					matrixPageCount = QualitativeMSDataBusiness.getMatrixPageDataCount(section, country, institution);
 				} else {
 					countryList = QualitativeMSDataBusiness.getCountriesByStrategiesPageSection(section);
 					literalsList = QualitativeMSDataBusiness.getStrategiesPageDataByCountryAndInstitution(section, country);
 				}
 				
+//				if(section.equals("MATRIX_AUTHORITY") || section.equals("MATRIX_STRATEGY")
+//						|| section.equals("MATRIX_STATISTICS")) {
+//					req.setAttribute("isMatrixPage", true);
+//				} else {
+//					req.setAttribute("isMatrixPage", false);
+//				}
+				
 				req.setAttribute("countryList", countryList);
 				req.setAttribute("literalsList", literalsList);
+				req.setAttribute("matrixPageCount", matrixPageCount);
 				req.setAttribute("sectionSelected", section);
 				req.setAttribute("countrySelected", country);
 				req.setAttribute("institutionSelected", institution);

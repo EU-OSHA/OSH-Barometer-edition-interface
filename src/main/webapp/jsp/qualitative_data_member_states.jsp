@@ -10,7 +10,7 @@
 	
 		<%@include file="includes/alerts.jsp"%>
 		<div id="wait-message" class="alert-success">
-		    <p>Literal changes have been saved. Before changing another literal, please wait a couple of minutes for the system to process last changes.</p>
+		    <p>The update of your data is now being processed, it can take a few minutes.</p>
 		</div>
 		<div id="wait-message-space" class="clear-content"></div>
 		
@@ -30,7 +30,7 @@
 			<label>Country</label>
 			<% ArrayList<HashMap<String,String>> countryList = (ArrayList<HashMap<String,String>>) request.getAttribute("countryList"); 
 			String countrySelected = (String) request.getAttribute("countrySelected");%>
-			<select id="countrySelect" name="country" onchange="loadLiteralsTable('qualitativeMS')">
+			<select id="countrySelect" name="country" onchange="loadLiterals()">
 				<% for(HashMap<String,String> country : countryList) {  %>
 					<option value="<%=country.get("country_code")%>" <%=countrySelected.equals(country.get("country_code")) ? "selected" : ""%> >
 						<%= (!country.get("country_code").equals("EU28")) ? "("+country.get("country_code")+") "+country.get("country_name") : country.get("country_code") %>
@@ -40,12 +40,14 @@
 		</div>
 		
 		<% String institutionSelected = (String) request.getAttribute("institutionSelected");
-		 if(sectionSelected.equals("MATRIX_AUTHORITY") || sectionSelected.equals("MATRIX_STRATEGY")
-				|| sectionSelected.equals("MATRIX_STATISTICS")) { %>
+		/*boolean isMatrixPage = (boolean) request.getAttribute("isMatrixPage");
+		System.out.println("isMatrixPage: "+isMatrixPage);*/
+		 /*if(sectionSelected.equals("MATRIX_AUTHORITY") || sectionSelected.equals("MATRIX_STRATEGY")
+				|| sectionSelected.equals("MATRIX_STATISTICS")) {*/ %>
 		
 		<div class="conten-input">
 			<label id="institution_type_label">Institution type</label>
-			<select id="institutionSelect" name="institution" onchange="loadLiteralsTable('qualitativeMS')">
+			<select id="institutionSelect" name="institution" onchange="loadLiteralsMatrixPage()">
 				<% if(sectionSelected.equals("MATRIX_AUTHORITY")) { %>
 					<option <%="osh_authority".equals(institutionSelected) ? "selected" : "" %> value="osh_authority">OSH authority</option>
 					<option <%="compensation_insurance".equals(institutionSelected) ? "selected" : "" %> value="compensation_insurance">Compensation and insurance body</option>
@@ -63,63 +65,125 @@
 			</select>
 		</div>
 		
-		<% } %>
+		<% //} %>
 		
-		<div class="conten-input">
-            <button id="updateAllButton" class="disabled" type="submit" name="formSent" value="updateAll" form="labels-form"
-                title="Click here to launch the ETL process and update all the saved changes displayed in the 'Updated text' column" onsubmit="showWaitAlert()"
-            >Update all</button>
-        </div>
 		<div class="clear-content"></div>
 		<form id="labels-form" action="user?page=qualitative_data_member_states" method="post">
+		
 			<% ArrayList<HashMap<String,String>> literalList = (ArrayList<HashMap<String,String>>) request.getAttribute("literalsList");%>
 			<input type="hidden" value="<%=literalList.size() %>" name="literalListSize">
-			<table class="literals columns-4">
-				<thead>
-					<tr>
-					  	<th>Publish</th>
-					  	<th>Literal type</th>
-					    <th>Published text</th>
-						<th>Updated text</th>
-						<th>Actions</th>
-					</tr>
-				</thead>
-				<tbody id="literalListBody">
-					<% int index = 0;
-					boolean updated = false;%>			
-					<% for (HashMap<String,String> data : literalList) { %>
-					<% updated = false; 
-					if(data.get("escaped_updated_text") != null){
-						if(!data.get("escaped_updated_text").equals(data.get("escaped_published_text"))){
-							updated = true;
-						}
-					}%>
-					<tr>
-						<td>
-							<input <%=updated ? "" : "disabled" %> id="check-<%=index%>" type="checkbox" onchange="checkTextChanges()" name="publishCheck_<%=index%>" >
-							<input type="hidden" value="<%=data.get("translation_id")%>" name="translation_id_<%=index %>" id="translation_id_<%=index %>">
-							<!-- <input type="hidden" value="<%=data.get("updated_text")%>" name="updated_text_<%=index %>">-->
-							<input type="hidden" value="<%=sectionSelected%>" name="section_<%=index %>">
-	                        <input type="hidden" value="<%=countrySelected%>" name="country_<%=index %>">
-	                        <input type="hidden" value="<%=institutionSelected%>" name="institution_<%=index %>">
-	                        <input type="hidden" value="<%=data.get("escaped_updated_text")%>" name="escaped_updated_text_<%=index %>" id="escaped_updated_text-<%=index%>">
-	                        <input type="hidden" value="<%=data.get("escaped_published_text")%>" name="escaped_published_text_<%=index %>" id="escaped_published_text-<%=index%>">
-						</td>
-						<td><%=data.get("literal_type") != null ? data.get("literal_type").replace("_", " ") : ""%></td>
-						<td><span id="span_published_text_<%=index%>"><%=data.get("published_text")%></span></td>
-						<td><span class="span_updated_text" id="span_updated_text_<%=index%>"><%=data.get("escaped_updated_text") != null ? data.get("updated_text") : ""%></span></td>
-						<td>
-						<a class="href-link" href="#" onclick='editModal("<%=index%>")'>Edit</a> <a class="href-link <%=(data.get("escaped_updated_text") != null && !data.get("escaped_published_text").equals(data.get("escaped_updated_text"))) ? "" : "disabled"%>" href="#" onclick='undoPopup("<%=index%>")'>Undo</a>
-						<!-- <button class="view-click" onclick='editModal("<%=index%>")'>Edit</button>
-						<button onclick="undoPopup('<%=index%>')" class="<%=(data.get("escaped_updated_text") != null && !data.get("escaped_published_text").equals(data.get("escaped_updated_text"))) ? "" : "disabled"%>">Undo</button> -->
-						</td> 
-					</tr>
-					<% index++; %>
-					<% } %>
-				</tbody>
-			</table>
+			<!-- --------------------------------------------STRATEGIES PAGE----------------------------------------- -->
+			<div id="strategies-page-table">
+				<table class="literals columns-4">
+					<thead>
+						<tr>
+						  	<th>Publish</th>
+						  	<th>Literal type</th>
+						    <th>Published text</th>
+							<th>Updated text</th>
+							<th>Actions</th>
+						</tr>
+					</thead>
+					<tbody id="literalListBody">
+						<% int index = 0;
+						boolean updated = false;%>
+						<% if(sectionSelected.equals("STRATEGY_ENFOR_CAPACITY") || sectionSelected.equals("STRATEGY")){ %>
+						<% for (HashMap<String,String> data : literalList) { %>
+						<% updated = false; 
+						if(data.get("escaped_updated_text") != null){
+							if(!data.get("escaped_updated_text").equals(data.get("escaped_published_text"))){
+								updated = true;
+							}
+						}%>
+						<tr>
+							<td>
+								<input <%=updated ? "" : "disabled" %> id="check-<%=index%>" type="checkbox" onchange="checkTextChanges()" name="publishCheck_<%=index%>" >
+								<input type="hidden" value="<%=data.get("translation_id")%>" name="translation_id_<%=index %>" id="translation_id_<%=index %>">
+								<!-- <input type="hidden" value="<%=data.get("updated_text")%>" name="updated_text_<%=index %>">-->
+								<input type="hidden" value="<%=sectionSelected%>" name="section_<%=index %>">
+		                        <input type="hidden" value="<%=countrySelected%>" name="country_<%=index %>">
+		                        <input type="hidden" value="<%=institutionSelected%>" name="institution_<%=index %>">
+		                        <input type="hidden" value="<%=data.get("escaped_updated_text")%>" name="escaped_updated_text_<%=index %>" id="escaped_updated_text-<%=index%>">
+		                        <input type="hidden" value="<%=data.get("escaped_published_text")%>" name="escaped_published_text_<%=index %>" id="escaped_published_text-<%=index%>">
+							</td>
+							<td><%=data.get("literal_type") != null ? data.get("literal_type").replace("_", " ") : ""%></td>
+							<td><span id="span_published_text_<%=index%>"><%=data.get("published_text")%></span></td>
+							<td><span class="span_updated_text" id="span_updated_text_<%=index%>"><%=data.get("escaped_updated_text") != null ? data.get("updated_text") : ""%></span></td>
+							<td>
+							<a class="href-link" href="#" onclick='editModal("<%=index%>")'>Edit</a> <a class="href-link <%=(data.get("escaped_updated_text") != null && !data.get("escaped_published_text").equals(data.get("escaped_updated_text"))) ? "" : "disabled"%>" href="#" onclick='undoPopup("<%=index%>")'>Undo</a>
+							<!-- <button class="view-click" onclick='editModal("<%=index%>")'>Edit</button>
+							<button onclick="undoPopup('<%=index%>')" class="<%=(data.get("escaped_updated_text") != null && !data.get("escaped_published_text").equals(data.get("escaped_updated_text"))) ? "" : "disabled"%>">Undo</button> -->
+							</td> 
+						</tr>
+						<% index++; %>
+						<% } %>
+						<% } %>
+					</tbody>
+				</table>
+			</div>
+
+<!-- ---------------------------------------------- MATRIX PAGE ---------------------------------------------------------- -->
+			<div id="matrix-page-table">
+				<% ArrayList<HashMap<String,String>> matrixPageCount = (ArrayList<HashMap<String,String>>) request.getAttribute("matrixPageCount"); 
+				//System.out.println("index: "+index);
+				//System.out.println("matrixPageCount: "+matrixPageCount);
+				if(matrixPageCount != null){
+				for (HashMap<String,String> count : matrixPageCount) { %>
+				
+				<table class="literals columns-4">
+					<thead>
+						<tr>
+						  	<th>Publish</th>
+						    <th>Published text</th>
+							<th>Updated text</th>
+							<th>Actions</th>
+						</tr>
+					</thead>
+					<tbody id="matrixListBody_<%=count.get("data_id")%>">
+						<% /*int index = 0;
+						boolean*/ updated = false;%>			
+						<% for (HashMap<String,String> data : literalList) { 
+						//System.out.println("data.get(\"data_id\"): "+data.get("data_id")+" count.get(\"data_id\"): "+count.get("data_id")
+						//	+" are equal? "+data.get("data_id").equals(count.get("data_id")));
+						if(data.get("data_id").equals(count.get("data_id"))){
+							updated = false; 
+							if(data.get("escaped_updated_text") != null){
+								if(!data.get("escaped_updated_text").equals(data.get("escaped_published_text"))){
+									updated = true;
+								}
+							}%>
+						<tr>
+							<td>
+								<input <%=updated ? "" : "disabled" %> id="check-<%=index%>" type="checkbox" onchange="checkTextChanges()" name="publishCheck_<%=index%>" >
+								<input type="hidden" value="<%=data.get("translation_id")%>" name="translation_id_<%=index %>" id="translation_id_<%=index %>">
+								<!-- <input type="hidden" value="<%=data.get("updated_text")%>" name="updated_text_<%=index %>">-->
+								<input type="hidden" value="<%=sectionSelected%>" name="section_<%=index %>">
+		                        <input type="hidden" value="<%=countrySelected%>" name="country_<%=index %>">
+		                        <input type="hidden" value="<%=institutionSelected%>" name="institution_<%=index %>">
+		                        <input type="hidden" value="<%=data.get("escaped_updated_text")%>" name="escaped_updated_text_<%=index %>" id="escaped_updated_text-<%=index%>">
+		                        <input type="hidden" value="<%=data.get("escaped_published_text")%>" name="escaped_published_text_<%=index %>" id="escaped_published_text-<%=index%>">
+							</td>
+							<td><span id="span_published_text_<%=index%>"><%=data.get("published_text")%></span></td>
+							<td><span class="span_updated_text" id="span_updated_text_<%=index%>"><%=data.get("escaped_updated_text") != null ? data.get("updated_text") : ""%></span></td>
+							<td>
+							<a class="href-link" href="#" onclick='editModal("<%=index%>")'>Edit</a> <a class="href-link <%=(data.get("escaped_updated_text") != null && !data.get("escaped_published_text").equals(data.get("escaped_updated_text"))) ? "" : "disabled"%>" href="#" onclick='undoPopup("<%=index%>")'>Undo</a>
+							<!-- <button class="view-click" onclick='editModal("<%=index%>")'>Edit</button>
+							<button onclick="undoPopup('<%=index%>')" class="<%=(data.get("escaped_updated_text") != null && !data.get("escaped_published_text").equals(data.get("escaped_updated_text"))) ? "" : "disabled"%>">Undo</button> -->
+							</td> 
+						</tr>
+						<% index++; %>
+						<% } %>
+						<% } %>
+					</tbody>
+				</table>
+				<% }
+				}%>
+			</div>
 		</form>
 		<button id="publishButton" class="disabled" onclick="openConfirmationModal()">Publish</button>
+        <button id="updateAllButton" class="disabled" type="submit" name="formSent" value="updateAll" form="labels-form"
+            title="Click here to launch the ETL process and update all the saved changes displayed in the 'Updated text' column" onsubmit="showWaitAlert()"
+        >Update all</button>
 		<div class="clear-content"></div>
 		
 		<!-- MODALS -->

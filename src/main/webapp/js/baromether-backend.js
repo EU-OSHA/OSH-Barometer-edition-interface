@@ -258,6 +258,8 @@ $(document).ready(function(){
 			},
 			async: true
 		});
+		
+		$("#chartSelect").val("0");
 		loadLiteralsTable('literals');
 	}
 	
@@ -312,6 +314,11 @@ $(document).ready(function(){
 				var literalListSize = literalsList.length;
 				$('input[name="literalListSize"]').val(literalListSize);
 		        $('#literalListBody').empty();
+
+				if(page == 'qualitativeMS'){
+					$('div#matrix-page-table').empty();
+				}
+
 		        literalsList.forEach(function(literal){
 					new_tbody = new_tbody.concat('<tr>');
 					new_tbody = new_tbody.concat('<td>');
@@ -355,9 +362,9 @@ $(document).ready(function(){
 					
 					//new_tbody = new_tbody.concat('<td><span id="span_published_text_'+index+'">'+literal.published_text+'</span></td>');
 					if(literal.updated_text != null || literal.updated_text != undefined){
-						new_tbody = new_tbody.concat('<td><span id="span_updated_text_'+index+'">'+literal.updated_text+'</span></td>');
+						new_tbody = new_tbody.concat('<td><span class="span_updated_text" id="span_updated_text_'+index+'">'+literal.updated_text+'</span></td>');
 					}else{
-						new_tbody = new_tbody.concat('<td><span id="span_updated_text_'+index+'"></span></td>');	
+						new_tbody = new_tbody.concat('<td><span class="span_updated_text" id="span_updated_text_'+index+'"></span></td>');	
 					}
 					//new_tbody = new_tbody.concat('<td><button class="view-click" onclick="editModal('+index+')">Edit</button>');
 					new_tbody = new_tbody.concat('<td><a class="href-link" href="#" onclick="editModal(\''+index+'\')">Edit</a> ');
@@ -377,7 +384,17 @@ $(document).ready(function(){
 		        $('#literalListBody').html(new_tbody);
 			},
 			async: true
-		});
+		}).done(function(data){
+				console.log('AJAX TERMINADO');
+				if(page == 'qualitativeMS'){
+					enableUpdateAllButton();
+				}
+			});
+		
+		if($('div#qualitative-member-states').length > 0){
+			enableUpdateAllButton();
+		}
+
 	}
 	
 	if($('div#update-labels').length > 0 || $('div#qualitative-member-states').length > 0 || $('div#methodology').length > 0){
@@ -400,16 +417,6 @@ $(document).ready(function(){
 		
 		$('div#wait-message').css("display","none");
 		$('div#wait-message-space').css("display","none");
-		
-		var text_updates = $('.span_updated_text');
-        for (var i = 0; i < text_updates.length; i++) {
-            if(text_updates[i].textContent != ""){
-                if($('#updateAllButton').hasClass('disabled')){
-                    $('#updateAllButton').removeClass('disabled');
-                }
-                break;
-            }
-        }
 	}
 		
 	editModal = function(index/*, published_text, updated_text*/){
@@ -485,6 +492,7 @@ $(document).ready(function(){
 		$("#edit-popup p#publishedText").html(published_text);
 		
 		$("#edit-popup").css("display","block");
+		enableUpdateAllButton();
 	};
 	
 	disableSaveButton = function(){
@@ -643,10 +651,152 @@ $(document).ready(function(){
 			async: true
 		});
 		
-		loadInstitutionsMS(valueSelected);
+		if($('div#qualitative-member-states').length > 0){
+			loadInstitutionsMS(valueSelected);
+			if(valueSelected == "STRATEGY" || valueSelected == "STRATEGY_ENFOR_CAPACITY"){
+				$('div#strategies-page-table').css('display', 'block');
+				$('div#matrix-page-table').css('display', 'none')
+				loadLiteralsTable('qualitativeMS');
+				console.log("Enters loadCountriesQualitativeMS function: "+valueSelected);
+			}else{
+				$('div#strategies-page-table').css('display', 'none');
+				$('div#matrix-page-table').css('display', 'block');
+				loadLiteralsMatrixPage();
+				console.log("Enters loadCountriesQualitativeMS function: "+valueSelected);
+			}
+		}
+	}
+	
+	loadLiteralsMatrixPage = function (){
+		console.log("Enters loadLiteralsMatrixPage function");
+		var section = document.getElementById("sectionSelect");
+		var sectionSelected = section.value;
+		
+		var country = document.getElementById("countrySelect");
+		var countrySelected = country.value;
+		
+		var institution = document.getElementById("institutionSelect");
+		var institutionSelected = institution.value;
+		
+		$.get({
+			url: 'matrixpagesize',
+			data: {
+				section: sectionSelected,
+				country : countrySelected,
+				institution: institutionSelected
+			},
+			success: function(countResponse){
+				var countList = JSON.parse(countResponse);
+				var index = 0;
+				var new_tbody = "";
+				$('div#matrix-page-table').empty();
+				//$('div#strategies-page-table').empty();
+				$('#literalListBody').empty();
+				countList.forEach(function(count){
+					new_tbody = new_tbody.concat('<table class="literals columns-4">');
+					new_tbody = new_tbody.concat('<thead><tr>');
+					new_tbody = new_tbody.concat('<th>Publish</th>');
+					new_tbody = new_tbody.concat('<th>Published text</th>');
+					new_tbody = new_tbody.concat('<th>Updated text</th>');
+					new_tbody = new_tbody.concat('<th>Actions</th>');
+					new_tbody = new_tbody.concat('</tr></thead>');
+					new_tbody = new_tbody.concat('<tbody id="matrixListBody_"'+count.data_id+'>');
+					//new_tbody = new_tbody.concat('');
+					//new_tbody = new_tbody.concat('');
+					
+					$.get({
+						url: 'tableload',
+						data: {
+							section: sectionSelected,
+							country : countrySelected,
+							institution: institutionSelected,
+							get: 'qualitativeMS'
+						},
+						success: function(literalsResponse) {
+							//if(data.get("data_id").equals(count.get("data_id")))
+					        var literalsList = JSON.parse(literalsResponse);
+							//var index = 0;
+							//var new_tbody = "";
+							var literalListSize = literalsList.length;
+							$('input[name="literalListSize"]').val(literalListSize);
+					        //$('#matrixListBody_'+count.data_id).empty();
+					        literalsList.forEach(function(literal){
+								if(literal.data_id == count.data_id){
+									new_tbody = new_tbody.concat('<tr>');
+									new_tbody = new_tbody.concat('<td>');
+									new_tbody = new_tbody.concat('<input ');
+									if(literal.updated_text != null || literal.updated_text != undefined){
+										if(literal.escaped_updated_text == literal.escaped_published_text){
+											new_tbody = new_tbody.concat('disabled');
+										}
+									}else{
+										new_tbody = new_tbody.concat('disabled');
+									}
+									new_tbody = new_tbody.concat(' id="check-'+index+'" type="checkbox" onchange="checkTextChanges()" name="publishCheck_'+index+'">');
+									new_tbody = new_tbody.concat('<input type="hidden" value="'+literal.translation_id+'" name="translation_id_'+index+'" id="translation_id_'+index+'">');
+									new_tbody = new_tbody.concat('<input type="hidden" value="'+sectionSelected+'" name="section_'+index+'">');
+									/*if(page == 'literals'){
+										new_tbody = new_tbody.concat('<input type="hidden" value="'+chartSelected+'" name="chart_'+index+'">');
+									}else if(page == 'qualitativeMS'){*/
+									new_tbody = new_tbody.concat('<input type="hidden" value="'+countrySelected+'" name="country_'+index+'">');
+									new_tbody = new_tbody.concat('<input type="hidden" value="'+institutionSelected+'" name="institution_'+index+'">');
+									/*}else{
+										new_tbody = new_tbody.concat('<input type="hidden" value="'+indicatorSelected+'" name="indicator_'+index+'">');
+									}*/
+									
+									new_tbody = new_tbody.concat('<input type="hidden" value="'+literal.escaped_updated_text+'" name="escaped_updated_text_'+index+'" id="escaped_updated_text-'+index+'">');
+									new_tbody = new_tbody.concat('<input type="hidden" value="'+literal.escaped_published_text+'" name="escaped_published_text_'+index+'" id="escaped_published_text-'+index+'">');
+									new_tbody = new_tbody.concat('</td>');
+									/*if(page != 'qualitativeMS' || (literal.page == "STRATEGY" || literal.page == "STRATEGY_ENFOR_CAPACITY")){
+										new_tbody = new_tbody.concat('<td>');
+										if(literal.literal_type != null && literal.literal_type != ""){
+											new_tbody = new_tbody.concat(literal.literal_type.replace('_', ' '));
+										}
+										new_tbody = new_tbody.concat('</td>');
+									}*/
+									
+									if(literal.published_text != "null"){
+										new_tbody = new_tbody.concat('<td><span id="span_published_text_'+index+'">'+literal.published_text+'</span></td>');
+									}else{
+										new_tbody = new_tbody.concat('<td><span id="span_published_text_'+index+'"></span></td>');
+									}
+									
+									if(literal.updated_text != null || literal.updated_text != undefined){
+										new_tbody = new_tbody.concat('<td><span class="span_updated_text" id="span_updated_text_'+index+'">'+literal.updated_text+'</span></td>');
+									}else{
+										new_tbody = new_tbody.concat('<td><span class="span_updated_text" id="span_updated_text_'+index+'"></span></td>');	
+									}
+									new_tbody = new_tbody.concat('<td><a class="href-link" href="#" onclick="editModal(\''+index+'\')">Edit</a> ');
+									
+									if(literal.updated_text != null && literal.updated_text != literal.escaped_published_text){
+										new_tbody = new_tbody.concat('<a class="href-link" href="#" onclick="undoPopup(\''+index+'\')">Undo</a>');
+									}else{
+										new_tbody = new_tbody.concat('<a class="href-link disabled" href="#" onclick="undoPopup(\''+index+'\')">Undo</a>');
+									}
+									new_tbody = new_tbody.concat('</td>');
+									new_tbody = new_tbody.concat('</tr>');
+									index++;
+								}
+					        });
+					        //$('#literalListBody').html(new_tbody);
+						},
+						async: false
+					});
+					
+					new_tbody = new_tbody.concat('</tbody>');
+					new_tbody = new_tbody.concat('</table>');
+				});
+				$('div#matrix-page-table').html(new_tbody);
+			},
+			async: true
+		}).done(function(data){
+				console.log('AJAX TERMINADO');
+				enableUpdateAllButton();
+			});
 	}
 	
 	loadInstitutionsMS = function(sectionSelected){
+		console.log("Enters loadInstitutionsMS function");
 		var new_tbody = "";
 		$('#institutionSelect').empty();
 		$('#institutionSelect').css('display', 'block');
@@ -671,7 +821,20 @@ $(document).ready(function(){
 		
 		$('#institutionSelect').html(new_tbody);
 		
-		loadLiteralsTable('qualitativeMS');
+		//loadLiteralsTable('qualitativeMS');
+		//loadLiteralsMatrixPage();
+	}
+	
+	loadLiterals = function(){
+		console.log("Enters loadLiterals function");
+		var section = document.getElementById("sectionSelect");
+		var sectionSelected = section.value;
+		if(sectionSelected == "STRATEGY" || sectionSelected == "STRATEGY_ENFOR_CAPACITY"){
+			loadLiteralsTable('qualitativeMS');
+		}else{
+			loadInstitutionsMS(sectionSelected);
+			loadLiteralsMatrixPage();
+		}
 	}
 	
 	loadIndicatorsBySection = function() {
@@ -706,6 +869,37 @@ $(document).ready(function(){
 		
 		loadLiteralsTable('methodology');
 	};
+	
+	enableUpdateAllButton = function() {
+		var text_updates = $('.span_updated_text');
+		//console.log('text_updates length: '+text_updates.length);
+		$('#updateAllButton').addClass('disabled');
+        for (var i = 0; i < text_updates.length; i++) {
+            if(text_updates[i].textContent != ""){
+                if($('#updateAllButton').hasClass('disabled')){
+                    $('#updateAllButton').removeClass('disabled');
+                }
+                break;
+            }
+        }
+	}
+	
+	if($('div#qualitative-member-states').length > 0){
+		var section = document.getElementById("sectionSelect");
+		var sectionSelected = section.value;
+		if(sectionSelected == "STRATEGY" || sectionSelected == "STRATEGY_ENFOR_CAPACITY"){
+			$('div#strategies-page-table').css('display', 'block');
+			$('div#matrix-page-table').css('display', 'none')
+			$('#institutionSelect').css('display', 'none');
+			$('#institution_type_label').css('display', 'none');
+		}else{
+			$('div#strategies-page-table').css('display', 'none');
+			$('div#matrix-page-table').css('display', 'block')
+			$('#institutionSelect').css('display', 'block');
+			$('#institution_type_label').css('display', 'block');
+		}
+		enableUpdateAllButton();
+	}
 });
 
 })(jQuery);
