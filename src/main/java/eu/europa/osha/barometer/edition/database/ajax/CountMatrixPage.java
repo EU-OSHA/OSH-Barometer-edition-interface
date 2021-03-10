@@ -15,40 +15,32 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 
-import eu.europa.osha.barometer.edition.webui.business.UpdateLabelsBusiness;
+import eu.europa.osha.barometer.edition.webui.business.QualitativeMSDataBusiness;
 
 @WebServlet
 (
-    name = "controllerchartload",
+    name = "controllermatrixpage",
     description = "Servlet that receives Ajax calls",
-    urlPatterns = {"/chartload"}
+    urlPatterns = {"/matrixpagesize"}
 )
-public class ChartLoad extends HttpServlet {
+public class CountMatrixPage extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final Logger LOGGER = LogManager.getLogger(ChartLoad.class);
+	private static final Logger LOGGER = LogManager.getLogger(CountMatrixPage.class);
 	
-	/**
-	 * Service for ajax. This service will retrieve in the servlet response a list of
-	 * charts for Update Labels page
-     * @param req HttpServletRequest request 
-     * @param res HttpServletResponse response
-	 */
 	public void service(HttpServletRequest req, HttpServletResponse res)
             throws ServletException, IOException
     {
-		LOGGER.info("App flow arrives to ChartLoad Ajax service");
+		LOGGER.info("App flow arrives to CountMatrixPage Ajax service");
 		Gson g = new Gson();
         String returningData = "";
-        String section = req.getParameter("section");
-        ArrayList<HashMap<String,String>> chartList = null;
+		String section = req.getParameter("section");
+		String country = req.getParameter("country");
+		String institution = req.getParameter("institution");
 
-        //chartList = QualitativeDataBusiness.getChartsBySection(section);
-        chartList = UpdateLabelsBusiness.getChartsBySectionUpdateLabels(section);
-        LOGGER.info("chartList length: "+chartList.size());
-        
-        req.setAttribute("sectionSelected", section);
-        
-        returningData = g.toJson(chartList);        
+		ArrayList<HashMap<String,String>> countIdList = QualitativeMSDataBusiness.getMatrixPageDataCount(section, country, institution);
+		LOGGER.info("countIdList for Matrix page length: "+countIdList.size());
+		returningData = g.toJson(countIdList);
+		
 		res.setContentType("text/plain");
         res.setCharacterEncoding("UTF-8");
         LOGGER.info("Converting Arraylist to Json");

@@ -15,40 +15,33 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 
-import eu.europa.osha.barometer.edition.webui.business.UpdateLabelsBusiness;
+import eu.europa.osha.barometer.edition.webui.business.MethodologyBusiness;
 
 @WebServlet
 (
-    name = "controllerchartload",
+    name = "controllerindicatorload",
     description = "Servlet that receives Ajax calls",
-    urlPatterns = {"/chartload"}
+    urlPatterns = {"/indicatorload"}
 )
-public class ChartLoad extends HttpServlet {
+public class IndicatorLoad extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final Logger LOGGER = LogManager.getLogger(ChartLoad.class);
+	private static final Logger LOGGER = LogManager.getLogger(IndicatorLoad.class);
 	
-	/**
-	 * Service for ajax. This service will retrieve in the servlet response a list of
-	 * charts for Update Labels page
-     * @param req HttpServletRequest request 
-     * @param res HttpServletResponse response
-	 */
 	public void service(HttpServletRequest req, HttpServletResponse res)
             throws ServletException, IOException
     {
-		LOGGER.info("App flow arrives to ChartLoad Ajax service");
+		LOGGER.info("App flow arrives to IndicatorLoad Ajax service");
 		Gson g = new Gson();
         String returningData = "";
         String section = req.getParameter("section");
-        ArrayList<HashMap<String,String>> chartList = null;
+        ArrayList<HashMap<String,String>> indicatorList = null;
 
-        //chartList = QualitativeDataBusiness.getChartsBySection(section);
-        chartList = UpdateLabelsBusiness.getChartsBySectionUpdateLabels(section);
-        LOGGER.info("chartList length: "+chartList.size());
+        indicatorList = MethodologyBusiness.getIndicatorsBySection(section);
+        LOGGER.info("indicatorList length: "+indicatorList.size());
         
         req.setAttribute("sectionSelected", section);
         
-        returningData = g.toJson(chartList);        
+        returningData = g.toJson(indicatorList);        
 		res.setContentType("text/plain");
         res.setCharacterEncoding("UTF-8");
         LOGGER.info("Converting Arraylist to Json");

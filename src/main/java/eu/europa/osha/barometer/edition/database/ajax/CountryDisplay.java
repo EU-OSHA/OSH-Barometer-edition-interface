@@ -16,6 +16,7 @@ import org.apache.logging.log4j.Logger;
 import com.google.gson.Gson;
 
 import eu.europa.osha.barometer.edition.webui.business.CountryReportBusiness;
+import eu.europa.osha.barometer.edition.webui.business.QualitativeMSDataBusiness;
 
 @WebServlet
 (
@@ -48,6 +49,13 @@ public class CountryDisplay extends HttpServlet {
         } else if(section.equals("social_dialogue")) {
         	countryList = CountryReportBusiness.getSocialDialogueCountries();
         	LOGGER.info("countryList Social Dialogue length: "+countryList.size());
+        } else if(section.equals("MATRIX_AUTHORITY") || section.equals("MATRIX_STRATEGY") 
+        		|| section.equals("MATRIX_STATISTICS")) {
+        	countryList = QualitativeMSDataBusiness.getCountriesByMatrixPageSection(section);
+        	LOGGER.info("countryList "+section+" length: "+countryList.size());
+        } else if(section.equals("STRATEGY") || section.equals("STRATEGY_ENFOR_CAPACITY")) {
+        	countryList = QualitativeMSDataBusiness.getCountriesByStrategiesPageSection(section);
+        	LOGGER.info("countryList "+section+" length: "+countryList.size());
         }
         
         returningData = g.toJson(countryList);        

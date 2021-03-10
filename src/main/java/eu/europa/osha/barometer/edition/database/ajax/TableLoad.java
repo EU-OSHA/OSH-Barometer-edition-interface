@@ -15,7 +15,9 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 
+import eu.europa.osha.barometer.edition.webui.business.MethodologyBusiness;
 import eu.europa.osha.barometer.edition.webui.business.QualitativeDataBusiness;
+import eu.europa.osha.barometer.edition.webui.business.QualitativeMSDataBusiness;
 import eu.europa.osha.barometer.edition.webui.business.UpdateLabelsBusiness;
 
 @WebServlet
@@ -40,7 +42,14 @@ public class TableLoad extends HttpServlet {
         String returningData = "";
 		String section = req.getParameter("section");
 		String chart = req.getParameter("chart");
+		
+		String country = req.getParameter("country");
+		String institution = req.getParameter("institution");
+		
+		String indicator = req.getParameter("indicator");
+		
 		String get = req.getParameter("get");
+		
 		if(get.equals("charts")) {
 			ArrayList<HashMap<String,String>> chartsBySectionList = QualitativeDataBusiness.getChartsBySection(section);
 			LOGGER.info("chartsBySectionList length: "+chartsBySectionList.size());
@@ -57,6 +66,20 @@ public class TableLoad extends HttpServlet {
 		} else if(get.equals("literals")) {
 			ArrayList<HashMap<String,String>> literalsList = UpdateLabelsBusiness.getLiteralsBySectionAndChart(section, chart);
 			LOGGER.info("literalsList length: "+literalsList.size());
+			returningData = g.toJson(literalsList);
+		} else if(get.equals("qualitativeMS")) {
+			ArrayList<HashMap<String,String>> literalsList = null;
+			if(section.contains("MATRIX")) {
+				literalsList = QualitativeMSDataBusiness.getMatrixPageDataByCountryAndInstitution(section, country, institution);
+				LOGGER.info("literalsList for Matrix length: "+literalsList.size());
+			}else{
+				literalsList = QualitativeMSDataBusiness.getStrategiesPageDataByCountryAndInstitution(section, country);
+				LOGGER.info("literalsList for Strategies length: "+literalsList.size());
+			}
+			returningData = g.toJson(literalsList);
+		} else if(get.equals("methodology")) {
+			ArrayList<HashMap<String,String>> literalsList = MethodologyBusiness.getLiteralsMethodology(section, indicator);
+			LOGGER.info("literalsList for Methodology length: "+literalsList.size());
 			returningData = g.toJson(literalsList);
 		}
 		
