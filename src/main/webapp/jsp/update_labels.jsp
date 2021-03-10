@@ -41,11 +41,6 @@
 			<% } %>
 			</select>
 		</div>
-		<div class="conten-input">
-			<button id="updateAllButton" class="disabled" type="submit" name="formSent" value="updateAll" form="labels-form"
-				title="Click here to launch the ETL process and update all the saved changes displayed in the 'Updated text' column" onsubmit="showWaitAlert()"
-			>Update all</button>
-		</div>
 		<div class="clear-content"></div>
 		<form id="labels-form" action="user?page=update_labels" method="post">
 			<% ArrayList<HashMap<String,String>> literalList = (ArrayList<HashMap<String,String>>) request.getAttribute("literalList");%>
@@ -97,6 +92,9 @@
 			</table>
 		</form>
 		<button id="publishButton" class="disabled" onclick="openConfirmationModal()">Publish</button>
+		<button id="updateAllButton" class="disabled" type="submit" name="formSent" value="updateAll" form="labels-form"
+			title="Click here to launch the ETL process and update all the saved changes displayed in the 'Updated text' column" onsubmit="showWaitAlert()"
+		>Update all</button>
 		<div class="clear-content"></div>
 		
 		<!-- MODALS -->
