@@ -93,7 +93,7 @@
 		</form>
 		<button id="publishButton" class="disabled" onclick="openConfirmationModal()">Publish</button>
 		<button id="updateAllButton" class="disabled" type="submit" name="formSent" value="updateAll" form="labels-form"
-			title="Click here to launch the ETL process and update all the saved changes displayed in the 'Updated text' column" onsubmit="showWaitAlert()"
+			title="Click here to launch the ETL process and update all the saved changes displayed in the 'Updated text' column" onclick="showWaitAlert()"
 		>Update all</button>
 		<div class="clear-content"></div>
 		
@@ -127,7 +127,7 @@
 		<div id="confirm-popup" class="popup-confirm">
 			<div class="close close-click">x</div>
 			<p>Have you checked your new text/data in this <a href="https://test-visualisation.osha.europa.eu/osh-barometer#!/" target="_blank">URL</a> test environment and it is ok, press the 'Publish' button and the text/data will be updated in the dataset. To be able to see it in production environment, please request the corresponding deployment to the developers.</p>
-			<button class="close-click" id="modalConfirmButton" type="submit" name="formSent" value="confirmUpdate" form="labels-form" onsubmit="showWaitAlert()">Confirm</button>
+			<button class="close-click" id="modalConfirmButton" type="submit" name="formSent" value="confirmUpdate" form="labels-form" onclick="showWaitAlert()">Confirm</button>
 			<button class="close-click" id="modalConfirmCancelButton">Cancel</button>
 		</div>
 	</div>

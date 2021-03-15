@@ -78,7 +78,7 @@
 					<thead>
 						<tr>
 						  	<th>Publish</th>
-						  	<th>Literal type</th>
+						  	<th>Indicator Name</th>
 						    <th>Published text</th>
 							<th>Updated text</th>
 							<th>Actions</th>
@@ -182,7 +182,7 @@
 		</form>
 		<button id="publishButton" class="disabled" onclick="openConfirmationModal()">Publish</button>
         <button id="updateAllButton" class="disabled" type="submit" name="formSent" value="updateAll" form="labels-form"
-            title="Click here to launch the ETL process and update all the saved changes displayed in the 'Updated text' column" onsubmit="showWaitAlert()"
+            title="Click here to launch the ETL process and update all the saved changes displayed in the 'Updated text' column" onclick="showWaitAlert()"
         >Update all</button>
 		<div class="clear-content"></div>
 		

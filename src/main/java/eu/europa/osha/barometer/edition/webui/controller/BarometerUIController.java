@@ -812,13 +812,14 @@ public class BarometerUIController extends HttpServlet{
 								LOGGER.info("outputDirectory: "+outputDirectory);
 								countryList = CountryReportBusiness.getNationalStrategiesCountries();
 								filename.append("National-Strategies-Mapping_");
-								if(country.equals("Germany")) {
+								filename.append(country);
+								/*if(country.equals("Germany")) {
 									filename.append("2017_Germany");
-								} /*else if(country.equals("Czechia")) {
+								} else if(country.equals("Czechia")) {
 									filename.append("Czech Republic");
-								} */else {
+								} else {
 									filename.append(country);
-								}
+								}*/
 							} else if(section.equals("social_dialogue")) {
 								LOGGER.info("Uploading social dialogue pdf file");
 								outputDirectory = configurationData.getString("directory.barometer")+configurationData.getString("directory.country_reports.social_dialogue.output");
