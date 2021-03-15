@@ -78,7 +78,7 @@
 					<thead>
 						<tr>
 						  	<th>Publish</th>
-						  	<th>Indicator Name</th>
+						  	<th>Indicator name</th>
 						    <th>Published text</th>
 							<th>Updated text</th>
 							<th>Actions</th>

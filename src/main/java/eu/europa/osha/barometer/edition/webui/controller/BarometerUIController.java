@@ -14,9 +14,13 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.ResourceBundle;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipOutputStream;
 
 import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
@@ -437,6 +441,9 @@ public class BarometerUIController extends HttpServlet{
 				
 				StringBuilder resultStringBuilder = null;
 				
+				String zipsDirectory = configurationData.getString("barometer.working.directory") 
+						+ configurationData.getString("barometer.eurostat.zip.directory") ;
+				
 				String command = null;
 				submit = req.getParameter("formSent");
 				if(submit != null) {
@@ -520,8 +527,45 @@ public class BarometerUIController extends HttpServlet{
 					}
 					
 					if(validation) {
+						if(fileName.contains(FATAL_WORK_ACCIDENTS_TEMPLATE)) {
+							File before_zip = new File(zipsDirectory+"Eurostat_Quantitative_Templates.zip");
+							File after_zip = new File(zipsDirectory+"Eurostat_Quantitative_Templates_old.zip");
+							boolean renamed = before_zip.renameTo(after_zip);
+							InputStream fileContent = file.getInputStream();
+							ZipFile zipFile = new ZipFile(zipsDirectory+"Eurostat_Quantitative_Templates_old.zip");
+							final ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipsDirectory+"Eurostat_Quantitative_Templates.zip"));
+							for(Enumeration e = zipFile.entries(); e.hasMoreElements(); ) {
+								ZipEntry entryIn = (ZipEntry) e.nextElement();
+								if (!entryIn.getName().equalsIgnoreCase("EU-OSHA_OIE_Eurostat_Fatal_Work_accidents_YYYYMMDD.xlsx")) {
+									ZipEntry zipEntry = new ZipEntry(entryIn.getName());
+//							        zos.putNextEntry(entryIn);
+									zos.putNextEntry(zipEntry);
+							        InputStream is = zipFile.getInputStream(entryIn);
+							        byte[] buf = new byte[1024];
+							        int len;
+							        while((len = is.read(buf)) > 0) {            
+							            zos.write(buf, 0, len);
+							        }
+							    }
+							    else{
+							        zos.putNextEntry(new ZipEntry("EU-OSHA_OIE_Eurostat_Fatal_Work_accidents_YYYYMMDD.xlsx"));
+							        byte[] buf = new byte[1024];
+							        int len;
+							        while ((len = (fileContent.read(buf))) > 0) {
+							            zos.write(buf, 0, (len < buf.length) ? len : buf.length);
+							        }
+							    }
+								zos.closeEntry();
+							}
+							zos.close();
+							zipFile.close();
+							fileContent.close();
+							after_zip.delete();
+						}
+						
 						LOGGER.info("File name: "+fileName);
-						InputStream fileContent = file.getInputStream();						
+//						InputStream fileContent = file.getInputStream();
+						InputStream fileContent2 = file.getInputStream();
 						OutputStream out = null;
 						
 						try {
@@ -543,7 +587,7 @@ public class BarometerUIController extends HttpServlet{
 					        int read = 0;
 					        final byte[] bytes = new byte[1024];
 
-					        while ((read = fileContent.read(bytes)) != -1) {
+					        while ((read = fileContent2.read(bytes)) != -1) {
 					            out.write(bytes, 0, read);
 					        }
 					        LOGGER.info("File "+fileName+" being uploaded to " + inputDirectory);
@@ -636,6 +680,8 @@ public class BarometerUIController extends HttpServlet{
 					        	errorMessage = "An error has occurred while processing excel file";
 					        }
 					        
+					        
+					        
 						} catch(Exception e) {
 							LOGGER.error("An error has occurred while processing file uploaded.");
 							errorMessage = "An error has occurred while processing excel file.";
@@ -644,8 +690,8 @@ public class BarometerUIController extends HttpServlet{
 					        if (out != null) {
 					            out.close();
 					        }
-					        if (fileContent != null) {
-					        	fileContent.close();
+					        if (fileContent2 != null) {
+					        	fileContent2.close();
 					        }
 						}
 					}
@@ -934,13 +980,13 @@ public class BarometerUIController extends HttpServlet{
 							}
 						}
 						
-						errorMessage = executeLiteralsETL(command);
+//						errorMessage = executeLiteralsETL(command);
                         
                         if(errorMessage == null) {
                             confirmationMessage = "Literals updated successfully.";
                         }
                     } else if(submit.equals("updateAll")) {
-                        errorMessage = executeLiteralsETL(command);
+//                        errorMessage = executeLiteralsETL(command);
                         
                         if(errorMessage == null) {
                             confirmationMessage = "Literals updated successfully.";
@@ -1009,6 +1055,15 @@ public class BarometerUIController extends HttpServlet{
 				ArrayList<HashMap<String,String>> indicatorList = null;
 				ArrayList<HashMap<String,String>> literalList = null;
 				
+				String jobDirectory = configurationData.getString("directory.etl")+configurationData.getString("directory.etl.job.literals");
+				LOGGER.info("jobDirectory: "+jobDirectory);
+				String spoonLogsDirectory = configurationData.getString("directory.etl")+configurationData.getString("directory.etl.logs");
+				LOGGER.info("spoonLogsDirectory: "+spoonLogsDirectory);
+				String scriptDirectory = configurationData.getString("directory.etl")+configurationData.getString("directory.script");
+				LOGGER.info("scriptDirectory: "+scriptDirectory);
+				String command = "sh "+scriptDirectory+"literals.sh " + jobDirectory + " " + configurationData.getString("directory.etl")
+					+ " " + spoonLogsDirectory;
+				
 				if(submit != null) {
 					if(submit.equals("saveDraft")) {
 						textUpdate = MethodologyBusiness.updateDraftText(updatedTextEditor, translation_id);
@@ -1038,37 +1093,49 @@ public class BarometerUIController extends HttpServlet{
 								LOGGER.info("Literal with id: "+translation_id+" updated in database: "+updatedLiteral);
 							}
 						}
-					}
-					
-					try {
-						String jobDirectory = configurationData.getString("directory.etl")+configurationData.getString("directory.etl.job.literals");
-						LOGGER.info("jobDirectory: "+jobDirectory);
-						String spoonLogsDirectory = configurationData.getString("directory.etl")+configurationData.getString("directory.etl.logs");
-						LOGGER.info("spoonLogsDirectory: "+spoonLogsDirectory);
-						String scriptDirectory = configurationData.getString("directory.etl")+configurationData.getString("directory.script");
-						LOGGER.info("scriptDirectory: "+scriptDirectory);
-						String command = "sh "+scriptDirectory+"literals.sh " + jobDirectory + " " + configurationData.getString("directory.etl")
-							+ " " + spoonLogsDirectory;
-						LOGGER.info("LINUX: command to execute: "+command);
-						Process p = Runtime.getRuntime().exec(command);
-						LOGGER.info("Waiting for script to end...");
-						p.waitFor();
-						LOGGER.info("Script process ended.");
 						
-						try {
-							copyFilesToDVT();
-						} catch (Exception e) {
-							LOGGER.error("ERROR WHILE MOVING FILES TO DVT. "+e.getMessage());
-							e.printStackTrace();
-							errorMessage = "An error has occurred while processing literals";
-						}
-							
-					} catch (Exception e) {
-						LOGGER.error("An error has occurred while creating json file for literals.");
-						LOGGER.error("Error: "+e.getMessage());
-						e.printStackTrace();
-						errorMessage = "An error has occurred while processing literals";
-					}
+						errorMessage = executeLiteralsETL(command);
+                        
+                        if(errorMessage == null) {
+                            confirmationMessage = "Literals updated successfully.";
+                        }
+					} else if(submit.equals("updateAll")) {
+                        errorMessage = executeLiteralsETL(command);
+                        
+                        if(errorMessage == null) {
+                            confirmationMessage = "Literals updated successfully.";
+                        }
+                    }
+					
+//					try {
+//						String jobDirectory = configurationData.getString("directory.etl")+configurationData.getString("directory.etl.job.literals");
+//						LOGGER.info("jobDirectory: "+jobDirectory);
+//						String spoonLogsDirectory = configurationData.getString("directory.etl")+configurationData.getString("directory.etl.logs");
+//						LOGGER.info("spoonLogsDirectory: "+spoonLogsDirectory);
+//						String scriptDirectory = configurationData.getString("directory.etl")+configurationData.getString("directory.script");
+//						LOGGER.info("scriptDirectory: "+scriptDirectory);
+//						String command = "sh "+scriptDirectory+"literals.sh " + jobDirectory + " " + configurationData.getString("directory.etl")
+//							+ " " + spoonLogsDirectory;
+//						LOGGER.info("LINUX: command to execute: "+command);
+//						Process p = Runtime.getRuntime().exec(command);
+//						LOGGER.info("Waiting for script to end...");
+//						p.waitFor();
+//						LOGGER.info("Script process ended.");
+//						
+//						try {
+//							copyFilesToDVT();
+//						} catch (Exception e) {
+//							LOGGER.error("ERROR WHILE MOVING FILES TO DVT. "+e.getMessage());
+//							e.printStackTrace();
+//							errorMessage = "An error has occurred while processing literals";
+//						}
+//							
+//					} catch (Exception e) {
+//						LOGGER.error("An error has occurred while creating json file for literals.");
+//						LOGGER.error("Error: "+e.getMessage());
+//						e.printStackTrace();
+//						errorMessage = "An error has occurred while processing literals";
+//					}
 				}
 				
 				sendAlertsToUser(req, confirmationMessage, errorMessage);
