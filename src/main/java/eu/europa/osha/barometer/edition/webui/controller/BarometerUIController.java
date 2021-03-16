@@ -529,7 +529,7 @@ public class BarometerUIController extends HttpServlet{
 					if(validation) {
 						if(fileName.contains(FATAL_WORK_ACCIDENTS_TEMPLATE) || fileName.contains(NON_FATAL_WORK_ACCIDENTS_TEMPLATE)) {
 							try {
-								LOGGER.info("Excel file is Fatal Work Accidents");
+								LOGGER.info("Excel file is "+fileName);
 								File before_zip = new File(zipsDirectory+"Eurostat_Quantitative_Templates.zip");
 								LOGGER.info("Path of the zip: "+zipsDirectory+"Eurostat_Quantitative_Templates.zip");
 								File after_zip = new File(zipsDirectory+"Eurostat_Quantitative_Templates_old.zip");
@@ -997,7 +997,9 @@ public class BarometerUIController extends HttpServlet{
                         }
                     } else if(submit.equals("updateAll")) {
 //                        errorMessage = executeLiteralsETL(command);
-                        
+                    	section = req.getParameter("section_0");
+						country = req.getParameter("country_0");
+						institution = req.getParameter("institution_0");
                         if(errorMessage == null) {
                             confirmationMessage = "Literals updated successfully.";
                         }
