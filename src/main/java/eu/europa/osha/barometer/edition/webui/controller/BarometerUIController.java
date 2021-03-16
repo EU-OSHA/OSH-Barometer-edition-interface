@@ -37,6 +37,10 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
 import org.apache.commons.lang3.SystemUtils;
+import org.apache.directory.api.ldap.model.exception.LdapException;
+import org.apache.directory.ldap.client.api.LdapConnection;
+import org.apache.directory.ldap.client.api.LdapNetworkConnection;
+import org.apache.directory.ldap.client.template.LdapConnectionTemplate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -50,6 +54,7 @@ import eu.europa.osha.barometer.edition.webui.business.QualitativeMSDataBusiness
 import eu.europa.osha.barometer.edition.webui.business.QuantitativeDataBusiness;
 import eu.europa.osha.barometer.edition.webui.business.UpdateLabelsBusiness;
 import eu.europa.osha.barometer.edition.webui.security.ConfigurationImpl;
+import eu.europa.osha.barometer.edition.webui.security.LDAPConnectionService;
 import eu.europa.osha.barometer.edition.webui.security.PassiveCallbackHandler;
 
 /**
@@ -160,20 +165,24 @@ public class BarometerUIController extends HttpServlet{
 				if (logout != null) {
 					LOGGER.info("Logging out from OSH Barometer Edition Tool.");
 					//LDAP LOGOUT
-					try {
-						User user = (User) session.getAttribute("user");
-						CallbackHandler callbackHandler = new PassiveCallbackHandler(user.getUsername(), user.getPassword());
-						Subject subject = null;
+					String url = configurationData.getString("ldap.provider.url");
+					LdapConnection connection = LDAPConnectionService.getConnection(url);
+					LDAPConnectionService.logout(connection);
 					
-						LoginContext lc = new LoginContext(ConfigurationImpl.LDAP_CONFIGURATION_NAME, 
-								subject, callbackHandler, new ConfigurationImpl());
-						lc.logout();
-					} catch(Exception e) {
-						LOGGER.error("AN ERROR HAS OCCURRED WHILE LOGGING OUT.");
-						e.printStackTrace();
-					} finally {
-						nextURL = "/jsp/login.jsp";
-					}
+//					try {
+//						User user = (User) session.getAttribute("user");
+//						CallbackHandler callbackHandler = new PassiveCallbackHandler(user.getUsername(), user.getPassword());
+//						Subject subject = null;
+//					
+//						LoginContext lc = new LoginContext(ConfigurationImpl.LDAP_CONFIGURATION_NAME, 
+//								subject, callbackHandler, new ConfigurationImpl());
+//						lc.logout();
+//					} catch(Exception e) {
+//						LOGGER.error("AN ERROR HAS OCCURRED WHILE LOGGING OUT.");
+//						e.printStackTrace();
+//					} finally {
+//						nextURL = "/jsp/login.jsp";
+//					}
 
 					/* TEMPORAL LOGOUT */
 					session.removeAttribute("user");
@@ -199,61 +208,42 @@ public class BarometerUIController extends HttpServlet{
 					if(temporalLogin != null) {
 						LOGGER.info("Username and password correct.");
 						loginCorrect = true;
-						User userTemporal = new User(username, password);
-						session.setAttribute("user", userTemporal);
+//						User userTemporal = new User(username, password);
+//						session.setAttribute("user", userTemporal);
 					} else {
 						//LDAP LOGIN
 						//Connect to LDAP to check if user/mail and password exist
-						try {
-							CallbackHandler callbackHandler = new PassiveCallbackHandler(username, password);
-							Subject subject = null;
-	
-							String user = null;
+						String url = configurationData.getString("ldap.provider.url");
+						LdapConnection connection = LDAPConnectionService.getConnection(url);
+						loginCorrect = LDAPConnectionService.login(connection, username, password);
+						LDAPConnectionService.closeConnection(connection);
 						
-							LoginContext lc = new LoginContext(ConfigurationImpl.LDAP_CONFIGURATION_NAME, 
-									subject, callbackHandler, new ConfigurationImpl());
-							lc.login();
-
-							subject = lc.getSubject();
-
-							for(Iterator it = subject.getPrincipals(UserPrincipal.class).iterator(); it.hasNext();) {
-								UserPrincipal userPrincipal = (UserPrincipal) it.next();
-								LOGGER.info("Authenticated: "+userPrincipal.getName());
-								username = userPrincipal.getName();
-							}
-
-						}catch(Exception e) {
-							LOGGER.error("ERROR WHILE AUTHENTICATING");
-							e.printStackTrace();
-						} finally{
-							nextURL = "/jsp/login.jsp";
-						}
-					}
-					
-//					if(username != null) {
-//						if(password != null) {
-//							if(username.equals(USERNAME) && password.equals(PASSWORD)) {
-//								LOGGER.info("Username and password correct.");
-//								loginCorrect = true;
-//								User user = new User(username, password);
-//								session.setAttribute("user", user);
-//							} else {
-//								LOGGER.error("Login failed. Username or password not correct.");
+//						try {
+//							CallbackHandler callbackHandler = new PassiveCallbackHandler(username, password);
+//							Subject subject = null;
+//	
+//							String user = null;
+//						
+//							LoginContext lc = new LoginContext(ConfigurationImpl.LDAP_CONFIGURATION_NAME, 
+//									subject, callbackHandler, new ConfigurationImpl());
+//							lc.login();
+//
+//							subject = lc.getSubject();
+//
+//							for(Iterator it = subject.getPrincipals(UserPrincipal.class).iterator(); it.hasNext();) {
+//								UserPrincipal userPrincipal = (UserPrincipal) it.next();
+//								LOGGER.info("Authenticated: "+userPrincipal.getName());
+//								username = userPrincipal.getName();
 //							}
-//						} else {
-//							LOGGER.error("Login failed. Password is empty.");
+//
+//						}catch(Exception e) {
+//							LOGGER.error("ERROR WHILE AUTHENTICATING");
+//							e.printStackTrace();
+//						} finally{
+//							nextURL = "/jsp/login.jsp";
 //						}
-//					}
+					}
 				}
-
-//				if(loginCorrect) {
-//					LOGGER.info("Login correct. Accessing to OSH Barometer homepage.");
-//					nextURL = "/jsp/home.jsp";
-//				}else {
-//					LOGGER.error("Login failed. Returning to login page.");
-//					errorMessage = "Sorry, unrecognized username or password.";
-//					nextURL = "/jsp/login.jsp";
-//				}
 
 				//boolean loginCorrect = true;
 				if(loginCorrect) {
@@ -541,7 +531,8 @@ public class BarometerUIController extends HttpServlet{
 								final ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipsDirectory+"Eurostat_Quantitative_Templates.zip"));
 								for(Enumeration e = zipFile.entries(); e.hasMoreElements(); ) {
 									ZipEntry entryIn = (ZipEntry) e.nextElement();
-									if (!entryIn.getName().equalsIgnoreCase("EU-OSHA_OIE_Eurostat_Fatal_Work_accidents_YYYYMMDD.xlsx")) {
+									if (!entryIn.getName().equalsIgnoreCase("EU-OSHA_OIE_Eurostat_Fatal_Work_accidents_YYYYMMDD.xlsx") &&
+											!entryIn.getName().equalsIgnoreCase("EU-OSHA_OIE_Eurostat_NonFatal_Work_accidents_YYYY-MM-DD.xlsx")) {
 										ZipEntry zipEntry = new ZipEntry(entryIn.getName());
 //								        zos.putNextEntry(entryIn);
 										zos.putNextEntry(zipEntry);
@@ -551,9 +542,13 @@ public class BarometerUIController extends HttpServlet{
 								        while((len = is.read(buf)) > 0) {            
 								            zos.write(buf, 0, len);
 								        }
-								    }
-								    else{
-								        zos.putNextEntry(new ZipEntry("EU-OSHA_OIE_Eurostat_Fatal_Work_accidents_YYYYMMDD.xlsx"));
+								    } else {
+								    	if(fileName.contains(FATAL_WORK_ACCIDENTS_TEMPLATE)) {
+								    		zos.putNextEntry(new ZipEntry("EU-OSHA_OIE_Eurostat_Fatal_Work_accidents_YYYYMMDD.xlsx"));
+								    	} else {
+								    		zos.putNextEntry(new ZipEntry("EU-OSHA_OIE_Eurostat_NonFatal_Work_accidents_YYYY-MM-DD.xlsx"));
+								    	}
+//								        zos.putNextEntry(new ZipEntry("EU-OSHA_OIE_Eurostat_Fatal_Work_accidents_YYYYMMDD.xlsx"));
 								        byte[] buf = new byte[1024];
 								        int len;
 								        while ((len = (fileContent.read(buf))) > 0) {
