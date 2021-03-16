@@ -527,40 +527,50 @@ public class BarometerUIController extends HttpServlet{
 					}
 					
 					if(validation) {
-						if(fileName.contains(FATAL_WORK_ACCIDENTS_TEMPLATE)) {
-							File before_zip = new File(zipsDirectory+"Eurostat_Quantitative_Templates.zip");
-							File after_zip = new File(zipsDirectory+"Eurostat_Quantitative_Templates_old.zip");
-							boolean renamed = before_zip.renameTo(after_zip);
-							InputStream fileContent = file.getInputStream();
-							ZipFile zipFile = new ZipFile(zipsDirectory+"Eurostat_Quantitative_Templates_old.zip");
-							final ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipsDirectory+"Eurostat_Quantitative_Templates.zip"));
-							for(Enumeration e = zipFile.entries(); e.hasMoreElements(); ) {
-								ZipEntry entryIn = (ZipEntry) e.nextElement();
-								if (!entryIn.getName().equalsIgnoreCase("EU-OSHA_OIE_Eurostat_Fatal_Work_accidents_YYYYMMDD.xlsx")) {
-									ZipEntry zipEntry = new ZipEntry(entryIn.getName());
-//							        zos.putNextEntry(entryIn);
-									zos.putNextEntry(zipEntry);
-							        InputStream is = zipFile.getInputStream(entryIn);
-							        byte[] buf = new byte[1024];
-							        int len;
-							        while((len = is.read(buf)) > 0) {            
-							            zos.write(buf, 0, len);
-							        }
-							    }
-							    else{
-							        zos.putNextEntry(new ZipEntry("EU-OSHA_OIE_Eurostat_Fatal_Work_accidents_YYYYMMDD.xlsx"));
-							        byte[] buf = new byte[1024];
-							        int len;
-							        while ((len = (fileContent.read(buf))) > 0) {
-							            zos.write(buf, 0, (len < buf.length) ? len : buf.length);
-							        }
-							    }
-								zos.closeEntry();
+						if(fileName.contains(FATAL_WORK_ACCIDENTS_TEMPLATE) || fileName.contains(NON_FATAL_WORK_ACCIDENTS_TEMPLATE)) {
+							try {
+								LOGGER.info("Excel file is Fatal Work Accidents");
+								File before_zip = new File(zipsDirectory+"Eurostat_Quantitative_Templates.zip");
+								LOGGER.info("Path of the zip: "+zipsDirectory+"Eurostat_Quantitative_Templates.zip");
+								File after_zip = new File(zipsDirectory+"Eurostat_Quantitative_Templates_old.zip");
+								boolean renamed = before_zip.renameTo(after_zip);
+								LOGGER.info("Rename zip to: "+zipsDirectory+"Eurostat_Quantitative_Templates_old.zip");
+								LOGGER.info("Excel file is Fatal Work Accidents");
+								InputStream fileContent = file.getInputStream();
+								ZipFile zipFile = new ZipFile(zipsDirectory+"Eurostat_Quantitative_Templates_old.zip");
+								final ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipsDirectory+"Eurostat_Quantitative_Templates.zip"));
+								for(Enumeration e = zipFile.entries(); e.hasMoreElements(); ) {
+									ZipEntry entryIn = (ZipEntry) e.nextElement();
+									if (!entryIn.getName().equalsIgnoreCase("EU-OSHA_OIE_Eurostat_Fatal_Work_accidents_YYYYMMDD.xlsx")) {
+										ZipEntry zipEntry = new ZipEntry(entryIn.getName());
+//								        zos.putNextEntry(entryIn);
+										zos.putNextEntry(zipEntry);
+								        InputStream is = zipFile.getInputStream(entryIn);
+								        byte[] buf = new byte[1024];
+								        int len;
+								        while((len = is.read(buf)) > 0) {            
+								            zos.write(buf, 0, len);
+								        }
+								    }
+								    else{
+								        zos.putNextEntry(new ZipEntry("EU-OSHA_OIE_Eurostat_Fatal_Work_accidents_YYYYMMDD.xlsx"));
+								        byte[] buf = new byte[1024];
+								        int len;
+								        while ((len = (fileContent.read(buf))) > 0) {
+								            zos.write(buf, 0, (len < buf.length) ? len : buf.length);
+								        }
+								    }
+									zos.closeEntry();
+								}
+								LOGGER.info("Finished processing zip file");
+								zos.close();
+								zipFile.close();
+								fileContent.close();
+								after_zip.delete();
+							} catch(Exception e) {
+								e.printStackTrace();
+								LOGGER.error("Exception while updating Templates Zip File. "+e.getMessage());
 							}
-							zos.close();
-							zipFile.close();
-							fileContent.close();
-							after_zip.delete();
 						}
 						
 						LOGGER.info("File name: "+fileName);
@@ -683,7 +693,7 @@ public class BarometerUIController extends HttpServlet{
 					        
 					        
 						} catch(Exception e) {
-							LOGGER.error("An error has occurred while processing file uploaded.");
+							LOGGER.error("An error has occurred while processing file uploaded. "+e.getMessage());
 							errorMessage = "An error has occurred while processing excel file.";
 							e.printStackTrace();
 						} finally {
