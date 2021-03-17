@@ -36,14 +36,14 @@
 				</a>
 			</div>
 			<div class="row2">
-				<a class="box" href="">
+				<a class="box" href="user?page=qualitative_data_member_states">
 					<span class="content-box">
 						<span class="box-title">Qualitative<br>data from<br>Member States,<br>EU and International</span>
 						<span class="box-ico"><img src="images/qualitative-data.png"></span>
 					</span>
 					<span class="tootip-box more-text">Update the qualitative data for OSH authorities, National strategies, Enforcement capacity and OSH statistics, surveys and research.</span>
 				</a>
-				<a class="box" href="">
+				<a class="box" href="user?page=methodology">
 					<span class="content-box">
 						<span class="box-title">Methodology<br>data</span>
 						<span class="box-ico"><img src="images/methodology.png"></span>

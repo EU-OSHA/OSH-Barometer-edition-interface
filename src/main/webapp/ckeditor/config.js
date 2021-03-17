@@ -13,6 +13,7 @@ CKEDITOR.editorConfig = function( config ) {
 	config.pasteFromWordNumberedHeadingToList =true;
 	config.removePlugins = 'pastefromword';
 	config.removeButtons = 'pastefromword';
+	//config.startupMode = 'source';
 	
 	// The toolbar groups arrangement, optimized for two toolbar rows.
 	config.toolbarGroups = [

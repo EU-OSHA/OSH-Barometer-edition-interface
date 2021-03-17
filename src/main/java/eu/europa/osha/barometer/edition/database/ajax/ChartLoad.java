@@ -36,7 +36,7 @@ public class ChartLoad extends HttpServlet {
 	public void service(HttpServletRequest req, HttpServletResponse res)
             throws ServletException, IOException
     {
-		LOGGER.info("App flow arrives to CountryDisplay Ajax service");
+		LOGGER.info("App flow arrives to ChartLoad Ajax service");
 		Gson g = new Gson();
         String returningData = "";
         String section = req.getParameter("section");
