@@ -523,17 +523,41 @@ public class BarometerUIController extends HttpServlet{
 								File before_zip = new File(zipsDirectory+"Eurostat_Quantitative_Templates.zip");
 								LOGGER.info("Path of the zip: "+zipsDirectory+"Eurostat_Quantitative_Templates.zip");
 								File after_zip = new File(zipsDirectory+"Eurostat_Quantitative_Templates_old.zip");
+//								after_zip.createNewFile();
 								boolean renamed = before_zip.renameTo(after_zip);
 								LOGGER.info("Rename zip to: "+zipsDirectory+"Eurostat_Quantitative_Templates_old.zip");
-								LOGGER.info("Excel file is Fatal Work Accidents");
+								LOGGER.info("Excel file is Fatal Work Accidents or Non Fatal Work Accidents");
 								InputStream fileContent = file.getInputStream();
 								ZipFile zipFile = new ZipFile(zipsDirectory+"Eurostat_Quantitative_Templates_old.zip");
 								final ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipsDirectory+"Eurostat_Quantitative_Templates.zip"));
+//								String zipEntryName = "";
+//								if(fileName.contains(FATAL_WORK_ACCIDENTS_TEMPLATE)) {
+//									zipEntryName = "EU-OSHA_OIE_Eurostat_Fatal_Work_accidents_YYYYMMDD.xlsx";
+//								} else if(fileName.contains(NON_FATAL_WORK_ACCIDENTS_TEMPLATE)) {
+//									zipEntryName = "EU-OSHA_OIE_Eurostat_NonFatal_Work_accidents_YYYY-MM-DD.xlsx";
+//								}
+								
 								for(Enumeration e = zipFile.entries(); e.hasMoreElements(); ) {
 									ZipEntry entryIn = (ZipEntry) e.nextElement();
-									if (!entryIn.getName().equalsIgnoreCase("EU-OSHA_OIE_Eurostat_Fatal_Work_accidents_YYYYMMDD.xlsx") &&
-											!entryIn.getName().equalsIgnoreCase("EU-OSHA_OIE_Eurostat_NonFatal_Work_accidents_YYYY-MM-DD.xlsx")) {
-										ZipEntry zipEntry = new ZipEntry(entryIn.getName());
+									System.out.println("Entry name and file name is fatal work?"+(entryIn.getName().contains(FATAL_WORK_ACCIDENTS_TEMPLATE) && fileName.contains(FATAL_WORK_ACCIDENTS_TEMPLATE)));
+//									if (!entryIn.getName().equalsIgnoreCase("EU-OSHA_OIE_Eurostat_Fatal_Work_accidents_YYYYMMDD.xlsx") &&
+//											!entryIn.getName().equalsIgnoreCase("EU-OSHA_OIE_Eurostat_NonFatal_Work_accidents_YYYY-MM-DD.xlsx")) {
+									if (entryIn.getName().contains(FATAL_WORK_ACCIDENTS_TEMPLATE) && fileName.contains(FATAL_WORK_ACCIDENTS_TEMPLATE)) {
+										zos.putNextEntry(new ZipEntry("EU-OSHA_OIE_Eurostat_Fatal_Work_accidents_YYYYMMDD.xlsx"));
+								        byte[] buf = new byte[1024];
+								        int len;
+								        while ((len = (fileContent.read(buf))) > 0) {
+								            zos.write(buf, 0, (len < buf.length) ? len : buf.length);
+								        }
+								    } else if(entryIn.getName().contains(NON_FATAL_WORK_ACCIDENTS_TEMPLATE) && fileName.contains(NON_FATAL_WORK_ACCIDENTS_TEMPLATE)) {
+								    	zos.putNextEntry(new ZipEntry("EU-OSHA_OIE_Eurostat_NonFatal_Work_accidents_YYYY-MM-DD.xlsx"));
+								        byte[] buf = new byte[1024];
+								        int len;
+								        while ((len = (fileContent.read(buf))) > 0) {
+								            zos.write(buf, 0, (len < buf.length) ? len : buf.length);
+								        }
+								    } else {
+								    	ZipEntry zipEntry = new ZipEntry(entryIn.getName());
 //								        zos.putNextEntry(entryIn);
 										zos.putNextEntry(zipEntry);
 								        InputStream is = zipFile.getInputStream(entryIn);
@@ -542,18 +566,12 @@ public class BarometerUIController extends HttpServlet{
 								        while((len = is.read(buf)) > 0) {            
 								            zos.write(buf, 0, len);
 								        }
-								    } else {
-								    	if(fileName.contains(FATAL_WORK_ACCIDENTS_TEMPLATE)) {
-								    		zos.putNextEntry(new ZipEntry("EU-OSHA_OIE_Eurostat_Fatal_Work_accidents_YYYYMMDD.xlsx"));
-								    	} else {
-								    		zos.putNextEntry(new ZipEntry("EU-OSHA_OIE_Eurostat_NonFatal_Work_accidents_YYYY-MM-DD.xlsx"));
-								    	}
-//								        zos.putNextEntry(new ZipEntry("EU-OSHA_OIE_Eurostat_Fatal_Work_accidents_YYYYMMDD.xlsx"));
-								        byte[] buf = new byte[1024];
-								        int len;
-								        while ((len = (fileContent.read(buf))) > 0) {
-								            zos.write(buf, 0, (len < buf.length) ? len : buf.length);
-								        }
+//								    	if(entryIn.getName().equalsIgnoreCase("EU-OSHA_OIE_Eurostat_Fatal_Work_accidents_YYYYMMDD.xlsx")) {
+//								    		zos.putNextEntry(new ZipEntry("EU-OSHA_OIE_Eurostat_Fatal_Work_accidents_YYYYMMDD.xlsx"));
+//								    	} else {
+//								    		zos.putNextEntry(new ZipEntry("EU-OSHA_OIE_Eurostat_NonFatal_Work_accidents_YYYY-MM-DD.xlsx"));
+//								    	}
+								    	
 								    }
 									zos.closeEntry();
 								}
@@ -750,6 +768,12 @@ public class BarometerUIController extends HttpServlet{
 						
 						if(!textUpdate) {
 							errorMessage = "Updated text could not be deleted";
+						}
+						
+						errorMessage = executeLiteralsETL(command);
+						
+						if(errorMessage == null) {
+							confirmationMessage = "Literal undone successfully.";
 						}
 					}else if(submit.equals("confirmUpdate")) {
 						int literalListSize = 0;
@@ -965,6 +989,12 @@ public class BarometerUIController extends HttpServlet{
 						if(!textUpdate) {
 							errorMessage = "Updated text could not be deleted";
 						}
+						
+						errorMessage = executeLiteralsETL(command);
+						
+						if(errorMessage == null) {
+							confirmationMessage = "Literal undone successfully.";
+						}
 					}else if(submit.equals("confirmUpdate")) {
 						int literalListSize = 0;
 						if(totalRows != null) {
@@ -991,13 +1021,13 @@ public class BarometerUIController extends HttpServlet{
                             confirmationMessage = "Literals updated successfully.";
                         }
                     } else if(submit.equals("updateAll")) {
-//                        errorMessage = executeLiteralsETL(command);
                     	section = req.getParameter("section_0");
 						country = req.getParameter("country_0");
 						institution = req.getParameter("institution_0");
                         if(errorMessage == null) {
                             confirmationMessage = "Literals updated successfully.";
                         }
+                        errorMessage = executeLiteralsETL(command);
                     }
 					
 //					try {
@@ -1081,6 +1111,12 @@ public class BarometerUIController extends HttpServlet{
 						textUpdate = MethodologyBusiness.undoDraftText(translation_id);						
 						if(!textUpdate) {
 							errorMessage = "Updated text could not be deleted";
+						}
+						
+						errorMessage = executeLiteralsETL(command);
+						
+						if(errorMessage == null) {
+							confirmationMessage = "Literal undone successfully.";
 						}
 					}else if(submit.equals("confirmUpdate")) {
 						int literalListSize = 0;

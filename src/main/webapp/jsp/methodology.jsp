@@ -119,7 +119,7 @@
 				<input type="hidden" value="" name="indicator" id="popUpUndoIndicator">
 			</form>
 			<p>Are you sure you want to undo the changes? The information in the 'Updated text' column will be lost.</p>
-			<button class="disabled close-click" id="modalUndoButton" type="submit" name="formSent" value="undoUpdate" form="formUndoPopUp">Confirm</button>
+			<button class="disabled close-click" id="modalUndoButton" type="submit" name="formSent" value="undoUpdate" form="formUndoPopUp" onclick="showWaitAlert()">Confirm</button>
 			<button class="close-click" id="modalUndoCancelButton">Cancel</button>
 		</div>
 		<div id="confirm-popup" class="popup-confirm">
