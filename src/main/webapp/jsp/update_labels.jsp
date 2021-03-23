@@ -30,14 +30,21 @@
 			<label>Chart</label>
 			<% ArrayList<HashMap<String,String>> chartList = (ArrayList<HashMap<String,String>>) request.getAttribute("chartList");
 			int chartLength = chartList.size();
+			boolean disableOption = false;
 			String chartSelected = (String) request.getAttribute("chartSelected");
 			%>
 			<select id="chartSelect" name="chart" <%= chartLength > 0 ? "" : "disabled" %> onchange="loadLiteralsTable('literals')">
 				<option value="0" <%= chartSelected.equals("0") ? "selected": "" %>>No chart selected</option>
 			<% for (HashMap<String,String> data : chartList) { %>
-				<option value="<%=data.get("chart_id")%>" <%= chartSelected.equals(data.get("chart_id")) ? "selected": "" %> >
-					<%=data.get("chart_name")%>
-				</option>
+				<% if((sectionSelected.equals("17") && !data.get("chart_id").equals("20013")) || sectionSelected.equals("21")){ 
+					disableOption = true;
+				%>
+					<option value="<%=data.get("chart_id")%>" <%= chartSelected.equals(data.get("chart_id")) ? "selected": "" %> 
+						<%= disableOption ? "disabled" : "" %>>
+						<%=data.get("chart_name")%>
+					</option>
+				<% } %>
+				
 			<% } %>
 			</select>
 		</div>

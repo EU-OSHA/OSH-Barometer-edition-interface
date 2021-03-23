@@ -250,7 +250,11 @@ $(document).ready(function(){
 					new_tbody = new_tbody.concat('No chart selected');
 					new_tbody = new_tbody.concat('</option>');
 		        chartList.forEach(function(chart){
-					new_tbody = new_tbody.concat('<option value="'+chart.chart_id+'" >');
+					new_tbody = new_tbody.concat('<option value="'+chart.chart_id+'"');
+					if((valueSelected == "17" && chart.chart_id != "20013") || valueSelected == "21"){
+						new_tbody = new_tbody.concat('disabled');
+					}
+					new_tbody = new_tbody.concat('>');
 					new_tbody = new_tbody.concat(chart.chart_name);
 					new_tbody = new_tbody.concat('</option>');
 		        });
