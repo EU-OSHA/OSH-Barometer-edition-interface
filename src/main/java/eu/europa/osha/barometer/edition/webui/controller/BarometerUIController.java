@@ -801,6 +801,9 @@ public class BarometerUIController extends HttpServlet{
 					} else if(submit.equals("updateAll")) {
 						errorMessage = executeLiteralsETL(command);
 						
+						section = req.getParameter("section_0");
+						chart = req.getParameter("chart_0");
+						
 						if(errorMessage == null) {
 							confirmationMessage = "Literals updated successfully.";
 						}
@@ -849,9 +852,6 @@ public class BarometerUIController extends HttpServlet{
 				req.setAttribute("sectionSelected", section);
 				req.setAttribute("chartSelected", chart);
 				req.setAttribute("literalList", literalList);
-				
-//				session.removeAttribute("section");
-//				session.removeAttribute("chart");
 			} else if (page.equals("country_reports_member_states")) {
 				LOGGER.info("Arriving to Country Reports for Member States.");
 				nextURL = "/jsp/country_reports_member_states.jsp";
@@ -1144,6 +1144,9 @@ public class BarometerUIController extends HttpServlet{
                         }
 					} else if(submit.equals("updateAll")) {
                         errorMessage = executeLiteralsETL(command);
+                        
+                        section = req.getParameter("section_0");
+                        indicator = req.getParameter("indicator_0");
                         
                         if(errorMessage == null) {
                             confirmationMessage = "Literals updated successfully.";

@@ -396,9 +396,9 @@ $(document).ready(function(){
 			},
 			async: true
 		}).done(function(data){
-				if(page == 'qualitativeMS'){
+				//if(page == 'qualitativeMS'){
 					enableUpdateAllButton();
-				}
+				//}
 			});
 		
 		if($('div#qualitative-member-states').length > 0){
@@ -406,6 +406,21 @@ $(document).ready(function(){
 		}
 
 	}
+	
+	enableUpdateAllButton = function() {
+		//console.log('Enters in enableUpdateAllButton');
+		var text_updates = $('.span_updated_text');
+		//console.log('text_updates length: '+text_updates.length);
+		$('#updateAllButton').addClass('disabled');
+        for (var i = 0; i < text_updates.length; i++) {
+            if(text_updates[i].textContent != ""){
+                if($('#updateAllButton').hasClass('disabled')){
+                    $('#updateAllButton').removeClass('disabled');
+                }
+                break;
+            }
+        }
+	};
 	
 	if($('div#update-labels').length > 0 || $('div#qualitative-member-states').length > 0 || $('div#methodology').length > 0){
 		CKEDITOR.instances.updatedTextEditor.on('change', function() {
@@ -437,6 +452,7 @@ $(document).ready(function(){
 				break;
 			}
 		}
+		enableUpdateAllButton();
 	}
 	
 	/** Function called in Update labels, Qualitative data for MS and Methodology pages.
@@ -641,7 +657,7 @@ $(document).ready(function(){
 	/** Function that shows a message when an ETL process is executed
 	*/
 	showWaitAlert = function(){
-		console.log('Enters showWaitAlert function');
+		//console.log('Enters showWaitAlert function');
 		$('div#wait-message').css("display","block");
 		$('div#wait-message-space').css("display","block");
 	}
@@ -649,20 +665,20 @@ $(document).ready(function(){
 	/**
 	*/
 	loadingScreen = function(){
-		console.log('Enters loadingScreen function');
+		//console.log('Enters loadingScreen function');
 		//$('div.loading-screen').css('display', 'block');
 	}
 	
 	/** Function to reset to default fields in Country reports for MS page
 	*/
 	resetFields = function(){
-		console.log('Enters resetFields');
+		//console.log('Enters resetFields');
 		$('#section').val('osh_authorities');
 		changeCountryDisplay('true');
 	}
 	
 	loadCountriesQualitativeMS = function(){
-		console.log("Enters loadCountriesAndInstitution function");
+		//console.log("Enters loadCountriesAndInstitution function");
 		var sectionSelected = document.getElementById("sectionSelect");
 		var valueSelected = sectionSelected.value;
 		
@@ -838,7 +854,7 @@ $(document).ready(function(){
 	}
 	
 	loadInstitutionsMS = function(sectionSelected){
-		console.log("Enters loadInstitutionsMS function");
+		//console.log("Enters loadInstitutionsMS function");
 		var new_tbody = "";
 		$('#institutionSelect').empty();
 		$('#institutionSelect').css('display', 'block');
@@ -880,7 +896,7 @@ $(document).ready(function(){
 	}
 	
 	loadIndicatorsBySection = function() {
-		console.log("Enters in loadIndicatorsBySection");
+		//console.log("Enters in loadIndicatorsBySection");
 		var sectionSelected = document.getElementById("sectionSelect");
 		var valueSelected = sectionSelected.value;
 		
@@ -911,20 +927,6 @@ $(document).ready(function(){
 		
 		loadLiteralsTable('methodology');
 	};
-	
-	enableUpdateAllButton = function() {
-		var text_updates = $('.span_updated_text');
-		//console.log('text_updates length: '+text_updates.length);
-		$('#updateAllButton').addClass('disabled');
-        for (var i = 0; i < text_updates.length; i++) {
-            if(text_updates[i].textContent != ""){
-                if($('#updateAllButton').hasClass('disabled')){
-                    $('#updateAllButton').removeClass('disabled');
-                }
-                break;
-            }
-        }
-	}
 	
 	if($('div#qualitative-member-states').length > 0){
 		var section = document.getElementById("sectionSelect");
