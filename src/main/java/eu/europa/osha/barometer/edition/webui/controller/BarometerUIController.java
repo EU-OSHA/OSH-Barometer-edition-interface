@@ -39,6 +39,7 @@ import javax.servlet.http.Part;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.directory.api.ldap.model.exception.LdapException;
 import org.apache.directory.ldap.client.api.LdapConnection;
+import org.apache.directory.ldap.client.api.LdapConnectionConfig;
 import org.apache.directory.ldap.client.api.LdapNetworkConnection;
 import org.apache.directory.ldap.client.template.LdapConnectionTemplate;
 import org.apache.logging.log4j.LogManager;
@@ -165,9 +166,9 @@ public class BarometerUIController extends HttpServlet{
 				if (logout != null) {
 					LOGGER.info("Logging out from OSH Barometer Edition Tool.");
 					//LDAP LOGOUT
-					String url = configurationData.getString("ldap.provider.url");
-					LdapConnection connection = LDAPConnectionService.getConnection(url);
-					LDAPConnectionService.logout(connection);
+//					String url = configurationData.getString("ldap.provider.url");
+//					LdapConnection connection = LDAPConnectionService.getConnection();
+//					LDAPConnectionService.logout(connection);
 					
 //					try {
 //						User user = (User) session.getAttribute("user");
@@ -213,9 +214,12 @@ public class BarometerUIController extends HttpServlet{
 					} else {
 						//LDAP LOGIN
 						//Connect to LDAP to check if user/mail and password exist
-						String url = configurationData.getString("ldap.provider.url");
-						LdapConnection connection = LDAPConnectionService.getConnection(url);
+//						String url = configurationData.getString("ldap.provider.url");
+						LdapConnection connection = LDAPConnectionService.getConnection();
+//						loginCorrect = LDAPConnectionService.login(connection, username, password);
+						//Looks in ldap if the received credentials from client exist
 						loginCorrect = LDAPConnectionService.login(connection, username, password);
+						LDAPConnectionService.logout(connection);
 						LDAPConnectionService.closeConnection(connection);
 						
 //						try {
