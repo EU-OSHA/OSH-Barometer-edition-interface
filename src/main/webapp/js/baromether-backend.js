@@ -382,7 +382,7 @@ $(document).ready(function(){
 						new_tbody = new_tbody.concat('<td><span class="span_updated_text" id="span_updated_text_'+index+'"></span></td>');	
 					}
 					//new_tbody = new_tbody.concat('<td><button class="view-click" onclick="editModal('+index+')">Edit</button>');
-					new_tbody = new_tbody.concat('<td><a class="href-link" href="#" onclick="editModal(\''+index+'\')">Edit</a> ');
+					new_tbody = new_tbody.concat('<td><a class="href-link" href="#" onclick="editModal(\''+index+'\',\''+literal.literal_type+'\')">Edit</a> ');
 					
 					if(literal.updated_text != null && literal.updated_text != literal.escaped_published_text){
 						//new_tbody = new_tbody.concat('<button onclick="undoPopup('+index+')" class="">Undo</button>');
@@ -428,7 +428,7 @@ $(document).ready(function(){
 	
 	if($('div#update-labels').length > 0 || $('div#qualitative-member-states').length > 0 || $('div#methodology').length > 0){
 		CKEDITOR.instances.updatedTextEditor.on('change', function() {
-			var text = CKEDITOR.instances.updatedTextEditor.getData()
+			var text = CKEDITOR.instances.updatedTextEditor.getData();
 			if(text != null && text != "" && text !=$('#publishedText')[0].textContent){
 				if($('#modalSaveButton').hasClass('disabled')){
 					$('#modalSaveButton').removeClass('disabled');
@@ -436,7 +436,7 @@ $(document).ready(function(){
 			}
 		});
 		CKEDITOR.instances.updatedTextEditor.on('key', function() {
-			var text = CKEDITOR.instances.updatedTextEditor.getData()
+			var text = CKEDITOR.instances.updatedTextEditor.getData();
 			if(text != null && text != "" && text !=$('#publishedText')[0].textContent){
 				if($('#modalSaveButton').hasClass('disabled')){
 					$('#modalSaveButton').removeClass('disabled');
@@ -463,7 +463,7 @@ $(document).ready(function(){
 	* It prepares the modal window to edit an specific literal.
 	* @index var index of the current literal on the table
 	*/
-	editModal = function(index/*, published_text, updated_text*/){
+	editModal = function(index, literal_type/*, published_text, updated_text*/){
 		console.log("Arrives to editModal");
 		
 		var section = document.getElementById("sectionSelect");
@@ -497,7 +497,6 @@ $(document).ready(function(){
 			indicatorSelected = indicator.value;
 		}
 		
-		
 		var translation_id = $("#translation_id_"+index).val();
 		
 		var published_text = $("#span_published_text_"+index)[0].innerHTML;
@@ -505,16 +504,40 @@ $(document).ready(function(){
 		var escaped_published_text = $("#escaped_published_text-"+index).val();
 		var escaped_updated_text = $("#escaped_updated_text-"+index).val();
 		
+		if($('div#update-labels').length > 0){
+			$("#edit-popup input#literal_type").val(literal_type);
+			if(literal_type == "HEADER" || literal_type == "KEY_MESSAGE"
+				|| literal_type == "INTRO_TEXT" || literal_type == "CHART_FOOTER"){
+				$("#edit-popup #updatedTextEditor_default").css("display","none");
+				$("#edit-popup #updatedTextEditor_default").css("visibility","hidden");
+				$("#edit-popup #cke_updatedTextEditor").css("display","block");
+				//cke_updatedTextEditor
+			}else{
+				$("#edit-popup #updatedTextEditor_default").css("display","block");
+				$("#edit-popup #updatedTextEditor_default").css("visibility","visible");
+				$("#edit-popup #cke_updatedTextEditor").css("display","none");
+			}
+		}
+		
 		if(updated_text != null && updated_text != ""){
 			if(published_text != updated_text){
 				$("#edit-popup #updatedTextEditor").text(escaped_updated_text);
+				if($('div#update-labels').length > 0){
+					$("#edit-popup #updatedTextEditor_default").text(escaped_updated_text);
+				}
 				CKEDITOR.instances.updatedTextEditor.setData(escaped_updated_text);
 			}else{
 				$("#edit-popup #updatedTextEditor").text(escaped_published_text);
+				if($('div#update-labels').length > 0){
+					$("#edit-popup #updatedTextEditor_default").text(escaped_published_text);
+				}
 				CKEDITOR.instances.updatedTextEditor.setData(escaped_published_text);
 			}
 		}else{
 			$("#edit-popup #updatedTextEditor").text(escaped_published_text);
+			if($('div#update-labels').length > 0){
+				$("#edit-popup #updatedTextEditor_default").text(escaped_published_text);
+			}
 			CKEDITOR.instances.updatedTextEditor.setData(escaped_published_text);
 		}
 		

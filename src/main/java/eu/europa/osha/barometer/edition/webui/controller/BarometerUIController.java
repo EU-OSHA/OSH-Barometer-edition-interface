@@ -759,9 +759,17 @@ public class BarometerUIController extends HttpServlet{
 				//Save updated text in draft_text column in table translation
 				if (submit != null) {
 					translation_id = req.getParameter("translation_id"); 
-					String updatedTextEditor = req.getParameter("updatedTextEditor");
 					textUpdate = false;
 					if(submit.equals("saveDraft")) {
+						String updatedTextEditor = "";
+						String literalType = req.getParameter("literal_type");
+						if(literalType.equals("HEADER") || literalType.equals("KEY_MESSAGE")
+								|| literalType.equals("INTRO_TEXT") || literalType.equals("CHART_FOOTER")){
+							updatedTextEditor = req.getParameter("updatedTextEditor");
+						} else {
+							updatedTextEditor = req.getParameter("updatedTextEditor_default");
+						}
+//						String updateTextEditorDefault = req.getParameter("updatedTextEditor_default");
 						textUpdate = UpdateLabelsBusiness.updateDraftText(updatedTextEditor, translation_id);
 						
 						if(!textUpdate) {

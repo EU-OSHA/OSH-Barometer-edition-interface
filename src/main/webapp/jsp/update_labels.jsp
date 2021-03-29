@@ -80,6 +80,7 @@
 							<!-- <input type="hidden" value="<%=data.get("updated_text")%>" name="updated_text_<%=index %>">-->
 							<input type="hidden" value="<%=sectionSelected%>" name="section_<%=index %>">
 	                        <input type="hidden" value="<%=chartSelected%>" name="chart_<%=index %>">
+	                        <input type="hidden" value="<%=data.get("literal_type")%>" name="literal_type_<%=index%>">
 	                        <!-- <input type="hidden" value="" name="lastForm">-->
 	                        <input type="hidden" value="<%=data.get("escaped_updated_text")%>" name="escaped_updated_text_<%=index %>" id="escaped_updated_text-<%=index%>">
 	                        <input type="hidden" value="<%=data.get("escaped_published_text")%>" name="escaped_published_text_<%=index %>" id="escaped_published_text-<%=index%>">
@@ -88,7 +89,7 @@
 						<td><span id="span_published_text_<%=index%>"><%=data.get("published_text")%></span></td>
 						<td><span class="span_updated_text" id="span_updated_text_<%=index%>"><%=data.get("escaped_updated_text") != null ? data.get("updated_text") : ""%></span></td>
 						<td>
-						<a class="href-link" href="#" onclick='editModal("<%=index%>")'>Edit</a> <a class="href-link <%=(data.get("escaped_updated_text") != null && !data.get("escaped_published_text").equals(data.get("escaped_updated_text"))) ? "" : "disabled"%>" href="#" onclick='undoPopup("<%=index%>")'>Undo</a>
+						<a class="href-link" href="#" onclick='editModal("<%=index%>", "<%=data.get("literal_type")%>")'>Edit</a> <a class="href-link <%=(data.get("escaped_updated_text") != null && !data.get("escaped_published_text").equals(data.get("escaped_updated_text"))) ? "" : "disabled"%>" href="#" onclick='undoPopup("<%=index%>")'>Undo</a>
 						<!-- <button class="view-click" onclick='editModal("<%=index%>")'>Edit</button>
 						<button onclick="undoPopup('<%=index%>')" class="<%=(data.get("escaped_updated_text") != null && !data.get("escaped_published_text").equals(data.get("escaped_updated_text"))) ? "" : "disabled"%>">Undo</button> -->
 						</td> 
@@ -113,8 +114,11 @@
 				<input type="hidden" value="" name="translation_id" id="translation_id">
 				<input type="hidden" value="" name="section" id="popUpSection">
 				<input type="hidden" value="" name="chart" id="popUpChart">
+				<input type="hidden" value="" name="literal_type" id="literal_type">
 				<label>Updated text:</label>
-				<textarea class="textarea" name="updatedTextEditor" id="updatedTextEditor" oninput="enableSaveButton()"></textarea>
+				<textarea class="textarea" name="updatedTextEditor" id="updatedTextEditor"></textarea>
+				<textarea class="textarea" name="updatedTextEditor_default" id="updatedTextEditor_default"></textarea>
+				<!-- <textarea class="textarea" name="updatedTextEditor" id="updatedTextEditor_default" oninput="enableSaveButton()"></textarea> -->
 			</form>
 			<p></p>
 			<button class="disabled close-click" id="modalSaveButton" type="submit" name="formSent" value="saveDraft" form="formPopUp">Save</button>
