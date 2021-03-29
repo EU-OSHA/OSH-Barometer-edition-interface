@@ -3,16 +3,35 @@
     if(errorMessage != null){
 %>
 <div class="alert-danger">
-    <p><%=errorMessage%></p>
+    <span><%=errorMessage%></span>
+    <span class="closebtn" onclick="closeAlert('error')">x</span>
+    <!-- <div class="close close-click" onclick="disableSaveButton()">x</div> -->
 </div>
-<div class="clear-content"></div>
+<div id="alert-danger-space" class="clear-content"></div>
 <%
     }
     String confirmationMessage = (String) request.getAttribute("confirmationMessage");
     if(confirmationMessage != null){
 %>
 	<div class="alert-success">
-	    <p><%=confirmationMessage%></p>
+	    <span><%=confirmationMessage%></span>
+	    <span class="closebtn" onclick="closeAlert('success')">x</span>
 	</div>
-	<div class="clear-content"></div>
+	<div id="alert-success-space" class="clear-content"></div>
 <% } %>
+
+
+<script>
+	closeAlert = function(type){
+		//console.log('Enters in closeAlert function.');
+		if(type == 'error'){
+			$('.alert-danger').css("display","none");
+			$('#alert-danger-space').css("display","none");
+			<%errorMessage = null;%>
+		}else{
+			$('.alert-success').css("display","none");
+			$('#alert-success-space').css("display","none");
+			<%confirmationMessage = null;%>
+		}
+	}
+</script>

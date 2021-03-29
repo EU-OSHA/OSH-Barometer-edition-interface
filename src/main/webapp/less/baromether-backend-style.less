@@ -215,9 +215,31 @@ table a[target="_blank"]:after, a[target="blank"]:after {
     padding-right: 10px;
 }
 
+//.alert-success{
+//	display: block;
+//    float: left;
+//    clear: both;
+//    background: url(../images/success-ico.png) 527px 15px #d4edda no-repeat;
+//    border: 1px solid #c5e7cc;
+//    color: #155724;
+//    font-size: 0.8rem;
+//    line-height: 20px;
+//    width: 500px;
+//    margin-top: 2em;
+//    padding: 1em 4em 1em 1em;
+//    a{
+//    	color: #155724;
+//    	text-decoration: none;
+//    	font-weight: bold;
+//    	&:hover{
+//    		text-decoration: underline;
+//    	}
+//    }
+//}
+
 .alert-success{
-	display: block;
-    float: left;
+	display: flex;
+//    float: left;
     clear: both;
     background: url(../images/success-ico.png) 527px 15px #d4edda no-repeat;
     border: 1px solid #c5e7cc;
@@ -226,7 +248,9 @@ table a[target="_blank"]:after, a[target="blank"]:after {
     line-height: 20px;
     width: 500px;
     margin-top: 2em;
-    padding: 1em 4em 1em 1em;
+    padding: 1.3em 4em 1.5em 1em;
+    justify-content: space-between;
+    align-items: center;
     a{
     	color: #155724;
     	text-decoration: none;
@@ -237,18 +261,41 @@ table a[target="_blank"]:after, a[target="blank"]:after {
     }
 }
 
+//.alert-danger{
+//	display: block;
+//    float: left;
+//    clear: both;
+//    background: url(../images/error-ico.png) 522px 15px #f8d7da no-repeat;
+//    border: 1px solid #f5c6cb;
+//    color: #721c24;
+//    font-size: 0.8rem;
+//    line-height: 20px;
+//    width: 500px;
+//    margin-top: 2em;
+//    padding: 1em 4em 1em 1em;
+//    a{
+//    	color: #155724;
+//    	text-decoration: none;
+//    	font-weight: bold;
+//    	&:hover{
+//    		text-decoration: underline;
+//    	}
+//    }
+//}
+
 .alert-danger{
-	display: block;
-    float: left;
+	display: flex;
+//    float: left;
     clear: both;
     background: url(../images/error-ico.png) 522px 15px #f8d7da no-repeat;
     border: 1px solid #f5c6cb;
     color: #721c24;
     font-size: 0.8rem;
-    line-height: 20px;
+    line-height: 25px;
     width: 500px;
     margin-top: 2em;
-    padding: 1em 4em 1em 1em;
+    padding: 1.2em 4em 1.5em 1em;
+    justify-content: space-between;
     a{
     	color: #155724;
     	text-decoration: none;
@@ -637,14 +684,14 @@ footer{
 }
 
 .closebtn {
-  margin-left: 15px;
+//  margin-left: 15px;
   color: black;
-  float: right;
-  font-size: 22px;
-  line-height: 20px;
+//  float: right;
+  font-size: 20px;
+  line-height: 27px;
   cursor: pointer;
   transition: 0.3s;
-  padding-top: 7px;
+//  padding-top: 7px;
 }
 
 div.loading-screen{
