@@ -507,7 +507,8 @@ $(document).ready(function(){
 		if($('div#update-labels').length > 0){
 			$("#edit-popup input#literal_type").val(literal_type);
 			if(literal_type == "HEADER" || literal_type == "KEY_MESSAGE"
-				|| literal_type == "INTRO_TEXT" || literal_type == "CHART_FOOTER"){
+				|| literal_type == "INTRO_TEXT" || literal_type == "CHART_FOOTER"
+				|| literal_type == "CHART FOOTER"){
 				$("#edit-popup #updatedTextEditor_default").css("display","none");
 				$("#edit-popup #updatedTextEditor_default").css("visibility","hidden");
 				$("#edit-popup #cke_updatedTextEditor").css("display","block");
