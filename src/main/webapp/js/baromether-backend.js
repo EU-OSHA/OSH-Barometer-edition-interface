@@ -524,20 +524,20 @@ $(document).ready(function(){
 			if(published_text != updated_text){
 				$("#edit-popup #updatedTextEditor").text(escaped_updated_text);
 				if($('div#update-labels').length > 0){
-					$("#edit-popup #updatedTextEditor_default").text(escaped_updated_text);
+					$("#edit-popup #updatedTextEditor_default").val(escaped_updated_text);
 				}
 				CKEDITOR.instances.updatedTextEditor.setData(escaped_updated_text);
 			}else{
 				$("#edit-popup #updatedTextEditor").text(escaped_published_text);
 				if($('div#update-labels').length > 0){
-					$("#edit-popup #updatedTextEditor_default").text(escaped_published_text);
+					$("#edit-popup #updatedTextEditor_default").val(escaped_published_text);
 				}
 				CKEDITOR.instances.updatedTextEditor.setData(escaped_published_text);
 			}
 		}else{
 			$("#edit-popup #updatedTextEditor").text(escaped_published_text);
 			if($('div#update-labels').length > 0){
-				$("#edit-popup #updatedTextEditor_default").text(escaped_published_text);
+				$("#edit-popup #updatedTextEditor_default").val(escaped_published_text);
 			}
 			CKEDITOR.instances.updatedTextEditor.setData(escaped_published_text);
 		}
