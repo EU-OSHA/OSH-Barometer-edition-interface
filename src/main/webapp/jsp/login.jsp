@@ -3,16 +3,7 @@
 <div class="wrapper">
 	<%@include file="includes/header.jsp"%>
 	<div class="container">
-		<%
-	           String errorMessage = (String) request.getAttribute("errorMessage");
-	           if(errorMessage != null){
-	       %>
-	       <div class="alert-danger">
-	           <p><%=errorMessage%></p>
-	       </div>
-	       <%
-	           }
-	       %>
+		<%@include file="includes/alerts.jsp"%>
 		<h1>Log in</h1>
 		<div class="login">
 			<form action="user?page=home" method="post">
