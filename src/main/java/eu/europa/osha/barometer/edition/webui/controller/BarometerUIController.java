@@ -39,6 +39,7 @@ import javax.servlet.http.Part;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.directory.api.ldap.model.exception.LdapException;
 import org.apache.directory.ldap.client.api.LdapConnection;
+import org.apache.directory.ldap.client.api.LdapConnectionConfig;
 import org.apache.directory.ldap.client.api.LdapNetworkConnection;
 import org.apache.directory.ldap.client.template.LdapConnectionTemplate;
 import org.apache.logging.log4j.LogManager;
@@ -165,9 +166,9 @@ public class BarometerUIController extends HttpServlet{
 				if (logout != null) {
 					LOGGER.info("Logging out from OSH Barometer Edition Tool.");
 					//LDAP LOGOUT
-					String url = configurationData.getString("ldap.provider.url");
-					LdapConnection connection = LDAPConnectionService.getConnection(url);
-					LDAPConnectionService.logout(connection);
+//					String url = configurationData.getString("ldap.provider.url");
+//					LdapConnection connection = LDAPConnectionService.getConnection();
+//					LDAPConnectionService.logout(connection);
 					
 //					try {
 //						User user = (User) session.getAttribute("user");
@@ -213,11 +214,20 @@ public class BarometerUIController extends HttpServlet{
 					} else {
 						//LDAP LOGIN
 						//Connect to LDAP to check if user/mail and password exist
-						String url = configurationData.getString("ldap.provider.url");
-						LdapConnection connection = LDAPConnectionService.getConnection(url);
-						loginCorrect = LDAPConnectionService.login(connection, username, password);
-						LDAPConnectionService.closeConnection(connection);
-						
+//						String url = configurationData.getString("ldap.provider.url");
+						try {
+							LdapConnection connection = LDAPConnectionService.getConnection();
+	//						loginCorrect = LDAPConnectionService.login(connection, username, password);
+							//Looks in ldap if the received credentials from client exist
+							loginCorrect = LDAPConnectionService.login(connection, username, password);
+							LDAPConnectionService.logout(connection);
+							LDAPConnectionService.closeConnection(connection);
+						}catch(Exception e) {
+							LOGGER.error("An error has occurred while trying to connect to the LDAP."+"Exception: "+e.getClass().getName());
+							LOGGER.error("Message: "+e.getMessage());
+							e.printStackTrace();
+							nextURL = "/jsp/login.jsp";
+						}
 //						try {
 //							CallbackHandler callbackHandler = new PassiveCallbackHandler(username, password);
 //							Subject subject = null;
@@ -755,9 +765,18 @@ public class BarometerUIController extends HttpServlet{
 				//Save updated text in draft_text column in table translation
 				if (submit != null) {
 					translation_id = req.getParameter("translation_id"); 
-					String updatedTextEditor = req.getParameter("updatedTextEditor");
 					textUpdate = false;
 					if(submit.equals("saveDraft")) {
+						String updatedTextEditor = "";
+						String literalType = req.getParameter("literal_type");
+						if(literalType.equals("HEADER") || literalType.equals("KEY_MESSAGE")
+								|| literalType.equals("INTRO_TEXT") || literalType.equals("CHART_FOOTER")
+								|| literalType.equals("CHART FOOTER")){
+							updatedTextEditor = req.getParameter("updatedTextEditor");
+						} else {
+							updatedTextEditor = req.getParameter("updatedTextEditor_default");
+						}
+//						String updateTextEditorDefault = req.getParameter("updatedTextEditor_default");
 						textUpdate = UpdateLabelsBusiness.updateDraftText(updatedTextEditor, translation_id);
 						
 						if(!textUpdate) {
@@ -800,6 +819,9 @@ public class BarometerUIController extends HttpServlet{
 						}
 					} else if(submit.equals("updateAll")) {
 						errorMessage = executeLiteralsETL(command);
+						
+						section = req.getParameter("section_0");
+						chart = req.getParameter("chart_0");
 						
 						if(errorMessage == null) {
 							confirmationMessage = "Literals updated successfully.";
@@ -849,9 +871,6 @@ public class BarometerUIController extends HttpServlet{
 				req.setAttribute("sectionSelected", section);
 				req.setAttribute("chartSelected", chart);
 				req.setAttribute("literalList", literalList);
-				
-//				session.removeAttribute("section");
-//				session.removeAttribute("chart");
 			} else if (page.equals("country_reports_member_states")) {
 				LOGGER.info("Arriving to Country Reports for Member States.");
 				nextURL = "/jsp/country_reports_member_states.jsp";
@@ -1144,6 +1163,9 @@ public class BarometerUIController extends HttpServlet{
                         }
 					} else if(submit.equals("updateAll")) {
                         errorMessage = executeLiteralsETL(command);
+                        
+                        section = req.getParameter("section_0");
+                        indicator = req.getParameter("indicator_0");
                         
                         if(errorMessage == null) {
                             confirmationMessage = "Literals updated successfully.";

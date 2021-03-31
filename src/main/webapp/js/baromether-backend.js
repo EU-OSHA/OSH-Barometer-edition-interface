@@ -250,7 +250,11 @@ $(document).ready(function(){
 					new_tbody = new_tbody.concat('No chart selected');
 					new_tbody = new_tbody.concat('</option>');
 		        chartList.forEach(function(chart){
-					new_tbody = new_tbody.concat('<option value="'+chart.chart_id+'" >');
+					new_tbody = new_tbody.concat('<option value="'+chart.chart_id+'"');
+					if((valueSelected == "17" && chart.chart_id != "20013") || valueSelected == "21"){
+						new_tbody = new_tbody.concat('disabled');
+					}
+					new_tbody = new_tbody.concat('>');
 					new_tbody = new_tbody.concat(chart.chart_name);
 					new_tbody = new_tbody.concat('</option>');
 		        });
@@ -378,7 +382,7 @@ $(document).ready(function(){
 						new_tbody = new_tbody.concat('<td><span class="span_updated_text" id="span_updated_text_'+index+'"></span></td>');	
 					}
 					//new_tbody = new_tbody.concat('<td><button class="view-click" onclick="editModal('+index+')">Edit</button>');
-					new_tbody = new_tbody.concat('<td><a class="href-link" href="#" onclick="editModal(\''+index+'\')">Edit</a> ');
+					new_tbody = new_tbody.concat('<td><a class="href-link" href="#" onclick="editModal(\''+index+'\',\''+literal.literal_type+'\')">Edit</a> ');
 					
 					if(literal.updated_text != null && literal.updated_text != literal.escaped_published_text){
 						//new_tbody = new_tbody.concat('<button onclick="undoPopup('+index+')" class="">Undo</button>');
@@ -396,9 +400,9 @@ $(document).ready(function(){
 			},
 			async: true
 		}).done(function(data){
-				if(page == 'qualitativeMS'){
+				//if(page == 'qualitativeMS'){
 					enableUpdateAllButton();
-				}
+				//}
 			});
 		
 		if($('div#qualitative-member-states').length > 0){
@@ -407,9 +411,24 @@ $(document).ready(function(){
 
 	}
 	
+	enableUpdateAllButton = function() {
+		//console.log('Enters in enableUpdateAllButton');
+		var text_updates = $('.span_updated_text');
+		//console.log('text_updates length: '+text_updates.length);
+		$('#updateAllButton').addClass('disabled');
+        for (var i = 0; i < text_updates.length; i++) {
+            if(text_updates[i].textContent != ""){
+                if($('#updateAllButton').hasClass('disabled')){
+                    $('#updateAllButton').removeClass('disabled');
+                }
+                break;
+            }
+        }
+	};
+	
 	if($('div#update-labels').length > 0 || $('div#qualitative-member-states').length > 0 || $('div#methodology').length > 0){
 		CKEDITOR.instances.updatedTextEditor.on('change', function() {
-			var text = CKEDITOR.instances.updatedTextEditor.getData()
+			var text = CKEDITOR.instances.updatedTextEditor.getData();
 			if(text != null && text != "" && text !=$('#publishedText')[0].textContent){
 				if($('#modalSaveButton').hasClass('disabled')){
 					$('#modalSaveButton').removeClass('disabled');
@@ -417,7 +436,7 @@ $(document).ready(function(){
 			}
 		});
 		CKEDITOR.instances.updatedTextEditor.on('key', function() {
-			var text = CKEDITOR.instances.updatedTextEditor.getData()
+			var text = CKEDITOR.instances.updatedTextEditor.getData();
 			if(text != null && text != "" && text !=$('#publishedText')[0].textContent){
 				if($('#modalSaveButton').hasClass('disabled')){
 					$('#modalSaveButton').removeClass('disabled');
@@ -437,13 +456,14 @@ $(document).ready(function(){
 				break;
 			}
 		}
+		enableUpdateAllButton();
 	}
 	
 	/** Function called in Update labels, Qualitative data for MS and Methodology pages.
 	* It prepares the modal window to edit an specific literal.
 	* @index var index of the current literal on the table
 	*/
-	editModal = function(index/*, published_text, updated_text*/){
+	editModal = function(index, literal_type/*, published_text, updated_text*/){
 		console.log("Arrives to editModal");
 		
 		var section = document.getElementById("sectionSelect");
@@ -477,7 +497,6 @@ $(document).ready(function(){
 			indicatorSelected = indicator.value;
 		}
 		
-		
 		var translation_id = $("#translation_id_"+index).val();
 		
 		var published_text = $("#span_published_text_"+index)[0].innerHTML;
@@ -485,16 +504,41 @@ $(document).ready(function(){
 		var escaped_published_text = $("#escaped_published_text-"+index).val();
 		var escaped_updated_text = $("#escaped_updated_text-"+index).val();
 		
+		if($('div#update-labels').length > 0){
+			$("#edit-popup input#literal_type").val(literal_type);
+			if(literal_type == "HEADER" || literal_type == "KEY_MESSAGE"
+				|| literal_type == "INTRO_TEXT" || literal_type == "CHART_FOOTER"
+				|| literal_type == "CHART FOOTER"){
+				$("#edit-popup #updatedTextEditor_default").css("display","none");
+				$("#edit-popup #updatedTextEditor_default").css("visibility","hidden");
+				$("#edit-popup #cke_updatedTextEditor").css("display","block");
+				//cke_updatedTextEditor
+			}else{
+				$("#edit-popup #updatedTextEditor_default").css("display","block");
+				$("#edit-popup #updatedTextEditor_default").css("visibility","visible");
+				$("#edit-popup #cke_updatedTextEditor").css("display","none");
+			}
+		}
+		
 		if(updated_text != null && updated_text != ""){
 			if(published_text != updated_text){
 				$("#edit-popup #updatedTextEditor").text(escaped_updated_text);
+				if($('div#update-labels').length > 0){
+					$("#edit-popup #updatedTextEditor_default").val(escaped_updated_text);
+				}
 				CKEDITOR.instances.updatedTextEditor.setData(escaped_updated_text);
 			}else{
 				$("#edit-popup #updatedTextEditor").text(escaped_published_text);
+				if($('div#update-labels').length > 0){
+					$("#edit-popup #updatedTextEditor_default").val(escaped_published_text);
+				}
 				CKEDITOR.instances.updatedTextEditor.setData(escaped_published_text);
 			}
 		}else{
 			$("#edit-popup #updatedTextEditor").text(escaped_published_text);
+			if($('div#update-labels').length > 0){
+				$("#edit-popup #updatedTextEditor_default").val(escaped_published_text);
+			}
 			CKEDITOR.instances.updatedTextEditor.setData(escaped_published_text);
 		}
 		
@@ -641,7 +685,7 @@ $(document).ready(function(){
 	/** Function that shows a message when an ETL process is executed
 	*/
 	showWaitAlert = function(){
-		console.log('Enters showWaitAlert function');
+		//console.log('Enters showWaitAlert function');
 		$('div#wait-message').css("display","block");
 		$('div#wait-message-space').css("display","block");
 	}
@@ -649,20 +693,20 @@ $(document).ready(function(){
 	/**
 	*/
 	loadingScreen = function(){
-		console.log('Enters loadingScreen function');
+		//console.log('Enters loadingScreen function');
 		//$('div.loading-screen').css('display', 'block');
 	}
 	
 	/** Function to reset to default fields in Country reports for MS page
 	*/
 	resetFields = function(){
-		console.log('Enters resetFields');
+		//console.log('Enters resetFields');
 		$('#section').val('osh_authorities');
 		changeCountryDisplay('true');
 	}
 	
 	loadCountriesQualitativeMS = function(){
-		console.log("Enters loadCountriesAndInstitution function");
+		//console.log("Enters loadCountriesAndInstitution function");
 		var sectionSelected = document.getElementById("sectionSelect");
 		var valueSelected = sectionSelected.value;
 		
@@ -838,7 +882,7 @@ $(document).ready(function(){
 	}
 	
 	loadInstitutionsMS = function(sectionSelected){
-		console.log("Enters loadInstitutionsMS function");
+		//console.log("Enters loadInstitutionsMS function");
 		var new_tbody = "";
 		$('#institutionSelect').empty();
 		$('#institutionSelect').css('display', 'block');
@@ -880,7 +924,7 @@ $(document).ready(function(){
 	}
 	
 	loadIndicatorsBySection = function() {
-		console.log("Enters in loadIndicatorsBySection");
+		//console.log("Enters in loadIndicatorsBySection");
 		var sectionSelected = document.getElementById("sectionSelect");
 		var valueSelected = sectionSelected.value;
 		
@@ -911,20 +955,6 @@ $(document).ready(function(){
 		
 		loadLiteralsTable('methodology');
 	};
-	
-	enableUpdateAllButton = function() {
-		var text_updates = $('.span_updated_text');
-		//console.log('text_updates length: '+text_updates.length);
-		$('#updateAllButton').addClass('disabled');
-        for (var i = 0; i < text_updates.length; i++) {
-            if(text_updates[i].textContent != ""){
-                if($('#updateAllButton').hasClass('disabled')){
-                    $('#updateAllButton').removeClass('disabled');
-                }
-                break;
-            }
-        }
-	}
 	
 	if($('div#qualitative-member-states').length > 0){
 		var section = document.getElementById("sectionSelect");
