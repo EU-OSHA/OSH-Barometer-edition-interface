@@ -10,7 +10,7 @@
 		<h1>Explanations related to the quantitative data</h1>
 		<%@include file="includes/alerts.jsp"%>
 		<div id="wait-message" class="alert-success">
-		    <p>Literal changes are updating. Before changing another literal, please wait a couple of minutes for the system to process last changes.</p>
+		    <p>The update of your data is now being processed, it can take a few minutes.</p>
 		</div>
 		<div id="wait-message-space" class="clear-content"></div>
 		<div class="conten-input">
