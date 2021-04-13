@@ -264,7 +264,8 @@ public class BarometerUIController extends HttpServlet{
 				} else {
 					LOGGER.error("Login failed. Returning to login page.");
 					nextURL = "/jsp/login.jsp";
-					errorMessage = "Incorrect user/mail or password. Please try again.";
+//					errorMessage = "Incorrect user/mail or password. Please try again.";
+					errorMessage = "Sorry unrecognized username or password. Please try again.";
 				}
 				session.removeAttribute("section");
 				session.removeAttribute("chart");
@@ -769,8 +770,11 @@ public class BarometerUIController extends HttpServlet{
 					if(submit.equals("saveDraft")) {
 						String updatedTextEditor = "";
 						String literalType = req.getParameter("literal_type");
-						if(literalType.equals("HEADER") || literalType.equals("KEY_MESSAGE")
-								|| literalType.equals("INTRO_TEXT") || literalType.equals("CHART_FOOTER")
+						if(literalType.equals("HEADER") || literalType.equals("KEY MESSAGE")
+								|| literalType.equals("INTRO TEXT") || literalType.equals("INTROTEXT")
+								|| literalType.equals("OVERALL OP_HEADER") || literalType.equals("MENTAL RISKS_HEADER")
+								|| literalType.equals("PHYSICAL RISKS_HEADER")
+								//|| literalType.equals("CHART_FOOTER")
 								|| literalType.equals("CHART FOOTER")){
 							updatedTextEditor = req.getParameter("updatedTextEditor");
 						} else {
@@ -1105,7 +1109,7 @@ public class BarometerUIController extends HttpServlet{
 				translation_id = req.getParameter("translation_id");
 				submit = req.getParameter("formSent");
 				totalRows = req.getParameter("literalListSize");
-				String updatedTextEditor = req.getParameter("updatedTextEditor");
+				//String updatedTextEditor = req.getParameter("updatedTextEditor");
 				
 				ArrayList<HashMap<String,String>> sectionList = null;
 				ArrayList<HashMap<String,String>> indicatorList = null;
@@ -1122,6 +1126,13 @@ public class BarometerUIController extends HttpServlet{
 				
 				if(submit != null) {
 					if(submit.equals("saveDraft")) {
+						String updatedTextEditor = "";
+						String literalType = req.getParameter("literal_type");
+						if(literalType.equals("Indicator Name")){
+							updatedTextEditor = req.getParameter("updatedTextEditor");
+						} else {
+							updatedTextEditor = req.getParameter("updatedTextEditor_default");
+						}
 						textUpdate = MethodologyBusiness.updateDraftText(updatedTextEditor, translation_id);
 						if(!textUpdate) {
 							errorMessage = "Updated text could not be saved";

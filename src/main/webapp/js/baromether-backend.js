@@ -506,8 +506,11 @@ $(document).ready(function(){
 		
 		if($('div#update-labels').length > 0){
 			$("#edit-popup input#literal_type").val(literal_type);
-			if(literal_type == "HEADER" || literal_type == "KEY_MESSAGE"
-				|| literal_type == "INTRO_TEXT" || literal_type == "CHART_FOOTER"
+			if(literal_type == "HEADER" || literal_type == "KEY MESSAGE"
+				|| literal_type == "INTRO TEXT" || literal_type == "INTROTEXT"
+				|| literal_type == "OVERALL OP_HEADER" || literal_type == "MENTAL RISKS_HEADER"
+				|| literal_type == "PHYSICAL RISKS_HEADER"
+				//|| literal_type == "CHART FOOTER"
 				|| literal_type == "CHART FOOTER"){
 				$("#edit-popup #updatedTextEditor_default").css("display","none");
 				$("#edit-popup #updatedTextEditor_default").css("visibility","hidden");
@@ -520,23 +523,36 @@ $(document).ready(function(){
 			}
 		}
 		
+		if($('div#methodology').length > 0){
+			console.log("literal type: "+literal_type);
+			if(literal_type == "Indicator Name"){
+				$("#edit-popup #updatedTextEditor_default").css("display","block");
+				$("#edit-popup #updatedTextEditor_default").css("visibility","visible");
+				$("#edit-popup #cke_updatedTextEditor").css("display","none");
+			}else{
+				$("#edit-popup #updatedTextEditor_default").css("display","none");
+				$("#edit-popup #updatedTextEditor_default").css("visibility","hidden");
+				$("#edit-popup #cke_updatedTextEditor").css("display","block");
+			}
+		}
+		
 		if(updated_text != null && updated_text != ""){
 			if(published_text != updated_text){
 				$("#edit-popup #updatedTextEditor").text(escaped_updated_text);
-				if($('div#update-labels').length > 0){
+				if($('div#update-labels').length > 0 || $('div#methodology').length > 0){
 					$("#edit-popup #updatedTextEditor_default").val(escaped_updated_text);
 				}
 				CKEDITOR.instances.updatedTextEditor.setData(escaped_updated_text);
 			}else{
 				$("#edit-popup #updatedTextEditor").text(escaped_published_text);
-				if($('div#update-labels').length > 0){
+				if($('div#update-labels').length > 0 || $('div#methodology').length > 0){
 					$("#edit-popup #updatedTextEditor_default").val(escaped_published_text);
 				}
 				CKEDITOR.instances.updatedTextEditor.setData(escaped_published_text);
 			}
 		}else{
 			$("#edit-popup #updatedTextEditor").text(escaped_published_text);
-			if($('div#update-labels').length > 0){
+			if($('div#update-labels').length > 0 || $('div#methodology').length > 0){
 				$("#edit-popup #updatedTextEditor_default").val(escaped_published_text);
 			}
 			CKEDITOR.instances.updatedTextEditor.setData(escaped_published_text);
@@ -888,15 +904,18 @@ $(document).ready(function(){
 		$('#institutionSelect').css('display', 'block');
 		$('#institution_type_label').css('display', 'block');
 		if(sectionSelected == 'MATRIX_AUTHORITY') {
+			$('#institution_type_label').text("Institution type");
 			new_tbody = new_tbody.concat('<option selected value="osh_authority">OSH authority</option>');
 			new_tbody = new_tbody.concat('<option value="compensation_insurance">Compensation and insurance body</option>');
 			new_tbody = new_tbody.concat('<option value="prevention_institute">Prevention institute</option>');
 			new_tbody = new_tbody.concat('<option value="standardisation_body">Standardisation body</option>');
 		}else if(sectionSelected == 'MATRIX_STRATEGY') {
+			$('#institution_type_label').text("Challenges");
 			new_tbody = new_tbody.concat('<option selected value="implementation_record">Implementation record</option>');
 			new_tbody = new_tbody.concat('<option value="prevention_diseases">Prevention of work-related diseases</option>');
 			new_tbody = new_tbody.concat('<option value="tackling_demographic">Tackling demographic change</option>');
 		}else if(sectionSelected == 'MATRIX_STATISTICS') {
+			$('#institution_type_label').text("Category");
 			new_tbody = new_tbody.concat('<option selected value="osh_statistics">OSH statistics</option>');
 			new_tbody = new_tbody.concat('<option value="surveys">Surveys</option>');
 			new_tbody = new_tbody.concat('<option value="research_institutes">Research Institutes</option>');
