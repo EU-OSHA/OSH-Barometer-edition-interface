@@ -1,6 +1,9 @@
 package eu.europa.osha.barometer.edition.webui.security;
 
 import java.io.IOException;
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.ResourceBundle;
 
 import org.apache.directory.api.ldap.model.cursor.SearchCursor;
@@ -90,12 +93,40 @@ public class LDAPConnectionService {
 	public static boolean login (LdapConnection con, String user, String password) {
 		boolean foundUser = false;
 		try {
-			//Search by memberUid
-//			con.bind(user, password);
+			LOGGER.info("User: "+user+" password: "+password);
+			
+			String encryptedPassword = "";
+					
+	        MessageDigest messageDigest = MessageDigest.getInstance("SHA-256"); 
+	        byte[] passwordBytes = messageDigest.digest(password.getBytes(StandardCharsets.UTF_8));
+//	        StringBuilder passwordBuilder = new StringBuilder();
+	        
+//	        for(int i=0; i< passwordBytes.length ;i++){
+//	        	passwordBuilder.append(Integer.toString((passwordBytes[i] & 0xff) + 0x100, 16).substring(1));
+//	        }
+	        
+	        // Convert byte array into signum representation 
+	        BigInteger number = new BigInteger(1, passwordBytes); 
+	  
+	        // Convert message digest into hex value 
+	        StringBuilder passwordBuilder = new StringBuilder(number.toString(16));
+	  
+	        // Pad with leading zeros
+	        while (passwordBuilder.length() < 32) 
+	        { 
+	        	passwordBuilder.insert(0, '0'); 
+	        }
+	        
+	        encryptedPassword = passwordBuilder.toString();
+	        LOGGER.info("Encrypted Password: "+encryptedPassword);
+
+	        //Search by memberUid and userPassword
 			SearchRequest req = new SearchRequestImpl();
-			req.setScope(SearchScope.SUBTREE);
+//			req.setScope(SearchScope.SUBTREE);
+			req.setScope(SearchScope.OBJECT);
 			req.setBase(new Dn(configurationData.getString("ldap.base.dn")));
-			req.setFilter("(memberUid="+user+")");
+			req.setFilter("(memberUid="+user+")(userPassword="+encryptedPassword+")");
+			
 			SearchCursor searchCursor = con.search( req );
 			Dn existinUserDn = null;
 			LOGGER.info("Searching user in server... "+searchCursor);
@@ -104,32 +135,41 @@ public class LDAPConnectionService {
 		    {
 				LOGGER.info("While searchCursor... ");
 		        Response response = searchCursor.get();
-		        LOGGER.info("response: "+response);
-
+//		        LOGGER.info("response: "+response);
+		        
 		        // Process the SearchResultEntry
 		        if ( response instanceof SearchResultEntry )
 		        {
 		        	LOGGER.info("response instanceof SearchResultEntry: "+(response instanceof SearchResultEntry));
 		            Entry resultEntry = ( ( SearchResultEntry ) response ).getEntry();
-		            existinUserDn = resultEntry.getDn();
 		            LOGGER.info("resultEntry: "+resultEntry );
-		            LOGGER.info("USER FOUND!!! ");
-		            foundUser = true;
+		            existinUserDn = resultEntry.getDn();
+		            LOGGER.info("existinUserDn: "+existinUserDn);
+		            foundUser = resultEntry.contains("memberUid",user);
+		            if(foundUser) {
+		            	LOGGER.info("USER FOUND!!!");
+		            } else {
+		            	LOGGER.info("USER NOT FOUND");
+		            }
+//		            foundUser = true;
 		        }
 		    }
 			
-			if(foundUser) {
-				LOGGER.info("Verify user password");
-				boolean passwordVerified = verifyPassword(existinUserDn,password);
-				
-				if(passwordVerified) {
-					LOGGER.info("USER PASSWORD CORRECT");
-					return true;
-				}else {
-					LOGGER.info("USEER PASSWORD INCORRECT");
-					return false;
-				}
-			}
+//			Entry test = con.lookup(new Dn(configurationData.getString("ldap.base.dn")));
+//			LOGGER.info("test Entry: "+test );
+			
+//			if(foundUser) {
+//				LOGGER.info("Verify user password");
+//				boolean passwordVerified = verifyPassword(existinUserDn,password);
+//				
+//				if(passwordVerified) {
+//					LOGGER.info("USER PASSWORD CORRECT");
+//					return true;
+//				}else {
+//					LOGGER.info("USER PASSWORD INCORRECT");
+//					return false;
+//				}
+//			}
 			
 			return true;
 		} catch (Exception e) {
