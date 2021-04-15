@@ -507,9 +507,10 @@ $(document).ready(function(){
 		if($('div#update-labels').length > 0){
 			$("#edit-popup input#literal_type").val(literal_type);
 			if(literal_type == "HEADER" || literal_type == "KEY MESSAGE"
-				|| literal_type == "INTRO TEXT" || literal_type == "INTROTEXT"
-				|| literal_type == "OVERALL OP_HEADER" || literal_type == "MENTAL RISKS_HEADER"
-				|| literal_type == "PHYSICAL RISKS_HEADER"
+				|| literal_type.includes("INTRO TEXT") || literal_type.includes("INTROTEXT")
+				|| literal_type.includes("INTRO_TEXT") || literal_type.includes("HEADER")
+				/*|| literal_type == "OVERALL OP_HEADER" || literal_type == "MENTAL RISKS_HEADER"
+				|| literal_type == "PHYSICAL RISKS_HEADER"*/
 				//|| literal_type == "CHART FOOTER"
 				|| literal_type == "CHART FOOTER"){
 				$("#edit-popup #updatedTextEditor_default").css("display","none");

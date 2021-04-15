@@ -771,9 +771,10 @@ public class BarometerUIController extends HttpServlet{
 						String updatedTextEditor = "";
 						String literalType = req.getParameter("literal_type");
 						if(literalType.equals("HEADER") || literalType.equals("KEY MESSAGE")
-								|| literalType.equals("INTRO TEXT") || literalType.equals("INTROTEXT")
-								|| literalType.equals("OVERALL OP_HEADER") || literalType.equals("MENTAL RISKS_HEADER")
-								|| literalType.equals("PHYSICAL RISKS_HEADER")
+								|| literalType.contains("INTRO TEXT") || literalType.contains("INTROTEXT")
+								|| literalType.contains("INTRO_TEXT") || literalType.contains("HEADER")
+//								|| literalType.equals("OVERALL OP_HEADER") || literalType.equals("MENTAL RISKS_HEADER")
+//								|| literalType.equals("PHYSICAL RISKS_HEADER")
 								//|| literalType.equals("CHART_FOOTER")
 								|| literalType.equals("CHART FOOTER")){
 							updatedTextEditor = req.getParameter("updatedTextEditor");
