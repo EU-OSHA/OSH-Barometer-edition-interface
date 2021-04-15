@@ -16,15 +16,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.ResourceBundle;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
-import javax.security.auth.Subject;
-import javax.security.auth.callback.CallbackHandler;
-import javax.security.auth.login.LoginContext;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -37,15 +33,9 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
 import org.apache.commons.lang3.SystemUtils;
-import org.apache.directory.api.ldap.model.exception.LdapException;
 import org.apache.directory.ldap.client.api.LdapConnection;
-import org.apache.directory.ldap.client.api.LdapConnectionConfig;
-import org.apache.directory.ldap.client.api.LdapNetworkConnection;
-import org.apache.directory.ldap.client.template.LdapConnectionTemplate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import com.sun.security.auth.UserPrincipal;
 
 import eu.europa.osha.barometer.edition.webui.bean.User;
 import eu.europa.osha.barometer.edition.webui.business.CountryReportBusiness;
@@ -54,9 +44,7 @@ import eu.europa.osha.barometer.edition.webui.business.QualitativeDataBusiness;
 import eu.europa.osha.barometer.edition.webui.business.QualitativeMSDataBusiness;
 import eu.europa.osha.barometer.edition.webui.business.QuantitativeDataBusiness;
 import eu.europa.osha.barometer.edition.webui.business.UpdateLabelsBusiness;
-import eu.europa.osha.barometer.edition.webui.security.ConfigurationImpl;
 import eu.europa.osha.barometer.edition.webui.security.LDAPConnectionService;
-import eu.europa.osha.barometer.edition.webui.security.PassiveCallbackHandler;
 
 /**
  * This class is the controller of the web interface. Pages and redirections are known through the use of the request
@@ -771,9 +759,10 @@ public class BarometerUIController extends HttpServlet{
 						String updatedTextEditor = "";
 						String literalType = req.getParameter("literal_type");
 						if(literalType.equals("HEADER") || literalType.equals("KEY MESSAGE")
-								|| literalType.equals("INTRO TEXT") || literalType.equals("INTROTEXT")
-								|| literalType.equals("OVERALL OP_HEADER") || literalType.equals("MENTAL RISKS_HEADER")
-								|| literalType.equals("PHYSICAL RISKS_HEADER")
+								|| literalType.contains("INTRO TEXT") || literalType.contains("INTROTEXT")
+								|| literalType.contains("INTRO_TEXT") || literalType.contains("HEADER")
+//								|| literalType.equals("OVERALL OP_HEADER") || literalType.equals("MENTAL RISKS_HEADER")
+//								|| literalType.equals("PHYSICAL RISKS_HEADER")
 								//|| literalType.equals("CHART_FOOTER")
 								|| literalType.equals("CHART FOOTER")){
 							updatedTextEditor = req.getParameter("updatedTextEditor");
