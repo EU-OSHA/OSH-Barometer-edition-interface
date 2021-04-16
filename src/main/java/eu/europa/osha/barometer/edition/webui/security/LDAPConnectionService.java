@@ -141,7 +141,7 @@ public class LDAPConnectionService {
 		            LOGGER.info("existinUserDn: "+existinUserDn);
 		            LOGGER.info("ATTRIBUTES LIST");
 		            LOGGER.info("-----------------------------------------------------------------");
-		            ArrayList<Attribute> list = (ArrayList<Attribute>) resultEntry.getAttributes();
+		            ArrayList<Attribute> list = new ArrayList<Attribute>(resultEntry.getAttributes());
 		            for(Attribute attribute: list){
 		            	LOGGER.info("Attribute type: "+attribute.getAttributeType()+" Value: "+attribute.get()
 		            	+" Id: "+attribute.getId()+" GetUpId: "+attribute.getUpId()+" Attribute String: "+attribute.getString());
@@ -240,6 +240,42 @@ public class LDAPConnectionService {
 			req = new SearchRequestImpl();
 			req.setScope(SearchScope.OBJECT);
 			req.setBase(new Dn(configurationData.getString("ldap.base.dn")));
+			req.setFilter("(memberUid="+user+")(userPassword="+password+")");
+			
+			searchCursor = con.search( req );
+			existinUserDn = null;
+			LOGGER.info("Searching user in server... "+searchCursor);
+			
+			while ( searchCursor.next() && !foundUser )
+		    {
+				LOGGER.info("While searchCursor... ");
+		        Response response = searchCursor.get();
+		        LOGGER.info("response: "+response);
+		        
+		        // Process the SearchResultEntry
+		        if ( response instanceof SearchResultEntry )
+		        {
+		        	LOGGER.info("response instanceof SearchResultEntry: "+(response instanceof SearchResultEntry));
+		            Entry resultEntry = ( ( SearchResultEntry ) response ).getEntry();
+		            LOGGER.info("resultEntry: "+resultEntry );
+		            existinUserDn = resultEntry.getDn();
+		            LOGGER.info("existinUserDn: "+existinUserDn);
+		            foundUser = resultEntry.contains("memberUid",user);
+		            if(foundUser) {
+		            	LOGGER.info("USER FOUND!!!");
+		            } else {
+		            	LOGGER.info("USER NOT FOUND");
+		            }
+//		            foundUser = true;
+		        }
+		    }
+			
+			LOGGER.info("-----------------------------------------------------------------");
+			LOGGER.info("Fifth search request with scope subtree, and filter user and pswd");
+			foundUser = false;
+			req = new SearchRequestImpl();
+			req.setScope(SearchScope.OBJECT);
+			req.setBase(new Dn(configurationData.getString("ldap.user.dn")));
 			req.setFilter("(memberUid="+user+")(userPassword="+password+")");
 			
 			searchCursor = con.search( req );
