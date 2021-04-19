@@ -141,14 +141,14 @@ public class LDAPConnectionService {
 		            LOGGER.info("resultEntry: "+resultEntry );
 		            existinUserDn = resultEntry.getDn();
 		            LOGGER.info("existinUserDn: "+existinUserDn);
-		            LOGGER.info("ATTRIBUTES LIST");
-		            LOGGER.info("-----------------------------------------------------------------");
-		            ArrayList<Attribute> list = new ArrayList<Attribute>(resultEntry.getAttributes());
-		            for(Attribute attribute: list){
-		            	LOGGER.info("Attribute type: "+attribute.getAttributeType()+" Value: "+attribute.get()
-		            	+" Id: "+attribute.getId()+" GetUpId: "+attribute.getUpId()+" Attribute String: "+attribute.getString());
-		            	LOGGER.info("-----------------------------------------------------------------");
-		            }
+//		            LOGGER.info("ATTRIBUTES LIST");
+//		            LOGGER.info("-----------------------------------------------------------------");
+//		            ArrayList<Attribute> list = new ArrayList<Attribute>(resultEntry.getAttributes());
+//		            for(Attribute attribute: list){
+//		            	LOGGER.info("Attribute type: "+attribute.getAttributeType()+" Value: "+attribute.get()
+//		            	+" Id: "+attribute.getId()+" GetUpId: "+attribute.getUpId()+" Attribute String: "+attribute.getString());
+//		            	LOGGER.info("-----------------------------------------------------------------");
+//		            }
 		            foundUser = resultEntry.contains("memberUid",user);
 		            if(foundUser) {
 		            	LOGGER.info("USER FOUND!!!");
