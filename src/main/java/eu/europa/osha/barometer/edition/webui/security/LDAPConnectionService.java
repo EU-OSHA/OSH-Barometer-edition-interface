@@ -161,8 +161,10 @@ public class LDAPConnectionService {
 		            } else {
 		            	LOGGER.info("PASSWORD NOT FOUND");
 		            }
-		            Attribute psw = resultEntry.get("userPassword");
-		            LOGGER.info("userPassword attribute: "+psw.getString());		            
+//		            Attribute psw = resultEntry.get("userPassword");
+//		            if(psw != null) {
+//		            	LOGGER.info("userPassword attribute: "+psw.getString());
+//		            }		            
 		        }
 		    }
 			
