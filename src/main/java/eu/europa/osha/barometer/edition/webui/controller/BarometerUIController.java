@@ -978,6 +978,7 @@ public class BarometerUIController extends HttpServlet{
 				translation_id = req.getParameter("translation_id");
 				totalRows = req.getParameter("literalListSize");
 				String updatedTextEditor = req.getParameter("updatedTextEditor");
+				LOGGER.info("updatedTextEditor: "+updatedTextEditor);
 				textUpdate = false;
 				ArrayList<HashMap<String,String>> matrixPageCount = null;
 				
@@ -1118,9 +1119,9 @@ public class BarometerUIController extends HttpServlet{
 						String updatedTextEditor = "";
 						String literalType = req.getParameter("literal_type");
 						if(literalType.equals("Indicator Name")){
-							updatedTextEditor = req.getParameter("updatedTextEditor");
-						} else {
 							updatedTextEditor = req.getParameter("updatedTextEditor_default");
+						} else {
+							updatedTextEditor = req.getParameter("updatedTextEditor");
 						}
 						textUpdate = MethodologyBusiness.updateDraftText(updatedTextEditor, translation_id);
 						if(!textUpdate) {

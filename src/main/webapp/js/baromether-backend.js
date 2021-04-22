@@ -526,6 +526,7 @@ $(document).ready(function(){
 		
 		if($('div#methodology').length > 0){
 			console.log("literal type: "+literal_type);
+			$("#edit-popup input#literal_type").val(literal_type);
 			if(literal_type == "Indicator Name"){
 				$("#edit-popup #updatedTextEditor_default").css("display","block");
 				$("#edit-popup #updatedTextEditor_default").css("visibility","visible");
