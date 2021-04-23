@@ -459,6 +459,11 @@ $(document).ready(function(){
 		enableUpdateAllButton();
 	}
 	
+	if($('div#quantitative-page').length > 0 || $('div#container-eurostat-quantitative').length > 0){
+		$('div#wait-message').css("display","none");
+		$('div#wait-message-space').css("display","none");
+	}
+	
 	/** Function called in Update labels, Qualitative data for MS and Methodology pages.
 	* It prepares the modal window to edit an specific literal.
 	* @index var index of the current literal on the table

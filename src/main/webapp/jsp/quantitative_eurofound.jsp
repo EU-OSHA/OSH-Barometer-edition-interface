@@ -14,6 +14,10 @@
 		<h1>Quantitative data from Eurofound</h1>
 		
 		<%@include file="includes/alerts.jsp"%>
+		<div id="wait-message" class="alert-success">
+			<p>The update of your data is now being processed, it can take a few minutes. Please do not reload the page just wait some time until the confirmation message is displayed</p>
+		</div>
+		<div id="wait-message-space" class="clear-content"></div>
 		
 		<form action="user?page=quantitative_eurofound" method="post" enctype="multipart/form-data" onsubmit="loadingScreen()">
 			<!-- Year input -->
@@ -41,7 +45,7 @@
 			<div class="clear-content"></div>
 			<div class="conten-button">
 				<button name="clearButton" value="Clear" >Clear</button>
-				<button type="submit" name="formSent" value="Submit">Submit</button>
+				<button type="submit" name="formSent" value="Submit" onclick="showWaitAlert()">Submit</button>
 			</div>
 		</form>
 	</div>
