@@ -74,6 +74,7 @@
 							<!-- <input type="hidden" value="<%=data.get("updated_text")%>" name="updated_text_<%=index %>"> -->
 							<input type="hidden" value="<%=sectionSelected%>" name="section_<%=index %>">
 	                        <input type="hidden" value="<%=indicatorSelected%>" name="indicator_<%=index %>">
+	                        <input type="hidden" value="<%=data.get("literal_type")%>" name="literal_type_<%=index%>">
 	                        <input type="hidden" value="<%=data.get("escaped_updated_text")%>" name="escaped_updated_text_<%=index %>" id="escaped_updated_text-<%=index%>">
 	                        <input type="hidden" value="<%=data.get("escaped_published_text")%>" name="escaped_published_text_<%=index %>" id="escaped_published_text-<%=index%>">
 						</td>

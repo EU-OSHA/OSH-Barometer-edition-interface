@@ -95,6 +95,7 @@ public class LDAPConnectionService {
 	 * @return boolean true if the bind was successful, false if there was an error while binding
 	 */
 	public static boolean login (LdapConnection con, String user, String password) {
+		boolean foundPassword = false;
 		boolean foundUser = false;
 		try {
 			LOGGER.info("User: "+user+" password: "+password);
@@ -116,11 +117,6 @@ public class LDAPConnectionService {
 			req.setBase(new Dn(configurationData.getString("ldap.base.dn")));
 			req.setFilter("(memberUid="+user+")(userPassword="+encryptedPassword+")");
 			req.addAttributes("*");
-//			List<String> attributes = new ArrayList<String>();
-//			attributes.add("memberUid");
-//			attributes.add("userPassword");
-//			req.addAttributes(attributes.toArray(new String[attributes.size()]));
-//			LOGGER.info("Attributes to search for: "+attributes.toArray(new String[attributes.size()]));
 			
 			SearchCursor searchCursor = con.search( req );
 			Dn existinUserDn = null;
@@ -141,26 +137,40 @@ public class LDAPConnectionService {
 		            LOGGER.info("resultEntry: "+resultEntry );
 		            existinUserDn = resultEntry.getDn();
 		            LOGGER.info("existinUserDn: "+existinUserDn);
-//		            LOGGER.info("ATTRIBUTES LIST");
-//		            LOGGER.info("-----------------------------------------------------------------");
-//		            ArrayList<Attribute> list = new ArrayList<Attribute>(resultEntry.getAttributes());
-//		            for(Attribute attribute: list){
-//		            	LOGGER.info("Attribute type: "+attribute.getAttributeType()+" Value: "+attribute.get()
-//		            	+" Id: "+attribute.getId()+" GetUpId: "+attribute.getUpId()+" Attribute String: "+attribute.getString());
-//		            	LOGGER.info("-----------------------------------------------------------------");
-//		            }
+
 		            foundUser = resultEntry.contains("memberUid",user);
 		            if(foundUser) {
 		            	LOGGER.info("USER FOUND!!!");
 		            } else {
 		            	LOGGER.info("USER NOT FOUND");
 		            }
-		            boolean passwordFound = resultEntry.contains("userPassword",encryptedPassword);
-		            if(passwordFound) {
-		            	LOGGER.info("PASSWORD FOUND!!!");
-		            } else {
-		            	LOGGER.info("PASSWORD NOT FOUND");
-		            }
+		            
+//		            boolean compareMemberUid = con.compare(existinUserDn, "memberUid", user);
+//	            	if(compareMemberUid) {
+//	            		LOGGER.info("MEMBER UID FOUND!!!");
+//	            	} else {
+//	            		LOGGER.info("MEMBER UID NOT FOUND");
+//	            	}
+//	            	boolean comparePasswordEncrypted = con.compare(existinUserDn, "userPassword", encryptedPassword);
+//	            	if(comparePasswordEncrypted) {
+//	            		LOGGER.info("PASSWORD ENCRYPTED FOUND!!!");
+//	            	} else {
+//	            		LOGGER.info("PASSWORD ENCRYPTED NOT FOUND");
+//	            	}
+//	            	boolean comparePasswordNonEncrypted = con.compare(existinUserDn, "userPassword", password);
+//	            	if(comparePasswordNonEncrypted) {
+//	            		LOGGER.info("PASSWORD NOT ENCRYPTED FOUND!!!");
+//	            	} else {
+//	            		LOGGER.info("PASSWORD NOT ENCRYPTED NOT FOUND");
+//	            	}
+	            	
+	            	
+//		            boolean passwordFound = resultEntry.contains("userPassword",encryptedPassword);
+//		            if(passwordFound) {
+//		            	LOGGER.info("PASSWORD FOUND!!!");
+//		            } else {
+//		            	LOGGER.info("PASSWORD NOT FOUND");
+//		            }
 //		            Attribute psw = resultEntry.get("userPassword");
 //		            if(psw != null) {
 //		            	LOGGER.info("userPassword attribute: "+psw.getString());
@@ -168,148 +178,47 @@ public class LDAPConnectionService {
 		        }
 		    }
 			
-			LOGGER.info("-----------------------------------------------------------------");
-			LOGGER.info("Second search request with ldap.user.dn, scope object without filter");
-			LOGGER.info("Return all attributes without filter");
-			foundUser = false;
-			req = new SearchRequestImpl();
-			req.setScope(SearchScope.OBJECT);
-			req.setBase(new Dn(configurationData.getString("ldap.user.dn")));
-//			req.setFilter("(memberUid="+user+")");
-			req.addAttributes("*");
-			
-			searchCursor = con.search( req );
-			existinUserDn = null;
-			LOGGER.info("Searching user in server... "+searchCursor);
-			
-			while ( searchCursor.next() && !foundUser )
-		    {
-				LOGGER.info("While searchCursor... ");
-		        Response response = searchCursor.get();
-//		        LOGGER.info("response: "+response);
-		        
-		        // Process the SearchResultEntry
-		        if ( response instanceof SearchResultEntry )
-		        {
-		        	LOGGER.info("response instanceof SearchResultEntry: "+(response instanceof SearchResultEntry));
-		            Entry resultEntry = ( ( SearchResultEntry ) response ).getEntry();
-		            LOGGER.info("resultEntry: "+resultEntry );
-		            existinUserDn = resultEntry.getDn();
-		            LOGGER.info("existinUserDn: "+existinUserDn);
-		            foundUser = resultEntry.contains("memberUid",user);
-		            if(foundUser) {
-		            	LOGGER.info("USER FOUND!!!");
-		            } else {
-		            	LOGGER.info("USER NOT FOUND");
-		            }
-//		            foundUser = true;
-		        }
-		    }
-			
-			LOGGER.info("-----------------------------------------------------------------");
-			LOGGER.info("Third search request using same example as apache ldap search request");
-			LOGGER.info("Return all attributes for filter (cn=Editors) with scope subtree");
-			foundUser = false;
-			req = new SearchRequestImpl();
-			req.setScope(SearchScope.SUBTREE);
-			req.setBase(new Dn(configurationData.getString("ldap.base.dn")));
-			//req.setFilter("(memberUid="+user+")(userPassword="+password+")");
-			req.setFilter("(&(cn=Editors))");
-			req.addAttributes("*");
-			
-			searchCursor = con.search( req );
-			existinUserDn = null;
-			LOGGER.info("Searching user in server... "+searchCursor);
-			
-			while ( searchCursor.next() && !foundUser )
-		    {
-				LOGGER.info("While searchCursor... ");
-		        Response response = searchCursor.get();
-//		        LOGGER.info("response: "+response);
-		        
-		        // Process the SearchResultEntry
-		        if ( response instanceof SearchResultEntry )
-		        {
-		        	LOGGER.info("response instanceof SearchResultEntry: "+(response instanceof SearchResultEntry));
-		            Entry resultEntry = ( ( SearchResultEntry ) response ).getEntry();
-		            LOGGER.info("resultEntry: "+resultEntry );
-		            existinUserDn = resultEntry.getDn();
-		            LOGGER.info("existinUserDn: "+existinUserDn);
-		            foundUser = resultEntry.contains("memberUid",user);
-		            if(foundUser) {
-		            	LOGGER.info("USER FOUND!!!");
-		            } else {
-		            	LOGGER.info("USER NOT FOUND");
-		            }
-//		            foundUser = true;
-		        }
-		    }
-			
-			LOGGER.info("-----------------------------------------------------------------");
-			LOGGER.info("Fourth search request using filter pattern with scope subtree");
-			LOGGER.info("Return all attributes for filter (memberUid=BM_ContentEditor)");
-			foundUser = false;
-			req = new SearchRequestImpl();
-			req.setScope(SearchScope.SUBTREE);
-			req.setBase(new Dn(configurationData.getString("ldap.base.dn")));
-//			req.setFilter("(&(memberUid="+user+")(userPassword="+password+"))");
-			req.setFilter("(&(memberUid="+user+"))");
-			req.addAttributes("*");
-			
-			searchCursor = con.search( req );
-			existinUserDn = null;
-			LOGGER.info("Searching user in server... "+searchCursor);
-			
-			while ( searchCursor.next() && !foundUser )
-		    {
-				LOGGER.info("While searchCursor... ");
-		        Response response = searchCursor.get();
-//		        LOGGER.info("response: "+response);
-		        
-		        // Process the SearchResultEntry
-		        if ( response instanceof SearchResultEntry )
-		        {
-		        	LOGGER.info("response instanceof SearchResultEntry: "+(response instanceof SearchResultEntry));
-		            Entry resultEntry = ( ( SearchResultEntry ) response ).getEntry();
-		            LOGGER.info("resultEntry: "+resultEntry );
-		            existinUserDn = resultEntry.getDn();
-		            LOGGER.info("existinUserDn: "+existinUserDn);
-		            foundUser = resultEntry.contains("memberUid",user);
-		            if(foundUser) {
-		            	LOGGER.info("USER FOUND!!!");
-		            } else {
-		            	LOGGER.info("USER NOT FOUND");
-		            }
-//		            foundUser = true;
-		        }
-		    }
-			
-			LOGGER.info("-----------------------------------------------------------------");
-			LOGGER.info("Fifth search request using simple search");
-			LOGGER.info("Return all attributes for filter (memberUid=BM_ContentEditor)");
-			foundUser = false;
-			
-			EntryCursor cursor = con.search( configurationData.getString("ldap.base.dn"), "(memberUid="+user+")", SearchScope.SUBTREE, "*" );
-			
-			existinUserDn = null;
-			LOGGER.info("Searching user in server... "+searchCursor);
-			
-			while ( cursor.next() && !foundUser )
-		    {
-				LOGGER.info("While searchCursor... ");
-		        Entry response = cursor.get();
-		        LOGGER.info("response: "+response);
-	            existinUserDn = response.getDn();
-	            LOGGER.info("existinUserDn: "+existinUserDn);
-	            foundUser = response.contains("memberUid",user);
-	            if(foundUser) {
-	            	LOGGER.info("USER FOUND!!!");
-	            } else {
-	            	LOGGER.info("USER NOT FOUND");
-	            }
-		    }
-			
-			LOGGER.info("-----------------------------------------------------------------");
+			//ldap.people.dn
+			if(foundUser) {
+				foundPassword = false;
+	        	req = new SearchRequestImpl();
+	        	req.setBase(new Dn(configurationData.getString("ldap.people.dn")));
+	        	req.setFilter("(memberUid="+user+")(userPassword="+encryptedPassword+")");
+				req.addAttributes("*");
+				searchCursor = con.search( req );
+				LOGGER.info("Searching user in server... "+searchCursor);
+				
+				while ( searchCursor.next() && !foundPassword )
+			    {
+					LOGGER.info("While searchCursor... ");
+			        Response response = searchCursor.get();
+			        LOGGER.info("response: "+response);
+			        LOGGER.info("-----------------------------------------------------------------");
+			        
+			        // Process the SearchResultEntry
+			        if ( response instanceof SearchResultEntry )
+			        {
+			        	LOGGER.info("response instanceof SearchResultEntry: "+(response instanceof SearchResultEntry));
+			        	Entry resultEntry = ( ( SearchResultEntry ) response ).getEntry();
+			            LOGGER.info("resultEntry: "+resultEntry );
+			            foundPassword = resultEntry.contains("userPassword",password);
+			            if(foundPassword) {
+			            	LOGGER.info("PASSWORD NOT ENCRYPTED FOUND!!!");
+			            	foundPassword = true;
+			            } else {
+			            	LOGGER.info("PASSWORD NOT ENCRYPTED NOT FOUND");
+			            }
+			            foundPassword = resultEntry.contains("userPassword",encryptedPassword);
+			            if(foundPassword) {
+			            	LOGGER.info("PASSWORD ENCRYPTED FOUND!!!");
+			            	foundPassword = true;
+			            } else {
+			            	LOGGER.info("PASSWORD ENCRYPTED NOT FOUND");
+			            }
+			        }
+			    }
+			}
+
 			
 //			Entry test = con.lookup(new Dn(configurationData.getString("ldap.base.dn")));
 //			LOGGER.info("test Entry: "+test );
@@ -327,7 +236,7 @@ public class LDAPConnectionService {
 //				}
 //			}
 			
-			return foundUser;
+			return foundPassword;
 		} catch (Exception e) {
 			LOGGER.error("Error while trying to search user in the LDAP Service. "+"Exception: "+e.getClass().getName());
 			LOGGER.error("Message: "+e.getMessage());

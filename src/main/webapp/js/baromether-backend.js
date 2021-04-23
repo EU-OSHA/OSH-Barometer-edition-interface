@@ -128,7 +128,7 @@ $(document).ready(function(){
 					            new_tbody = new_tbody.concat('<tr>');
 					            new_tbody = new_tbody.concat('<td>'+indicator.chart_name+'</td>');
 					            new_tbody = new_tbody.concat('<td>');
-								new_tbody = new_tbody.concat('<form id="formChart'+indicator.chart_id+'" action="user?page=update_datasets" method="post">');
+								new_tbody = new_tbody.concat('<form id="formChart'+indicator.indicator_id+'" action="user?page=update_datasets" method="post">');
 								new_tbody = new_tbody.concat('<input type="hidden" value="'+indicator.chart_id+'" name="chart_id">');
 								new_tbody = new_tbody.concat('<input type="hidden" value="'+indicator.indicator_id+'" name="indicator_id">');
 								new_tbody = new_tbody.concat('<input type="hidden" value="'+chart.section_id+'" name="section_id">');
@@ -169,7 +169,7 @@ $(document).ready(function(){
 								new_tbody = new_tbody.concat('</select>');
 								new_tbody = new_tbody.concat('</form>');
 								new_tbody = new_tbody.concat('</td>');
-								new_tbody = new_tbody.concat('<td><button id="buttonForm-'+indicator.indicator_id+'" class="disabled" type="submit" name="formSent" value="Save" form="formChart'+indicator.chart_id+'" disabled>');
+								new_tbody = new_tbody.concat('<td><button id="buttonForm-'+indicator.indicator_id+'" class="disabled" type="submit" name="formSent" value="Save" form="formChart'+indicator.indicator_id+'" disabled>');
 								new_tbody = new_tbody.concat('Save</button></td>');
 								new_tbody = new_tbody.concat('</tr>');
 					        });
@@ -459,6 +459,11 @@ $(document).ready(function(){
 		enableUpdateAllButton();
 	}
 	
+	if($('div#quantitative-page').length > 0 || $('div#container-eurostat-quantitative').length > 0){
+		$('div#wait-message').css("display","none");
+		$('div#wait-message-space').css("display","none");
+	}
+	
 	/** Function called in Update labels, Qualitative data for MS and Methodology pages.
 	* It prepares the modal window to edit an specific literal.
 	* @index var index of the current literal on the table
@@ -526,6 +531,7 @@ $(document).ready(function(){
 		
 		if($('div#methodology').length > 0){
 			console.log("literal type: "+literal_type);
+			$("#edit-popup input#literal_type").val(literal_type);
 			if(literal_type == "Indicator Name"){
 				$("#edit-popup #updatedTextEditor_default").css("display","block");
 				$("#edit-popup #updatedTextEditor_default").css("visibility","visible");
