@@ -9,7 +9,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
+import java.security.MessageDigest;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -202,10 +205,8 @@ public class BarometerUIController extends HttpServlet{
 					} else {
 						//LDAP LOGIN
 						//Connect to LDAP to check if user/mail and password exist
-//						String url = configurationData.getString("ldap.provider.url");
 						try {
 							LdapConnection connection = LDAPConnectionService.getConnection();
-	//						loginCorrect = LDAPConnectionService.login(connection, username, password);
 							//Looks in ldap if the received credentials from client exist
 							loginCorrect = LDAPConnectionService.login(connection, username, password);
 							LDAPConnectionService.logout(connection);
@@ -216,29 +217,32 @@ public class BarometerUIController extends HttpServlet{
 							e.printStackTrace();
 							nextURL = "/jsp/login.jsp";
 						}
+						
+//						String encryptedPassword = "";
 //						try {
-//							CallbackHandler callbackHandler = new PassiveCallbackHandler(username, password);
-//							Subject subject = null;
-//	
-//							String user = null;
-//						
-//							LoginContext lc = new LoginContext(ConfigurationImpl.LDAP_CONFIGURATION_NAME, 
-//									subject, callbackHandler, new ConfigurationImpl());
-//							lc.login();
-//
-//							subject = lc.getSubject();
-//
-//							for(Iterator it = subject.getPrincipals(UserPrincipal.class).iterator(); it.hasNext();) {
-//								UserPrincipal userPrincipal = (UserPrincipal) it.next();
-//								LOGGER.info("Authenticated: "+userPrincipal.getName());
-//								username = userPrincipal.getName();
-//							}
-//
-//						}catch(Exception e) {
-//							LOGGER.error("ERROR WHILE AUTHENTICATING");
-//							e.printStackTrace();
-//						} finally{
-//							nextURL = "/jsp/login.jsp";
+//					        MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
+//					        messageDigest.reset();
+//					        messageDigest.update(password.getBytes(StandardCharsets.UTF_8));
+//					        encryptedPassword = String.format("%040x", new BigInteger(1, messageDigest.digest()));
+//					        LOGGER.info("The SHA1 of "+password+"is: "+encryptedPassword);
+//					        
+//					        String userConfig = configurationData.getString("edition.tool.user");
+//					        String passwordConfig = configurationData.getString("edition.tool.password");
+//					        
+//					        if(username.equals(userConfig)) {
+//					        	LOGGER.info("User correct");
+//					        	if(encryptedPassword.equals(passwordConfig)) {
+//					        		LOGGER.info("Password correct");
+//					        		loginCorrect = true;
+//					        	} else {
+//					        		LOGGER.error("Incorrect password.");
+//					        	}
+//					        } else {
+//					        	LOGGER.error("Incorrect User");
+//					        }
+//						} catch(Exception e) {
+//							LOGGER.error("An error has occurred while trying to authenticate."+"Exception: "+e.getClass().getName());
+//							LOGGER.error("Message: "+e.getMessage());
 //						}
 					}
 				}
