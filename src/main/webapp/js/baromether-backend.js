@@ -128,7 +128,7 @@ $(document).ready(function(){
 					            new_tbody = new_tbody.concat('<tr>');
 					            new_tbody = new_tbody.concat('<td>'+indicator.chart_name+'</td>');
 					            new_tbody = new_tbody.concat('<td>');
-								new_tbody = new_tbody.concat('<form id="formChart'+indicator.chart_id+'" action="user?page=update_datasets" method="post">');
+								new_tbody = new_tbody.concat('<form id="formChart'+indicator.indicator_id+'" action="user?page=update_datasets" method="post">');
 								new_tbody = new_tbody.concat('<input type="hidden" value="'+indicator.chart_id+'" name="chart_id">');
 								new_tbody = new_tbody.concat('<input type="hidden" value="'+indicator.indicator_id+'" name="indicator_id">');
 								new_tbody = new_tbody.concat('<input type="hidden" value="'+chart.section_id+'" name="section_id">');
@@ -169,7 +169,7 @@ $(document).ready(function(){
 								new_tbody = new_tbody.concat('</select>');
 								new_tbody = new_tbody.concat('</form>');
 								new_tbody = new_tbody.concat('</td>');
-								new_tbody = new_tbody.concat('<td><button id="buttonForm-'+indicator.indicator_id+'" class="disabled" type="submit" name="formSent" value="Save" form="formChart'+indicator.chart_id+'" disabled>');
+								new_tbody = new_tbody.concat('<td><button id="buttonForm-'+indicator.indicator_id+'" class="disabled" type="submit" name="formSent" value="Save" form="formChart'+indicator.indicator_id+'" disabled>');
 								new_tbody = new_tbody.concat('Save</button></td>');
 								new_tbody = new_tbody.concat('</tr>');
 					        });
