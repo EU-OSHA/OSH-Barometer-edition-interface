@@ -182,11 +182,13 @@ public class LDAPConnectionService {
 			if(foundUser) {
 				foundPassword = false;
 	        	req = new SearchRequestImpl();
+	        	req.setScope(SearchScope.SUBTREE);
 	        	req.setBase(new Dn(configurationData.getString("ldap.people.dn")));
-	        	req.setFilter("(memberUid="+user+")(userPassword="+encryptedPassword+")");
+	        	//req.setFilter("(memberUid="+user+")(userPassword="+encryptedPassword+")");
+	        	req.setFilter("(memberUid="+user+")");
 				req.addAttributes("*");
 				searchCursor = con.search( req );
-				LOGGER.info("Searching user in server... "+searchCursor);
+				LOGGER.info("Searching password in server... "+searchCursor);
 				
 				while ( searchCursor.next() && !foundPassword )
 			    {
@@ -219,7 +221,7 @@ public class LDAPConnectionService {
 			    }
 			}
 
-			
+			LOGGER.info("foundPassword: "+foundPassword );
 //			Entry test = con.lookup(new Dn(configurationData.getString("ldap.base.dn")));
 //			LOGGER.info("test Entry: "+test );
 			

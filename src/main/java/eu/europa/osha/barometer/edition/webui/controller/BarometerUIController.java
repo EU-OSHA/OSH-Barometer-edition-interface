@@ -206,10 +206,14 @@ public class BarometerUIController extends HttpServlet{
 						//LDAP LOGIN
 						//Connect to LDAP to check if user/mail and password exist
 						try {
+							LOGGER.info("Getting connection to LDAP.");
 							LdapConnection connection = LDAPConnectionService.getConnection();
 							//Looks in ldap if the received credentials from client exist
+							LOGGER.info("Look for user and password in the LDAP");
 							loginCorrect = LDAPConnectionService.login(connection, username, password);
-							LDAPConnectionService.logout(connection);
+							//LOGGER.info("Logging out from the LDAP");
+							//LDAPConnectionService.logout(connection);
+							LOGGER.info("Closing connection to the LDAP");
 							LDAPConnectionService.closeConnection(connection);
 						}catch(Exception e) {
 							LOGGER.error("An error has occurred while trying to connect to the LDAP."+"Exception: "+e.getClass().getName());
