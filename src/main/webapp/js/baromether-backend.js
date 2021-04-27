@@ -733,6 +733,8 @@ $(document).ready(function(){
 		var sectionSelected = document.getElementById("sectionSelect");
 		var valueSelected = sectionSelected.value;
 		
+		$("#countrySelect").val('AT');
+		
 		$.get({
 			url: 'countrydisplay',
 			data: {

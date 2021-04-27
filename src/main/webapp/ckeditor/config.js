@@ -7,6 +7,8 @@ CKEDITOR.editorConfig = function( config ) {
 	// Define changes to default configuration here.
 	// For complete reference see:
 	// https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_config.html
+	config.width = '101%';
+	config.height = 160;
  	config.language = 'en';
 	config.pasteFromWordRemoveStyle = true;
 	config.pasteFromWordRemoveFontStyles = true;
@@ -31,7 +33,7 @@ CKEDITOR.editorConfig = function( config ) {
 		{ name: 'paragraph',   groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ] },
 		//{ name: 'styles' },
 		{ name: 'colors' },
-		{ name: 'about' }
+		//{ name: 'about' }
 	];
 	
 	// Toolbar configuration generated automatically by the editor based on config.toolbarGroups.
@@ -44,12 +46,12 @@ CKEDITOR.editorConfig = function( config ) {
 		{ name: 'tools', items: [ 'Maximize', 'ShowBlocks' ] },
 		{ name: 'document', groups: [ 'mode', 'document', 'doctools' ], items: [ 'Source', '-', 'Save', 'NewPage', 'ExportPdf', 'Preview', 'Print', '-', 'Templates' ] },
 		{ name: 'others', items: [ '-' ] },
-		'/',
+		//'/',
 		{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ], items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'CopyFormatting', 'RemoveFormat' ] },
 		{ name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ], items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl', 'Language' ] },
 		//{ name: 'styles', items: [ 'Styles', 'Format', 'Font', 'FontSize' ] },
 		{ name: 'colors', items: [ 'TextColor', 'BGColor' ] },
-		{ name: 'about', items: [ 'About' ] }
+		//{ name: 'about', items: [ 'About' ] }
 	];
 
 	// Remove some buttons provided by the standard plugins, which are
