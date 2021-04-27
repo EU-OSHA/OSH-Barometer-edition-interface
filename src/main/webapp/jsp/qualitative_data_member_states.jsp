@@ -11,7 +11,7 @@
 	
 		<%@include file="includes/alerts.jsp"%>
 		<div id="wait-message" class="alert-success">
-		    <p>The update of your data is now being processed, it can take a few minutes.</p>
+		    <p>The update of your data is now being processed, it can take a few minutes. Please do not reload the page just wait some time until the confirmation message is displayed</p>
 		</div>
 		<div id="wait-message-space" class="clear-content"></div>
 		
