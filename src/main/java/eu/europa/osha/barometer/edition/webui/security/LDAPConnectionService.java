@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.binary.Hex;
 import org.apache.directory.api.ldap.model.cursor.EntryCursor;
 import org.apache.directory.api.ldap.model.cursor.SearchCursor;
 import org.apache.directory.api.ldap.model.entry.Attribute;
@@ -106,6 +108,7 @@ public class LDAPConnectionService {
 	        messageDigest.reset();
 	        messageDigest.update(password.getBytes(StandardCharsets.UTF_8));
 	        encryptedPassword = String.format("%040x", new BigInteger(1, messageDigest.digest()));
+	        encryptedPassword = "{SHA}"+encryptedPassword;
 	        LOGGER.info("The SHA1 of "+password+"is: "+encryptedPassword);
 
 	        LOGGER.info("-----------------------------------------------------------------");
@@ -185,7 +188,7 @@ public class LDAPConnectionService {
 	        	req.setScope(SearchScope.SUBTREE);
 	        	req.setBase(new Dn(configurationData.getString("ldap.people.dn")));
 	        	//req.setFilter("(memberUid="+user+")(userPassword="+encryptedPassword+")");
-	        	req.setFilter("(memberUid="+user+")");
+	        	req.setFilter("(uid="+user+")");
 				req.addAttributes("*");
 				searchCursor = con.search( req );
 				LOGGER.info("Searching password in server... "+searchCursor);
@@ -202,7 +205,7 @@ public class LDAPConnectionService {
 			        {
 			        	LOGGER.info("response instanceof SearchResultEntry: "+(response instanceof SearchResultEntry));
 			        	Entry resultEntry = ( ( SearchResultEntry ) response ).getEntry();
-			            LOGGER.info("resultEntry: "+resultEntry );
+//			            LOGGER.info("resultEntry: "+resultEntry );
 			            foundPassword = resultEntry.contains("userPassword",password);
 			            if(foundPassword) {
 			            	LOGGER.info("PASSWORD NOT ENCRYPTED FOUND!!!");
@@ -217,6 +220,34 @@ public class LDAPConnectionService {
 			            } else {
 			            	LOGGER.info("PASSWORD ENCRYPTED NOT FOUND");
 			            }
+			            Attribute pswAttr = resultEntry.get("userPassword");
+			            String userPassword = "";
+			            if(pswAttr != null) {
+			            	LOGGER.info("Password attribute exists");
+			            	userPassword = pswAttr.getString();
+			            	LOGGER.info("userPassword: "+userPassword );
+			            	StringBuilder newString = new StringBuilder();
+							String[] array = userPassword.split("\\s+");
+							byte[] bytes = null;
+							try {
+								for(int i=0; i<array.length;i++) {
+									String character = array[i].replace("0x", "");
+									bytes = Hex.decodeHex(character.toCharArray());
+									newString.append(new String(bytes, "UTF-8"));
+								}
+								String userPasswordConverted = newString.toString();
+								LOGGER.info("userPasswordConverted: "+userPasswordConverted);
+								if(userPasswordConverted.equals(encryptedPassword)) {
+									LOGGER.info("Received password from LDAP equals to the form password");
+									foundPassword = true;
+								} else {
+									LOGGER.info("Received password from LDAP is NOT equals to the form password");
+								}
+							} catch (DecoderException e) {
+								e.printStackTrace();
+							}
+			            }
+			            
 			        }
 			    }
 			}
