@@ -206,53 +206,65 @@ public class LDAPConnectionService {
 			        	LOGGER.info("response instanceof SearchResultEntry: "+(response instanceof SearchResultEntry));
 			        	Entry resultEntry = ( ( SearchResultEntry ) response ).getEntry();
 //			            LOGGER.info("resultEntry: "+resultEntry );
-			            foundPassword = resultEntry.contains("userPassword",password);
-			            if(foundPassword) {
-			            	LOGGER.info("PASSWORD NOT ENCRYPTED FOUND!!!");
-			            	foundPassword = true;
+//			            foundPassword = resultEntry.contains("userPassword",password);
+//			            if(foundPassword) {
+//			            	LOGGER.info("PASSWORD NOT ENCRYPTED FOUND!!!");
+//			            	foundPassword = true;
+//			            } else {
+//			            	LOGGER.info("PASSWORD NOT ENCRYPTED NOT FOUND");
+//			            }
+//			            foundPassword = resultEntry.contains("userPassword",encryptedPassword);
+//			            if(foundPassword) {
+//			            	LOGGER.info("PASSWORD ENCRYPTED FOUND!!!");
+//			            	foundPassword = true;
+//			            } else {
+//			            	LOGGER.info("PASSWORD ENCRYPTED NOT FOUND");
+//			            }
+			        	Dn userDn = resultEntry.getDn();
+			        	LOGGER.info("userDn: "+userDn);
+			        	
+			        	foundPassword = verifyPassword(userDn,password);
+			        	
+			        	if(foundPassword) {
+			            	LOGGER.info("CONNECTION WITH USER DN AND PASSWORD SUCCESSFUL");
 			            } else {
-			            	LOGGER.info("PASSWORD NOT ENCRYPTED NOT FOUND");
+			            	LOGGER.info("CONNECTION NOT MADE. CONNECTION FAILED");
 			            }
-			            foundPassword = resultEntry.contains("userPassword",encryptedPassword);
-			            if(foundPassword) {
-			            	LOGGER.info("PASSWORD ENCRYPTED FOUND!!!");
-			            	foundPassword = true;
-			            } else {
-			            	LOGGER.info("PASSWORD ENCRYPTED NOT FOUND");
-			            }
-			            Attribute pswAttr = resultEntry.get("userPassword");
-			            String userPassword = "";
-			            if(pswAttr != null) {
-			            	LOGGER.info("Password attribute exists");
-			            	userPassword = pswAttr.getString();
-			            	LOGGER.info("userPassword: "+userPassword );
-			            	StringBuilder newString = new StringBuilder();
-							String[] array = userPassword.split("\\s+");
-							byte[] bytes = null;
-							try {
-								for(int i=0; i<array.length;i++) {
-									String character = array[i].replace("0x", "");
-									bytes = Hex.decodeHex(character.toCharArray());
-									newString.append(new String(bytes, "UTF-8"));
-								}
-								String userPasswordConverted = newString.toString();
-								LOGGER.info("userPasswordConverted: "+userPasswordConverted);
-								if(userPasswordConverted.equals(encryptedPassword)) {
-									LOGGER.info("Received password from LDAP equals to the form password");
-									foundPassword = true;
-								} else {
-									LOGGER.info("Received password from LDAP is NOT equals to the form password");
-								}
-							} catch (DecoderException e) {
-								e.printStackTrace();
-							}
-			            }
+			        	
+//			            Attribute pswAttr = resultEntry.get("userPassword");
+//			            String userPassword = "";
+//			            if(pswAttr != null) {
+//			            	LOGGER.info("Password attribute exists");
+//			            	userPassword = pswAttr.getString();
+//			            	LOGGER.info("userPassword: "+userPassword );
+//			            	StringBuilder newString = new StringBuilder();
+//							String[] array = userPassword.split("\\s+");
+//							byte[] bytes = null;
+//							try {
+//								for(int i=0; i<array.length;i++) {
+//									String character = array[i].replace("0x", "");
+//									bytes = Hex.decodeHex(character.toCharArray());
+//									newString.append(new String(bytes, "UTF-8"));
+//								}
+//								String userPasswordConverted = newString.toString();
+//								LOGGER.info("userPasswordConverted: "+userPasswordConverted);
+//								if(userPasswordConverted.equals(encryptedPassword)) {
+//									LOGGER.info("Received password from LDAP equals to the form password");
+//									foundPassword = true;
+//								} else {
+//									LOGGER.info("Received password from LDAP is NOT equals to the form password");
+//								}
+//							} catch (DecoderException e) {
+//								e.printStackTrace();
+//								LOGGER.error("Error while converting hex to utf8");
+//							}
+//			            }
 			            
 			        }
 			    }
 			}
 
-			LOGGER.info("foundPassword: "+foundPassword );
+//			LOGGER.info("foundPassword: "+foundPassword );
 //			Entry test = con.lookup(new Dn(configurationData.getString("ldap.base.dn")));
 //			LOGGER.info("test Entry: "+test );
 			
