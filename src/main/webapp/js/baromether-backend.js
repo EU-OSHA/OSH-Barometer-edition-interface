@@ -427,19 +427,93 @@ $(document).ready(function(){
 	};
 	
 	if($('div#update-labels').length > 0 || $('div#qualitative-member-states').length > 0 || $('div#methodology').length > 0){
-		CKEDITOR.instances.updatedTextEditor.on('change', function() {
-			var text = CKEDITOR.instances.updatedTextEditor.getData();
-			if(text != null && text != "" && text !=$('#publishedText')[0].textContent){
+		/*var text = "";
+		var literal_type = $("#literal_type")[0].value;
+		if(literal_type != undefined){
+			if(literal_type == "HEADER" || literal_type == "KEY MESSAGE"
+			|| literal_type.includes("INTRO TEXT") || literal_type.includes("INTROTEXT")
+			|| literal_type.includes("INTRO_TEXT") || literal_type.includes("HEADER")
+			|| literal_type == "CHART FOOTER"){
+				text = CKEDITOR.instances.updatedTextEditor.getData();
+			}else{
+				text = $("#updatedTextEditor_default")[0].textContent;
+			}
+		}*/
+		
+		$("#updatedTextEditor_default").bind('input propertychange', function() {
+		//$("#updatedTextEditor_default").keypress(function() {
+			// Does some stuff and logs the event to the console
+			var text = $("#updatedTextEditor_default").val();
+			if(text != null && text != "" && text != $('#publishedText')[0].innerHTML){
+			//if(text != null && text != "" && text != $('#publishedText')[0].textContent){
 				if($('#modalSaveButton').hasClass('disabled')){
 					$('#modalSaveButton').removeClass('disabled');
+				}
+			}else{
+				if(!$('#modalSaveButton').hasClass('disabled')){
+					$('#modalSaveButton').addClass('disabled');
+				}
+			}
+		});		
+		
+		CKEDITOR.instances.updatedTextEditor.on('change', function() {
+			if($('div#qualitative-member-states').length > 0){
+				text = CKEDITOR.instances.updatedTextEditor.getData();
+			}else{
+				var literal_type = $("#literal_type")[0].value;
+				if(literal_type != undefined){
+					if(literal_type == "HEADER" || literal_type == "KEY MESSAGE"
+					|| literal_type.includes("INTRO TEXT") || literal_type.includes("INTROTEXT")
+					|| literal_type.includes("INTRO_TEXT") || literal_type.includes("HEADER")
+					|| literal_type == "CHART FOOTER" || literal_type != "Indicator Name"){
+						text = CKEDITOR.instances.updatedTextEditor.getData();
+						//text = text.substring(0, text.lastIndexOf("\n"));
+					}else{
+						text = $("#updatedTextEditor_default").val();
+					}
+				}
+			}
+			
+			
+			//if(text != null && text != "" && text != $('#publishedText')[0].value.trim()){
+			if(text != null && text != "" && text != $('#publishedText')[0].innerHTML){
+			//if(text != null && text != "" && text != $('#publishedText')[0].textContent){
+				if($('#modalSaveButton').hasClass('disabled')){
+					$('#modalSaveButton').removeClass('disabled');
+				}
+			}else{
+				if(!$('#modalSaveButton').hasClass('disabled')){
+					$('#modalSaveButton').addClass('disabled');
 				}
 			}
 		});
 		CKEDITOR.instances.updatedTextEditor.on('key', function() {
-			var text = CKEDITOR.instances.updatedTextEditor.getData();
-			if(text != null && text != "" && text !=$('#publishedText')[0].textContent){
+			if($('div#qualitative-member-states').length > 0){
+				text = CKEDITOR.instances.updatedTextEditor.getData();
+			}else{
+				var literal_type = $("#literal_type")[0].value;
+				if(literal_type != undefined){
+					if(literal_type == "HEADER" || literal_type == "KEY MESSAGE"
+					|| literal_type.includes("INTRO TEXT") || literal_type.includes("INTROTEXT")
+					|| literal_type.includes("INTRO_TEXT") || literal_type.includes("HEADER")
+					|| literal_type == "CHART FOOTER" || literal_type != "Indicator Name"){
+						text = CKEDITOR.instances.updatedTextEditor.getData();
+						//text = text.substring(0, text.lastIndexOf("\n"));
+					}else{
+						text = $("#updatedTextEditor_default").val();
+					}
+				}
+			}
+			
+			//if(text != null && text != "" && text != $('#publishedText')[0].value.trim()){
+			if(text != null && text != "" && text != $('#publishedText')[0].innerHTML){
+			//if(text != null && text != "" && text != $('#publishedText')[0].textContent){
 				if($('#modalSaveButton').hasClass('disabled')){
 					$('#modalSaveButton').removeClass('disabled');
+				}
+			}else{
+				if(!$('#modalSaveButton').hasClass('disabled')){
+					$('#modalSaveButton').addClass('disabled');
 				}
 			}
 		});
@@ -558,11 +632,13 @@ $(document).ready(function(){
 				CKEDITOR.instances.updatedTextEditor.setData(escaped_published_text);
 			}
 		}else{
-			$("#edit-popup #updatedTextEditor").text(escaped_published_text);
+			$("#edit-popup #updatedTextEditor").text(escaped_published_text.trim());
 			if($('div#update-labels').length > 0 || $('div#methodology').length > 0){
-				$("#edit-popup #updatedTextEditor_default").val(escaped_published_text);
+				$("#edit-popup #updatedTextEditor_default").val(escaped_published_text.trim());
 			}
-			CKEDITOR.instances.updatedTextEditor.setData(escaped_published_text);
+			//CKEDITOR.instances.updatedTextEditor.setData(escaped_published_text);
+			
+			CKEDITOR.instances.updatedTextEditor.setData(published_text.trim());
 		}
 		
 		//$(".popup input#literal_id").val(literal_id);
@@ -580,7 +656,9 @@ $(document).ready(function(){
 		if(indicator != null){
 			$("#edit-popup input#popUpIndicator").val(indicatorSelected);
 		}
-		$("#edit-popup p#publishedText").html(published_text);
+		
+		$("#edit-popup p#publishedText").html(published_text.trim());
+		//$("#edit-popup #publishedText").val(published_text.trim());
 		
 		$("#edit-popup").css("display","block");
 		enableUpdateAllButton();
@@ -591,6 +669,7 @@ $(document).ready(function(){
 	*/
 	disableSaveButton = function(){
 		CKEDITOR.instances.updatedTextEditor.setData("");
+		$("#updatedTextEditor_default").val("");
 		if(!$('#modalSaveButton').hasClass('disabled')){
 			$('#modalSaveButton').addClass('disabled');
 		}
@@ -635,10 +714,14 @@ $(document).ready(function(){
 		
 		var translation_id = $("#translation_id_"+index).val();
 		
-		var published_text = $("#span_published_text_"+index)[0].textContent;
-		var updated_text = $("#span_updated_text_"+index)[0].textContent;
 		
-		if(updated_text != "null"){
+		var published_text = $("#span_published_text_"+index)[0].innerHTML;
+		var updated_text = $("#span_updated_text_"+index)[0].innerHTML;
+		
+		//var published_text = $("#span_published_text_"+index)[0].textContent;
+		//var updated_text = $("#span_updated_text_"+index)[0].textContent;
+		
+		if(updated_text != "null" && updated_text != ""){
             if(updated_text != published_text){
                 $('#modalUndoButton').removeClass('disabled');
             }else{

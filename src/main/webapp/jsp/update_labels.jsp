@@ -109,7 +109,10 @@
 		<div id="edit-popup" class="popup">
 			<div class="close close-click" onclick="disableSaveButton()">x</div>
 			<label>Published text:</label>
-			<div id="publishedContainer" readonly class="textarea disabled"><p id="publishedText"></p></div>
+			<div id="publishedContainer" readonly class="textarea disabled">
+				<p id="publishedText"></p>
+				<!-- <textarea class="textarea" name="publishedText" id="publishedText" disabled="disabled"></textarea> -->
+			</div>
 			<form id="formPopUp" action="user?page=update_labels" method="post">
 				<input type="hidden" value="" name="translation_id" id="translation_id">
 				<input type="hidden" value="" name="section" id="popUpSection">

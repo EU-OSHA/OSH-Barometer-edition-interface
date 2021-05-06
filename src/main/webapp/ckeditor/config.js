@@ -15,6 +15,12 @@ CKEDITOR.editorConfig = function( config ) {
 	config.pasteFromWordNumberedHeadingToList =true;
 	config.removePlugins = 'pastefromword';
 	config.removeButtons = 'pastefromword';
+	config.autoParagraph = false;
+	
+	config.entities = false;
+	config.entities_latin = false;
+	config.ForceSimpleAmpersand = true;
+	config.allowedContent = true;
 	
 	//config.startupMode = 'source';
 	
