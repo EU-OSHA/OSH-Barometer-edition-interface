@@ -194,12 +194,12 @@ public class BarometerUIController extends HttpServlet{
 					loginCorrect = true;
 				} else {
 					/* TEMPORAL LOGIN */
-					if(temporalLogin != null) {
-						LOGGER.info("Username and password correct.");
-						loginCorrect = true;
-//						User userTemporal = new User(username, password);
-//						session.setAttribute("user", userTemporal);
-					} else {
+//					if(temporalLogin != null) {
+//						LOGGER.info("Username and password correct.");
+//						loginCorrect = true;
+////						User userTemporal = new User(username, password);
+////						session.setAttribute("user", userTemporal);
+//					} else {
 						//LDAP LOGIN
 						//Connect to LDAP to check if user/mail and password exist
 						try {
@@ -218,35 +218,8 @@ public class BarometerUIController extends HttpServlet{
 							e.printStackTrace();
 							nextURL = "/jsp/login.jsp";
 						}
-						
-//						String encryptedPassword = "";
-//						try {
-//					        MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
-//					        messageDigest.reset();
-//					        messageDigest.update(password.getBytes(StandardCharsets.UTF_8));
-//					        encryptedPassword = String.format("%040x", new BigInteger(1, messageDigest.digest()));
-//					        LOGGER.info("The SHA1 of "+password+"is: "+encryptedPassword);
-//					        
-//					        String userConfig = configurationData.getString("edition.tool.user");
-//					        String passwordConfig = configurationData.getString("edition.tool.password");
-//					        
-//					        if(username.equals(userConfig)) {
-//					        	LOGGER.info("User correct");
-//					        	if(encryptedPassword.equals(passwordConfig)) {
-//					        		LOGGER.info("Password correct");
-//					        		loginCorrect = true;
-//					        	} else {
-//					        		LOGGER.error("Incorrect password.");
-//					        	}
-//					        } else {
-//					        	LOGGER.error("Incorrect User");
-//					        }
-//						} catch(Exception e) {
-//							LOGGER.error("An error has occurred while trying to authenticate."+"Exception: "+e.getClass().getName());
-//							LOGGER.error("Message: "+e.getMessage());
-//						}
 					}
-				}
+				//}
 
 				//boolean loginCorrect = true;
 				if(loginCorrect) {

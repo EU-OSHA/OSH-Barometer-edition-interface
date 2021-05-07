@@ -77,18 +77,6 @@ public class LDAPConnectionService {
 		return connection;
 	}
 	
-//	public static boolean setAuthenticationCredentials(LdapConnection con) {
-//		try {
-////			con.bind(configurationData.getString("ldap.username"), configurationData.getString("ldap.password"));
-//			con.bind();
-//			return true;
-//		} catch (LdapException e) {
-//			LOGGER.error("Error while trying to set auth credentials in the LDAP Service. "+e.getMessage());
-//			e.printStackTrace();
-//			return false;
-//		}
-//	}
-	
 	/**
 	 * 
 	 * @param con LdapConnection
@@ -116,7 +104,6 @@ public class LDAPConnectionService {
 	        //Search by memberUid and userPassword
 			SearchRequest req = new SearchRequestImpl();
 			req.setScope(SearchScope.SUBTREE);
-//			req.setScope(SearchScope.OBJECT);
 			req.setBase(new Dn(configurationData.getString("ldap.base.dn")));
 			req.setFilter("(memberUid="+user+")(userPassword="+encryptedPassword+")");
 			req.addAttributes("*");
@@ -129,7 +116,6 @@ public class LDAPConnectionService {
 		    {
 				LOGGER.info("While searchCursor... ");
 		        Response response = searchCursor.get();
-//		        LOGGER.info("response: "+response);
 		        LOGGER.info("-----------------------------------------------------------------");
 		        
 		        // Process the SearchResultEntry
@@ -146,48 +132,15 @@ public class LDAPConnectionService {
 		            	LOGGER.info("USER FOUND!!!");
 		            } else {
 		            	LOGGER.info("USER NOT FOUND");
-		            }
-		            
-//		            boolean compareMemberUid = con.compare(existinUserDn, "memberUid", user);
-//	            	if(compareMemberUid) {
-//	            		LOGGER.info("MEMBER UID FOUND!!!");
-//	            	} else {
-//	            		LOGGER.info("MEMBER UID NOT FOUND");
-//	            	}
-//	            	boolean comparePasswordEncrypted = con.compare(existinUserDn, "userPassword", encryptedPassword);
-//	            	if(comparePasswordEncrypted) {
-//	            		LOGGER.info("PASSWORD ENCRYPTED FOUND!!!");
-//	            	} else {
-//	            		LOGGER.info("PASSWORD ENCRYPTED NOT FOUND");
-//	            	}
-//	            	boolean comparePasswordNonEncrypted = con.compare(existinUserDn, "userPassword", password);
-//	            	if(comparePasswordNonEncrypted) {
-//	            		LOGGER.info("PASSWORD NOT ENCRYPTED FOUND!!!");
-//	            	} else {
-//	            		LOGGER.info("PASSWORD NOT ENCRYPTED NOT FOUND");
-//	            	}
-	            	
-	            	
-//		            boolean passwordFound = resultEntry.contains("userPassword",encryptedPassword);
-//		            if(passwordFound) {
-//		            	LOGGER.info("PASSWORD FOUND!!!");
-//		            } else {
-//		            	LOGGER.info("PASSWORD NOT FOUND");
-//		            }
-//		            Attribute psw = resultEntry.get("userPassword");
-//		            if(psw != null) {
-//		            	LOGGER.info("userPassword attribute: "+psw.getString());
-//		            }		            
+		            }            
 		        }
 		    }
 			
-			//ldap.people.dn
 			if(foundUser) {
 				foundPassword = false;
 	        	req = new SearchRequestImpl();
 	        	req.setScope(SearchScope.SUBTREE);
 	        	req.setBase(new Dn(configurationData.getString("ldap.people.dn")));
-	        	//req.setFilter("(memberUid="+user+")(userPassword="+encryptedPassword+")");
 	        	req.setFilter("(uid="+user+")");
 				req.addAttributes("*");
 				searchCursor = con.search( req );
@@ -205,21 +158,6 @@ public class LDAPConnectionService {
 			        {
 			        	LOGGER.info("response instanceof SearchResultEntry: "+(response instanceof SearchResultEntry));
 			        	Entry resultEntry = ( ( SearchResultEntry ) response ).getEntry();
-//			            LOGGER.info("resultEntry: "+resultEntry );
-//			            foundPassword = resultEntry.contains("userPassword",password);
-//			            if(foundPassword) {
-//			            	LOGGER.info("PASSWORD NOT ENCRYPTED FOUND!!!");
-//			            	foundPassword = true;
-//			            } else {
-//			            	LOGGER.info("PASSWORD NOT ENCRYPTED NOT FOUND");
-//			            }
-//			            foundPassword = resultEntry.contains("userPassword",encryptedPassword);
-//			            if(foundPassword) {
-//			            	LOGGER.info("PASSWORD ENCRYPTED FOUND!!!");
-//			            	foundPassword = true;
-//			            } else {
-//			            	LOGGER.info("PASSWORD ENCRYPTED NOT FOUND");
-//			            }
 			        	Dn userDn = resultEntry.getDn();
 			        	LOGGER.info("userDn: "+userDn);
 			        	
@@ -229,57 +167,10 @@ public class LDAPConnectionService {
 			            	LOGGER.info("CONNECTION WITH USER DN AND PASSWORD SUCCESSFUL");
 			            } else {
 			            	LOGGER.info("CONNECTION NOT MADE. CONNECTION FAILED");
-			            }
-			        	
-//			            Attribute pswAttr = resultEntry.get("userPassword");
-//			            String userPassword = "";
-//			            if(pswAttr != null) {
-//			            	LOGGER.info("Password attribute exists");
-//			            	userPassword = pswAttr.getString();
-//			            	LOGGER.info("userPassword: "+userPassword );
-//			            	StringBuilder newString = new StringBuilder();
-//							String[] array = userPassword.split("\\s+");
-//							byte[] bytes = null;
-//							try {
-//								for(int i=0; i<array.length;i++) {
-//									String character = array[i].replace("0x", "");
-//									bytes = Hex.decodeHex(character.toCharArray());
-//									newString.append(new String(bytes, "UTF-8"));
-//								}
-//								String userPasswordConverted = newString.toString();
-//								LOGGER.info("userPasswordConverted: "+userPasswordConverted);
-//								if(userPasswordConverted.equals(encryptedPassword)) {
-//									LOGGER.info("Received password from LDAP equals to the form password");
-//									foundPassword = true;
-//								} else {
-//									LOGGER.info("Received password from LDAP is NOT equals to the form password");
-//								}
-//							} catch (DecoderException e) {
-//								e.printStackTrace();
-//								LOGGER.error("Error while converting hex to utf8");
-//							}
-//			            }
-			            
+			            }			            
 			        }
 			    }
 			}
-
-//			LOGGER.info("foundPassword: "+foundPassword );
-//			Entry test = con.lookup(new Dn(configurationData.getString("ldap.base.dn")));
-//			LOGGER.info("test Entry: "+test );
-			
-//			if(foundUser) {
-//				LOGGER.info("Verify user password");
-//				boolean passwordVerified = verifyPassword(existinUserDn,password);
-//				
-//				if(passwordVerified) {
-//					LOGGER.info("USER PASSWORD CORRECT");
-//					return true;
-//				}else {
-//					LOGGER.info("USER PASSWORD INCORRECT");
-//					return false;
-//				}
-//			}
 			
 			return foundPassword;
 		} catch (Exception e) {
