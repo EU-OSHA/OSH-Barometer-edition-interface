@@ -16,15 +16,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.ResourceBundle;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
-import javax.security.auth.Subject;
-import javax.security.auth.callback.CallbackHandler;
-import javax.security.auth.login.LoginContext;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -37,15 +33,9 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
 import org.apache.commons.lang3.SystemUtils;
-import org.apache.directory.api.ldap.model.exception.LdapException;
 import org.apache.directory.ldap.client.api.LdapConnection;
-import org.apache.directory.ldap.client.api.LdapConnectionConfig;
-import org.apache.directory.ldap.client.api.LdapNetworkConnection;
-import org.apache.directory.ldap.client.template.LdapConnectionTemplate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import com.sun.security.auth.UserPrincipal;
 
 import eu.europa.osha.barometer.edition.webui.bean.User;
 import eu.europa.osha.barometer.edition.webui.business.CountryReportBusiness;
@@ -54,9 +44,7 @@ import eu.europa.osha.barometer.edition.webui.business.QualitativeDataBusiness;
 import eu.europa.osha.barometer.edition.webui.business.QualitativeMSDataBusiness;
 import eu.europa.osha.barometer.edition.webui.business.QuantitativeDataBusiness;
 import eu.europa.osha.barometer.edition.webui.business.UpdateLabelsBusiness;
-import eu.europa.osha.barometer.edition.webui.security.ConfigurationImpl;
 import eu.europa.osha.barometer.edition.webui.security.LDAPConnectionService;
-import eu.europa.osha.barometer.edition.webui.security.PassiveCallbackHandler;
 
 /**
  * This class is the controller of the web interface. Pages and redirections are known through the use of the request
@@ -206,21 +194,23 @@ public class BarometerUIController extends HttpServlet{
 					loginCorrect = true;
 				} else {
 					/* TEMPORAL LOGIN */
-					if(temporalLogin != null) {
-						LOGGER.info("Username and password correct.");
-						loginCorrect = true;
-//						User userTemporal = new User(username, password);
-//						session.setAttribute("user", userTemporal);
-					} else {
+//					if(temporalLogin != null) {
+//						LOGGER.info("Username and password correct.");
+//						loginCorrect = true;
+////						User userTemporal = new User(username, password);
+////						session.setAttribute("user", userTemporal);
+//					} else {
 						//LDAP LOGIN
 						//Connect to LDAP to check if user/mail and password exist
-//						String url = configurationData.getString("ldap.provider.url");
 						try {
+							LOGGER.info("Getting connection to LDAP.");
 							LdapConnection connection = LDAPConnectionService.getConnection();
-	//						loginCorrect = LDAPConnectionService.login(connection, username, password);
 							//Looks in ldap if the received credentials from client exist
+							LOGGER.info("Look for user and password in the LDAP");
 							loginCorrect = LDAPConnectionService.login(connection, username, password);
-							LDAPConnectionService.logout(connection);
+							//LOGGER.info("Logging out from the LDAP");
+							//LDAPConnectionService.logout(connection);
+							LOGGER.info("Closing connection to the LDAP");
 							LDAPConnectionService.closeConnection(connection);
 						}catch(Exception e) {
 							LOGGER.error("An error has occurred while trying to connect to the LDAP."+"Exception: "+e.getClass().getName());
@@ -228,32 +218,8 @@ public class BarometerUIController extends HttpServlet{
 							e.printStackTrace();
 							nextURL = "/jsp/login.jsp";
 						}
-//						try {
-//							CallbackHandler callbackHandler = new PassiveCallbackHandler(username, password);
-//							Subject subject = null;
-//	
-//							String user = null;
-//						
-//							LoginContext lc = new LoginContext(ConfigurationImpl.LDAP_CONFIGURATION_NAME, 
-//									subject, callbackHandler, new ConfigurationImpl());
-//							lc.login();
-//
-//							subject = lc.getSubject();
-//
-//							for(Iterator it = subject.getPrincipals(UserPrincipal.class).iterator(); it.hasNext();) {
-//								UserPrincipal userPrincipal = (UserPrincipal) it.next();
-//								LOGGER.info("Authenticated: "+userPrincipal.getName());
-//								username = userPrincipal.getName();
-//							}
-//
-//						}catch(Exception e) {
-//							LOGGER.error("ERROR WHILE AUTHENTICATING");
-//							e.printStackTrace();
-//						} finally{
-//							nextURL = "/jsp/login.jsp";
-//						}
 					}
-				}
+				//}
 
 				//boolean loginCorrect = true;
 				if(loginCorrect) {
@@ -771,9 +737,10 @@ public class BarometerUIController extends HttpServlet{
 						String updatedTextEditor = "";
 						String literalType = req.getParameter("literal_type");
 						if(literalType.equals("HEADER") || literalType.equals("KEY MESSAGE")
-								|| literalType.equals("INTRO TEXT") || literalType.equals("INTROTEXT")
-								|| literalType.equals("OVERALL OP_HEADER") || literalType.equals("MENTAL RISKS_HEADER")
-								|| literalType.equals("PHYSICAL RISKS_HEADER")
+								|| literalType.contains("INTRO TEXT") || literalType.contains("INTROTEXT")
+								|| literalType.contains("INTRO_TEXT") || literalType.contains("HEADER")
+//								|| literalType.equals("OVERALL OP_HEADER") || literalType.equals("MENTAL RISKS_HEADER")
+//								|| literalType.equals("PHYSICAL RISKS_HEADER")
 								//|| literalType.equals("CHART_FOOTER")
 								|| literalType.equals("CHART FOOTER")){
 							updatedTextEditor = req.getParameter("updatedTextEditor");
@@ -989,6 +956,7 @@ public class BarometerUIController extends HttpServlet{
 				translation_id = req.getParameter("translation_id");
 				totalRows = req.getParameter("literalListSize");
 				String updatedTextEditor = req.getParameter("updatedTextEditor");
+				LOGGER.info("updatedTextEditor: "+updatedTextEditor);
 				textUpdate = false;
 				ArrayList<HashMap<String,String>> matrixPageCount = null;
 				
@@ -1129,9 +1097,9 @@ public class BarometerUIController extends HttpServlet{
 						String updatedTextEditor = "";
 						String literalType = req.getParameter("literal_type");
 						if(literalType.equals("Indicator Name")){
-							updatedTextEditor = req.getParameter("updatedTextEditor");
-						} else {
 							updatedTextEditor = req.getParameter("updatedTextEditor_default");
+						} else {
+							updatedTextEditor = req.getParameter("updatedTextEditor");
 						}
 						textUpdate = MethodologyBusiness.updateDraftText(updatedTextEditor, translation_id);
 						if(!textUpdate) {

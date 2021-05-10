@@ -4,7 +4,7 @@
 		User sessionUser = (User) request.getSession().getAttribute("user");
 	%>
 	<div class="container">
-		<a href="https://test-visualisation.osha.europa.eu/osh-barometer#!/" target="_blank">
+		<a href="https://pre-visualisation.osha.europa.eu/osh-barometer#!/" target="_blank">
 			<img src="images/logo.png" alt="Baromether Logo" title="OSH BAROMETER Home">
 		</a>		
 		<% if(currentPage != null) {

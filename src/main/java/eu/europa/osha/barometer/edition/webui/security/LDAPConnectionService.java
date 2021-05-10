@@ -4,9 +4,15 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
+import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.binary.Hex;
+import org.apache.directory.api.ldap.model.cursor.EntryCursor;
 import org.apache.directory.api.ldap.model.cursor.SearchCursor;
+import org.apache.directory.api.ldap.model.entry.Attribute;
 import org.apache.directory.api.ldap.model.entry.Entry;
 import org.apache.directory.api.ldap.model.exception.LdapException;
 import org.apache.directory.api.ldap.model.message.Response;
@@ -71,18 +77,6 @@ public class LDAPConnectionService {
 		return connection;
 	}
 	
-//	public static boolean setAuthenticationCredentials(LdapConnection con) {
-//		try {
-////			con.bind(configurationData.getString("ldap.username"), configurationData.getString("ldap.password"));
-//			con.bind();
-//			return true;
-//		} catch (LdapException e) {
-//			LOGGER.error("Error while trying to set auth credentials in the LDAP Service. "+e.getMessage());
-//			e.printStackTrace();
-//			return false;
-//		}
-//	}
-	
 	/**
 	 * 
 	 * @param con LdapConnection
@@ -91,41 +85,28 @@ public class LDAPConnectionService {
 	 * @return boolean true if the bind was successful, false if there was an error while binding
 	 */
 	public static boolean login (LdapConnection con, String user, String password) {
+		boolean foundPassword = false;
 		boolean foundUser = false;
 		try {
 			LOGGER.info("User: "+user+" password: "+password);
 			
 			String encryptedPassword = "";
 					
-	        MessageDigest messageDigest = MessageDigest.getInstance("SHA-256"); 
-	        byte[] passwordBytes = messageDigest.digest(password.getBytes(StandardCharsets.UTF_8));
-//	        StringBuilder passwordBuilder = new StringBuilder();
-	        
-//	        for(int i=0; i< passwordBytes.length ;i++){
-//	        	passwordBuilder.append(Integer.toString((passwordBytes[i] & 0xff) + 0x100, 16).substring(1));
-//	        }
-	        
-	        // Convert byte array into signum representation 
-	        BigInteger number = new BigInteger(1, passwordBytes); 
-	  
-	        // Convert message digest into hex value 
-	        StringBuilder passwordBuilder = new StringBuilder(number.toString(16));
-	  
-	        // Pad with leading zeros
-	        while (passwordBuilder.length() < 32) 
-	        { 
-	        	passwordBuilder.insert(0, '0'); 
-	        }
-	        
-	        encryptedPassword = passwordBuilder.toString();
-	        LOGGER.info("Encrypted Password: "+encryptedPassword);
+	        MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
+	        messageDigest.reset();
+	        messageDigest.update(password.getBytes(StandardCharsets.UTF_8));
+	        encryptedPassword = String.format("%040x", new BigInteger(1, messageDigest.digest()));
+	        encryptedPassword = "{SHA}"+encryptedPassword;
+	        LOGGER.info("The SHA1 of "+password+"is: "+encryptedPassword);
 
+	        LOGGER.info("-----------------------------------------------------------------");
+	        LOGGER.info("First search request with scope subtree and filter user and encrypted pswd");
 	        //Search by memberUid and userPassword
 			SearchRequest req = new SearchRequestImpl();
-//			req.setScope(SearchScope.SUBTREE);
-			req.setScope(SearchScope.OBJECT);
+			req.setScope(SearchScope.SUBTREE);
 			req.setBase(new Dn(configurationData.getString("ldap.base.dn")));
 			req.setFilter("(memberUid="+user+")(userPassword="+encryptedPassword+")");
+			req.addAttributes("*");
 			
 			SearchCursor searchCursor = con.search( req );
 			Dn existinUserDn = null;
@@ -135,7 +116,7 @@ public class LDAPConnectionService {
 		    {
 				LOGGER.info("While searchCursor... ");
 		        Response response = searchCursor.get();
-//		        LOGGER.info("response: "+response);
+		        LOGGER.info("-----------------------------------------------------------------");
 		        
 		        // Process the SearchResultEntry
 		        if ( response instanceof SearchResultEntry )
@@ -145,33 +126,53 @@ public class LDAPConnectionService {
 		            LOGGER.info("resultEntry: "+resultEntry );
 		            existinUserDn = resultEntry.getDn();
 		            LOGGER.info("existinUserDn: "+existinUserDn);
+
 		            foundUser = resultEntry.contains("memberUid",user);
 		            if(foundUser) {
 		            	LOGGER.info("USER FOUND!!!");
 		            } else {
 		            	LOGGER.info("USER NOT FOUND");
-		            }
-//		            foundUser = true;
+		            }            
 		        }
 		    }
 			
-//			Entry test = con.lookup(new Dn(configurationData.getString("ldap.base.dn")));
-//			LOGGER.info("test Entry: "+test );
+			if(foundUser) {
+				foundPassword = false;
+	        	req = new SearchRequestImpl();
+	        	req.setScope(SearchScope.SUBTREE);
+	        	req.setBase(new Dn(configurationData.getString("ldap.people.dn")));
+	        	req.setFilter("(uid="+user+")");
+				req.addAttributes("*");
+				searchCursor = con.search( req );
+				LOGGER.info("Searching password in server... "+searchCursor);
+				
+				while ( searchCursor.next() && !foundPassword )
+			    {
+					LOGGER.info("While searchCursor... ");
+			        Response response = searchCursor.get();
+			        LOGGER.info("response: "+response);
+			        LOGGER.info("-----------------------------------------------------------------");
+			        
+			        // Process the SearchResultEntry
+			        if ( response instanceof SearchResultEntry )
+			        {
+			        	LOGGER.info("response instanceof SearchResultEntry: "+(response instanceof SearchResultEntry));
+			        	Entry resultEntry = ( ( SearchResultEntry ) response ).getEntry();
+			        	Dn userDn = resultEntry.getDn();
+			        	LOGGER.info("userDn: "+userDn);
+			        	
+			        	foundPassword = verifyPassword(userDn,password);
+			        	
+			        	if(foundPassword) {
+			            	LOGGER.info("CONNECTION WITH USER DN AND PASSWORD SUCCESSFUL");
+			            } else {
+			            	LOGGER.info("CONNECTION NOT MADE. CONNECTION FAILED");
+			            }			            
+			        }
+			    }
+			}
 			
-//			if(foundUser) {
-//				LOGGER.info("Verify user password");
-//				boolean passwordVerified = verifyPassword(existinUserDn,password);
-//				
-//				if(passwordVerified) {
-//					LOGGER.info("USER PASSWORD CORRECT");
-//					return true;
-//				}else {
-//					LOGGER.info("USER PASSWORD INCORRECT");
-//					return false;
-//				}
-//			}
-			
-			return true;
+			return foundPassword;
 		} catch (Exception e) {
 			LOGGER.error("Error while trying to search user in the LDAP Service. "+"Exception: "+e.getClass().getName());
 			LOGGER.error("Message: "+e.getMessage());

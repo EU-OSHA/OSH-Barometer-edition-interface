@@ -10,7 +10,7 @@
 		<h1>Explanations related to the quantitative data</h1>
 		<%@include file="includes/alerts.jsp"%>
 		<div id="wait-message" class="alert-success">
-		    <p>The update of your data is now being processed, it can take a few minutes.</p>
+		    <p>The update of your data is now being processed, it can take a few minutes. Please do not reload the page just wait some time until the confirmation message is displayed</p>
 		</div>
 		<div id="wait-message-space" class="clear-content"></div>
 		<div class="conten-input">
@@ -109,7 +109,10 @@
 		<div id="edit-popup" class="popup">
 			<div class="close close-click" onclick="disableSaveButton()">x</div>
 			<label>Published text:</label>
-			<div id="publishedContainer" readonly class="textarea disabled"><p id="publishedText"></p></div>
+			<div id="publishedContainer" readonly class="textarea disabled">
+				<p id="publishedText"></p>
+				<!-- <textarea class="textarea" name="publishedText" id="publishedText" disabled="disabled"></textarea> -->
+			</div>
 			<form id="formPopUp" action="user?page=update_labels" method="post">
 				<input type="hidden" value="" name="translation_id" id="translation_id">
 				<input type="hidden" value="" name="section" id="popUpSection">
@@ -137,7 +140,7 @@
 		</div>
 		<div id="confirm-popup" class="popup-confirm">
 			<div class="close close-click">x</div>
-			<p>Have you checked your new text/data in this <a href="https://test-visualisation.osha.europa.eu/osh-barometer#!/" target="_blank">URL</a> test environment and it is ok, press the 'Publish' button and the text/data will be updated in the dataset. To be able to see it in production environment, please request the corresponding deployment to the developers.</p>
+			<p>Have you checked your new text/data in this <a href="https://pre-visualisation.osha.europa.eu/osh-barometer#!/" target="_blank">URL</a> test environment and it is ok, press the 'Publish' button and the text/data will be updated in the dataset. To be able to see it in production environment, please request the corresponding deployment to the developers.</p>
 			<button class="close-click" id="modalConfirmButton" type="submit" name="formSent" value="confirmUpdate" form="labels-form" onclick="showWaitAlert()">Confirm</button>
 			<button class="close-click" id="modalConfirmCancelButton">Cancel</button>
 		</div>

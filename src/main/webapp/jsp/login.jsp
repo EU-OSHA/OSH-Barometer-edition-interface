@@ -19,7 +19,7 @@
 				<button>Log in</button>
 			</form>
 		</div>
-		<div class="clear-content"></div>
+		<!-- <div class="clear-content"></div>
 		<div>
 			<p style="font-size: 13px;">If LDAP Login fails click here to proceed to the home page</p>
 			<form action="user?page=home" method="post">
@@ -28,7 +28,7 @@
 				<input type="hidden" name="password" value="admin">
 				<button>Log in</button>
 			</form>
-		</div>
+		</div> -->
 	</div>
 </div>
 <%@include file="includes/footer.jsp"%>

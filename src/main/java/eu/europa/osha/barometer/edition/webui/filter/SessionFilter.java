@@ -29,6 +29,7 @@ public class SessionFilter implements Filter {
 			throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest)servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
+        request.setCharacterEncoding("UTF-8");
 
         String page = request.getParameter("page");
         HttpSession session = request.getSession();

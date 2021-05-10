@@ -10,7 +10,7 @@
 		<h1>Methodology data</h1>
 		<%@include file="includes/alerts.jsp"%>
 		<div id="wait-message" class="alert-success">
-		    <p>The update of your data is now being processed, it can take a few minutes.</p>
+		    <p>The update of your data is now being processed, it can take a few minutes. Please do not reload the page just wait some time until the confirmation message is displayed</p>
 		</div>
 		<div id="wait-message-space" class="clear-content"></div>
 		
@@ -74,6 +74,7 @@
 							<!-- <input type="hidden" value="<%=data.get("updated_text")%>" name="updated_text_<%=index %>"> -->
 							<input type="hidden" value="<%=sectionSelected%>" name="section_<%=index %>">
 	                        <input type="hidden" value="<%=indicatorSelected%>" name="indicator_<%=index %>">
+	                        <input type="hidden" value="<%=data.get("literal_type")%>" name="literal_type_<%=index%>">
 	                        <input type="hidden" value="<%=data.get("escaped_updated_text")%>" name="escaped_updated_text_<%=index %>" id="escaped_updated_text-<%=index%>">
 	                        <input type="hidden" value="<%=data.get("escaped_published_text")%>" name="escaped_published_text_<%=index %>" id="escaped_published_text-<%=index%>">
 						</td>
@@ -126,7 +127,7 @@
 		</div>
 		<div id="confirm-popup" class="popup-confirm">
 			<div class="close close-click">x</div>
-			<p>Have you checked your new text/data in this <a href="https://test-visualisation.osha.europa.eu/osh-barometer#!/" target="_blank">URL</a> test environment and it is ok, press the 'Publish' button and the text/data will be updated in the dataset. To be able to see it in production environment, please request the corresponding deployment to the developers.</p>
+			<p>Have you checked your new text/data in this <a href="https://pre-visualisation.osha.europa.eu/osh-barometer#!/" target="_blank">URL</a> test environment and it is ok, press the 'Publish' button and the text/data will be updated in the dataset. To be able to see it in production environment, please request the corresponding deployment to the developers.</p>
 			<button class="close-click" id="modalConfirmButton" type="submit" name="formSent" value="confirmUpdate" form="methodology-form" onclick="showWaitAlert()">Confirm</button>
 			<button class="close-click" id="modalConfirmCancelButton">Cancel</button>
 		</div>
