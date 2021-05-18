@@ -22,6 +22,7 @@
 		<form action="user?page=quantitative_eurofound" method="post" enctype="multipart/form-data" onsubmit="loadingScreen()">
 			<!-- Year input -->
 			<label>Year</label>
+			<label class="help-text">Reference year</label>
 			<%int year = Calendar.getInstance().get(Calendar.YEAR);%>
 			<% String yearSelected = (String) request.getAttribute("year"); 
 			System.out.println("yearSelected: "+yearSelected);
@@ -44,7 +45,8 @@
 			</div>
 			<div class="clear-content"></div>
 			<!-- File input -->
-			<label>File</label> 
+			<label>File</label>
+			<label class="help-text">Select file to be uploaded</label>
 			<input type="file" name="quantitativeEurofoundFile" required accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"> 
 			<!-- <button class="upload">Upload</button> -->
 			<!-- <button>Download Excel template</button> -->
