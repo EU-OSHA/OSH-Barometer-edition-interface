@@ -618,7 +618,8 @@ $(document).ready(function(){
 		}
 		
 		if(updated_text != null && updated_text != ""){
-			if(published_text != updated_text){
+			if(escaped_published_text != escaped_updated_text){
+			//if(published_text != updated_text){
 				$("#edit-popup #updatedTextEditor").text(escaped_updated_text);
 				if($('div#update-labels').length > 0 || $('div#methodology').length > 0){
 					$("#edit-popup #updatedTextEditor_default").val(escaped_updated_text);
@@ -764,8 +765,10 @@ $(document).ready(function(){
 		while (i < checks.length && !valid) {
 			if(checks[i].checked == true){
 				var checkId = checks[i].id.substring(checks[i].id.indexOf('-')+1);
-				update_text_i = $("#span_updated_text_"+checkId)[0].textContent;
-				published_text_i = $("#span_published_text_"+checkId)[0].textContent;
+				//update_text_i = $("#span_updated_text_"+checkId)[0].textContent;
+				//published_text_i = $("#span_published_text_"+checkId)[0].textContent;
+				update_text_i = $("#span_updated_text_"+checkId)[0].innerHTML;
+				published_text_i = $("#span_published_text_"+checkId)[0].innerHTML;
 				if(update_text_i != "null" && update_text_i != "" && update_text_i != published_text_i){
 					valid = true;
 				}
