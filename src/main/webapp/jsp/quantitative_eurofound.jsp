@@ -22,6 +22,7 @@
 		<form action="user?page=quantitative_eurofound" method="post" enctype="multipart/form-data" onsubmit="loadingScreen()">
 			<!-- Year input -->
 			<label>Year</label>
+			<label class="help-text">Reference year</label>
 			<%int year = Calendar.getInstance().get(Calendar.YEAR);%>
 			<% String yearSelected = (String) request.getAttribute("year"); 
 			System.out.println("yearSelected: "+yearSelected);
@@ -35,13 +36,21 @@
 				<% } %>
 			</select>
 			<div class="clear-content"></div>
+			<div>
+				<label class="help-text"><b>Download a template to enter updated data</b></label>
+				<span class="with-tooltip">
+					<a class="href-link" href="files/EU-OSHA_OSH BAROMETER_EUROFOUND Indicator List_YYYYMMDD.xlsx">Download Excel template</a>
+					<span class="tootip-box">Download the Eurofound Excel template</span>
+				</span>
+			</div>
+			<div class="clear-content"></div>
 			<!-- File input -->
-			<label>File</label> 
+			<label>File</label>
+			<label class="help-text">Select file to be uploaded</label>
 			<input type="file" name="quantitativeEurofoundFile" required accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"> 
 			<!-- <button class="upload">Upload</button> -->
 			<!-- <button>Download Excel template</button> -->
 			<!-- <a class="href-link" href="files/EU-OSHA_OSH BAROMETER_EUROFOUND Indicator List_YYYYMMDD.xlsx">Download Excel templates</a> -->
-			<span class="with-tooltip"><a class="href-link" href="files/EU-OSHA_OSH BAROMETER_EUROFOUND Indicator List_YYYYMMDD.xlsx">Download Excel template</a><span class="tootip-box">Download the Eurofound Excel template</span></span>
 			<div class="clear-content"></div>
 			<div class="conten-button">
 				<button name="clearButton" value="Clear" >Clear</button>
