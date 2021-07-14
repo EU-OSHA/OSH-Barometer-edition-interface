@@ -912,7 +912,7 @@ public class BarometerUIController extends HttpServlet{
 					            out.write(bytes, 0, read);
 					        }
 					        LOGGER.info("File "+fileName+" being uploaded to " + outputDirectory);
-					        confirmationMessage = "The Country report pdf has been correctly saved. You can see the changes in staging environment <a href=\"https://test-visualisation.osha.europa.eu/osh-barometer#!/\" target=\"_blank\">here</a>.";
+					        confirmationMessage = "The Country report pdf has been correctly saved. You can see the changes in staging environment <a href=\"https://pre-visualisation.osha.europa.eu/osh-barometer#!/\" target=\"_blank\">here</a>.";
 						} catch(Exception e) {
 							LOGGER.error("An error has occurred while uploading the pdf.");
 							e.printStackTrace();
